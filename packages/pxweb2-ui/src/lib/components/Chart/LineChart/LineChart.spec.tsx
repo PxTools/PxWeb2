@@ -25,6 +25,7 @@ vi.mock('../Utils/chartDataMapper', () => ({
 }));
 
 vi.mock('../Utils/useEChartOption', () => ({
+  getFallbackLegendHeight: vi.fn(() => 120),
   useEChartOption: vi.fn(),
 }));
 
@@ -153,7 +154,7 @@ describe('LineChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      orient: 'vertical',
+      orient: 'horizontal',
       left: 0,
       right: 0,
       bottom: 0,
@@ -173,6 +174,7 @@ describe('LineChart', () => {
     });
     expect(option.grid).toEqual({
       top: 36,
+      height: 392,
       bottom: 156,
       left: '0',
       right: '0',

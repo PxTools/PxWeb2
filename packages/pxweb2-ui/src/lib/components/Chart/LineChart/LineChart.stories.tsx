@@ -172,6 +172,29 @@ const manySeriesPxTable = createLineChartPxTable(
   },
 );
 
+const longLegendLabelsPxTable = createLineChartPxTable(
+  ['2020', '2021', '2022', '2023'],
+  [
+    {
+      code: 'LONG_A',
+      label: 'Long multi-word series label that should wrap naturally',
+    },
+    {
+      code: 'LONG_B',
+      label: 'Another series label with enough text to test equal columns',
+    },
+    {
+      code: 'LONG_C',
+      label: 'Averylongserieslabelwithoutspaceswhichmuststillremainvisible',
+    },
+    {
+      code: 'LONG_D',
+      label: 'Fourth label for balanced responsive legend distribution',
+    },
+  ],
+  (_year, _seriesCode, yearIndex) => 100 + yearIndex * 10,
+);
+
 const sparseDataPxTable = createLineChartPxTable(
   ['2020', '2021', '2022', '2023', '2024'],
   [
@@ -260,5 +283,12 @@ export const ManySeriesOnSmallScreen: Story = {
   args: {
     pxtable: manySeriesPxTable,
     isMediumOrSmallerScreen: true,
+  },
+};
+
+export const LongLegendLabels: Story = {
+  args: {
+    pxtable: longLegendLabelsPxTable,
+    isMediumOrSmallerScreen: false,
   },
 };

@@ -9,7 +9,10 @@ import {
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
-import { useEChartOption } from '../Utils/useEChartOption';
+import {
+  getFallbackLegendHeight,
+  useEChartOption,
+} from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMax,
@@ -37,12 +40,54 @@ type TooltipParam = {
   color?: string;
 };
 
-const LEGEND_ITEM_HEIGHT = 40;
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
 const CHART_PLOT_HEIGHT_REM = 29;
-const PIXELS_PER_REM = 16;
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
+
+function getPixelsPerRem(): number {
+  if (typeof document === 'undefined') {
+    return 16;
+  }
+
+  const rootFontSize = Number.parseFloat(
+    getComputedStyle(document.documentElement).fontSize,
+  );
+
+  return Number.isFinite(rootFontSize) && rootFontSize > 0
+    ? rootFontSize
+    : 16;
+}
+
+function useResponsivePixelsPerRem(): number {
+  const [pixelsPerRem, setPixelsPerRem] = useState(getPixelsPerRem);
+
+  useEffect(() => {
+    const updatePixelsPerRem = () => {
+      const nextPixelsPerRem = getPixelsPerRem();
+      setPixelsPerRem((previousPixelsPerRem) =>
+        previousPixelsPerRem === nextPixelsPerRem
+          ? previousPixelsPerRem
+          : nextPixelsPerRem,
+      );
+    };
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(updatePixelsPerRem);
+
+    resizeObserver?.observe(document.documentElement);
+    window.addEventListener('resize', updatePixelsPerRem);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updatePixelsPerRem);
+    };
+  }, []);
+
+  return pixelsPerRem;
+}
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -126,6 +171,7 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
+
   const yAxisValues = useMemo(() => {
     return dataset.source
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
@@ -155,9 +201,10 @@ export function LineChart({
 
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
+  const pixelsPerRem = useResponsivePixelsPerRem();
 
   const option = useMemo<echarts.EChartsOption>(() => {
-    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, 'line', resolvedColors).map(
       (seriesOption) => ({
         ...seriesOption,
@@ -171,7 +218,11 @@ export function LineChart({
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
+        height:
+          CHART_PLOT_HEIGHT_REM * pixelsPerRem -
+          TOP_CHART_PADDING -
+          X_AXIS_LABEL_TO_LEGEND_GAP,
+        bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: '0',
         right: '0',
         //'same' keeps axis labels inside the grid rect
@@ -211,7 +262,7 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        orient: 'vertical',
+        orient: 'horizontal',
         left: 0,
         right: 0,
         bottom: 0,
@@ -306,8 +357,9 @@ export function LineChart({
     yAxisBreak,
     yAxisInterval,
     xAxisName,
-    visibleLegendData,
     isMediumOrSmallerScreen,
+    visibleLegendData,
+    pixelsPerRem,
   ]);
 
   const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
@@ -316,10 +368,11 @@ export function LineChart({
     X_AXIS_LABEL_TO_LEGEND_GAP,
   );
 
-  const legendHeight =
-    (renderedLegendHeight ?? visibleLegendData.length * LEGEND_ITEM_HEIGHT) +
-    X_AXIS_LABEL_TO_LEGEND_GAP;
-  const height = CHART_PLOT_HEIGHT_REM + legendHeight / PIXELS_PER_REM;
+  const calculatedLegendHeight =
+    renderedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
+  const height =
+    CHART_PLOT_HEIGHT_REM +
+    (X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) / pixelsPerRem;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing

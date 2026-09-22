@@ -16,6 +16,208 @@ function getFontColor(): { color: string } {
   return { color: getChartCssVariables()?.fontColor || '#162327' };
 }
 
+const SMALL_BREAKPOINT_MAX_WIDTH = 767;
+const MEDIUM_BREAKPOINT_MAX_WIDTH = 1199;
+const LARGE_BREAKPOINT_MAX_WIDTH = 1399;
+const LEGEND_COLUMN_PADDING = 32;
+const LEGEND_LINE_HEIGHT = 20;
+const LEGEND_LINE_HEIGHT_RATIO = 1.4;
+const LEGEND_ITEM_GAP = 8;
+const LEGEND_FONT_SIZE = 14;
+const LEGEND_SYMBOL_SIZE = 14;
+
+export function getLegendColumnCount(chartWidth: number): number {
+  if (chartWidth <= SMALL_BREAKPOINT_MAX_WIDTH) {
+    return 1;
+  }
+
+  if (chartWidth <= LARGE_BREAKPOINT_MAX_WIDTH) {
+    return chartWidth <= MEDIUM_BREAKPOINT_MAX_WIDTH ? 2 : 3;
+  }
+
+  return 3;
+}
+
+function splitLegendData<T>(data: T[], columnCount: number): T[][] {
+  const columns: T[][] = [];
+  const baseColumnSize = Math.floor(data.length / columnCount);
+  const extraItems = data.length % columnCount;
+  let itemIndex = 0;
+
+  for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
+    const columnSize = baseColumnSize + (columnIndex < extraItems ? 1 : 0);
+    columns.push(data.slice(itemIndex, itemIndex + columnSize));
+    itemIndex += columnSize;
+  }
+
+  return columns.filter((column) => column.length > 0);
+}
+
+function getLegendText(value: string | { name?: string }): string {
+  return typeof value === 'string' ? value : value.name ?? '';
+}
+
+function getLegendFontSize(): number {
+  if (typeof document === 'undefined') {
+    return LEGEND_FONT_SIZE;
+  }
+
+  const rootFontSize = Number.parseFloat(
+    getComputedStyle(document.documentElement).fontSize,
+  );
+
+  return Number.isFinite(rootFontSize)
+    ? rootFontSize * 0.875
+    : LEGEND_FONT_SIZE;
+}
+
+function getLegendLineHeight(fontSize: number): number {
+  return Math.max(
+    LEGEND_LINE_HEIGHT,
+    Math.ceil(fontSize * LEGEND_LINE_HEIGHT_RATIO),
+  );
+}
+
+function getLegendColumnHeight(
+  data: Array<string | { name?: string }>,
+  textWidth: number,
+  fontSize = getLegendFontSize(),
+): number {
+  const lineHeight = getLegendLineHeight(fontSize);
+
+  return data.reduce((height, item, index) => {
+    const rowHeight = Math.max(
+      LEGEND_SYMBOL_SIZE,
+      wrapLegendText(getLegendText(item), textWidth, fontSize).split('\n')
+        .length * lineHeight,
+    );
+
+    return height + rowHeight + (index < data.length - 1 ? LEGEND_ITEM_GAP : 0);
+  }, 0);
+}
+
+export function getEstimatedLegendHeight(
+  chartWidth: number,
+  data: echarts.LegendComponentOption['data'],
+  fontSize = getLegendFontSize(),
+): number | null {
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
+
+  const columnCount = Math.min(getLegendColumnCount(chartWidth), data.length);
+  const columnWidth = chartWidth / columnCount;
+  const textWidth = Math.max(80, columnWidth - LEGEND_COLUMN_PADDING);
+  const columns = splitLegendData(data, columnCount);
+  return Math.max(
+    ...columns.map((column) =>
+      getLegendColumnHeight(column, textWidth, fontSize),
+    ),
+  );
+}
+
+export function getFallbackLegendHeight(
+  data: echarts.LegendComponentOption['data'],
+): number {
+  const estimates = [320, 768, 1200]
+    .map((chartWidth) => getEstimatedLegendHeight(chartWidth, data))
+    .filter((height): height is number => height !== null);
+
+  return estimates.length > 0 ? Math.max(...estimates) : 0;
+}
+
+function wrapLegendText(
+  text: string,
+  textWidth: number,
+  fontSize = getLegendFontSize(),
+): string {
+  const charactersPerLine = Math.max(
+    1,
+    Math.floor(textWidth / (fontSize * 0.55)),
+  );
+
+  return text
+    .split(/\s+/)
+    .reduce(
+      (lines, word) => {
+        const chunks = word.match(
+          new RegExp(`.{1,${charactersPerLine}}`, 'g'),
+        ) ?? [''];
+        const lastLine = lines.at(-1) ?? '';
+
+        if (lastLine && lastLine.length + 1 + chunks[0].length <= charactersPerLine) {
+          lines[lines.length - 1] = `${lastLine} ${chunks.shift()}`;
+        }
+
+        lines.push(...chunks);
+        return lines;
+      },
+      [] as string[],
+    )
+    .join('\n');
+}
+
+function applyHorizontalLegendColumns(
+  chart: echarts.EChartsType,
+  legend: echarts.LegendComponentOption,
+  renderedLegendHeight?: number,
+    legendGap: number = 0,
+): echarts.LegendComponentOption[] {
+  const data = legend.data;
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return [legend];
+  }
+
+  const columnCount = Math.min(
+    getLegendColumnCount(chart.getWidth()),
+    data.length,
+  );
+  const columnWidth = chart.getWidth() / columnCount;
+  const textWidth = Math.max(80, columnWidth - LEGEND_COLUMN_PADDING);
+  const fontSize = getLegendFontSize();
+  const lineHeight = getLegendLineHeight(fontSize);
+  const columns = splitLegendData(data, columnCount);
+  const itemGap = LEGEND_ITEM_GAP;
+  const estimatedLegendHeight = Math.max(
+    ...columns.map((column) =>
+      getLegendColumnHeight(column, textWidth, fontSize),
+    ),
+  );
+  const gridRect = getGridRect(chart);
+  const legendTop =
+    gridRect == null
+      ? Math.max(
+          0,
+          chart.getHeight() -
+            (renderedLegendHeight ?? estimatedLegendHeight) +
+            legendGap,
+        )
+      : gridRect.y + gridRect.height + legendGap * 2;
+
+  return columns.map((columnData, columnIndex) => ({
+    ...legend,
+    data: columnData,
+    orient: 'vertical',
+    left: columnIndex * columnWidth,
+    right: undefined,
+    top: legendTop,
+    bottom: undefined,
+    width: columnWidth,
+    itemWidth: LEGEND_SYMBOL_SIZE,
+    itemHeight: LEGEND_SYMBOL_SIZE,
+    itemGap,
+    formatter: (name: string) => wrapLegendText(name, textWidth, fontSize),
+    textStyle: {
+      ...legend.textStyle,
+      fontSize,
+      lineHeight,
+      overflow: 'break',
+      width: textWidth,
+    },
+  }));
+}
+
 function isSingleTitleOption(
   title: echarts.EChartsOption['title'],
 ): title is echarts.TitleComponentOption {
@@ -58,7 +260,12 @@ function applyOptionWithWrappedTitle(
 }
 
 type LegendMeasurableChart = {
-  getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
+  getModel?: () =>
+    | {
+        getComponent?: (mainType: string) => unknown;
+        getComponentsByType?: (mainType: string) => unknown[];
+      }
+    | undefined;
   getViewOfComponentModel?: (
     componentModel: unknown,
   ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
@@ -69,17 +276,29 @@ function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
   // the rendered group gives us the real height instead of estimating it from
   // the number of series.
   const measurable = chart as unknown as LegendMeasurableChart;
-  const legendModel = measurable.getModel?.()?.getComponent?.('legend');
+  const model = measurable.getModel?.();
+  const legendModels =
+    model?.getComponentsByType?.('legend') ??
+    [model?.getComponent?.('legend')].filter(
+      (legendModel): legendModel is unknown => legendModel != null,
+    );
 
-  if (!legendModel) {
+  if (legendModels.length === 0) {
     return null;
   }
 
-  const height = measurable
-    .getViewOfComponentModel?.(legendModel)
-    ?.group?.getBoundingRect?.().height;
+  const heights = legendModels
+    .map(
+      (legendModel) =>
+        measurable
+          .getViewOfComponentModel?.(legendModel)
+          ?.group?.getBoundingRect?.().height,
+    )
+    .filter((height): height is number =>
+      typeof height === 'number' && Number.isFinite(height),
+    );
 
-  return typeof height === 'number' && Number.isFinite(height) ? height : null;
+  return heights.length > 0 ? Math.max(...heights) : null;
 }
 
 function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
@@ -180,6 +399,8 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
 function applyResponsiveLegend(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
+  renderedLegendHeight?: number,
+  legendGap = 0,
 ): echarts.EChartsOption {
   const chartWidth = chart.getWidth();
   const legend = option.legend;
@@ -187,8 +408,8 @@ function applyResponsiveLegend(
   if (Array.isArray(legend)) {
     return {
       ...option,
-      legend: legend.map((legendItem) =>
-        legendItem.orient === 'vertical'
+      legend: legend.flatMap((legendItem) =>
+        legendItem.orient === 'vertical' || !Array.isArray(legendItem.data)
           ? {
               ...legendItem,
               width: chartWidth,
@@ -197,25 +418,28 @@ function applyResponsiveLegend(
                 width: Math.max(80, chartWidth - 40),
               },
             }
-          : legendItem,
+          : applyHorizontalLegendColumns(
+              chart,
+              legendItem,
+              renderedLegendHeight,
+              legendGap,
+            ),
       ),
     };
   }
 
-  if (legend?.orient !== 'vertical') {
+  if (!legend || legend.orient === 'vertical' || !Array.isArray(legend.data)) {
     return option;
   }
 
   return {
     ...option,
-    legend: {
-      ...legend,
-      width: chartWidth,
-      textStyle: {
-        ...legend.textStyle,
-        width: Math.max(80, chartWidth - 40),
-      },
-    },
+    legend: applyHorizontalLegendColumns(
+      chart,
+      legend,
+      renderedLegendHeight,
+      legendGap,
+    ),
   };
 }
 
@@ -234,9 +458,21 @@ function applyLegendGap(
   }
 
   const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
+  const nextBottom = Math.round(legendHeight + legendGap);
+  const measurable = chart as unknown as {
+    getModel?: () => { getComponent?: (mainType: string) => unknown };
+  };
+  const currentGridModel = measurable
+    .getModel?.()
+    ?.getComponent?.('grid') as { option?: { bottom?: unknown } } | undefined;
+  const currentBottom = currentGridModel?.option?.bottom ?? grid?.bottom;
+
+  if (currentBottom === nextBottom) {
+    return;
+  }
 
   chart.setOption({
-    grid: { ...grid, bottom: Math.round(legendHeight + legendGap) },
+    grid: { ...grid, bottom: nextBottom },
   });
 }
 
@@ -367,6 +603,8 @@ export function useEChartOption(
 ) {
   const divRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<echarts.EChartsType | null>(null);
+  const lastRenderedLegendHeightRef = useRef<number | null>(null);
+  const legendLayoutInvalidatedRef = useRef(false);
   const [renderedLegendHeight, setRenderedLegendHeight] = useState<
     number | null
   >(null);
@@ -378,6 +616,7 @@ export function useEChartOption(
       return;
     }
 
+    lastRenderedLegendHeightRef.current = null;
     setRenderedLegendHeight(null);
 
     const chartContainer = divRef.current;
@@ -387,55 +626,95 @@ export function useEChartOption(
     const updateRenderedLegendHeight = () => {
       const measuredHeight = getRenderedLegendHeight(chart);
 
-      if (measuredHeight === null) {
+      const legend = Array.isArray(option.legend)
+        ? option.legend.find((item) => item.orient === 'horizontal')
+        : option.legend;
+      const estimatedHeight = getEstimatedLegendHeight(
+        chart.getWidth(),
+        legend?.data,
+      );
+      const effectiveHeight =
+        measuredHeight === null
+          ? estimatedHeight
+          : Math.max(measuredHeight, estimatedHeight ?? 0);
+
+      if (effectiveHeight === null) {
         return;
       }
 
+      const heightChanged =
+        measuredHeight !== null &&
+        measuredHeight !== lastRenderedLegendHeightRef.current;
+      const layoutInvalidated = legendLayoutInvalidatedRef.current;
+      lastRenderedLegendHeightRef.current = effectiveHeight;
       setRenderedLegendHeight((previousHeight) =>
-        previousHeight === measuredHeight ? previousHeight : measuredHeight,
+        previousHeight === effectiveHeight ? previousHeight : effectiveHeight,
       );
-    };
 
-    const applyOption = () => {
-      // Apply the new selection or legend state first. The legend can only be
-      // measured after ECharts has rendered the updated option.
-      applyOptionWithWrappedTitle(
-        chart,
-        applyResponsiveLegend(chart, applyStyling(option)),
-      );
+      if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
+        legendLayoutInvalidatedRef.current = false;
+        applyOption(effectiveHeight, false);
+      }
 
       if (typeof legendGap === 'number') {
         applyLegendGap(chart, option, legendGap);
       }
+    };
+
+    const applyOption = (legendHeight?: number, measure = true) => {
+      // Apply the new selection or legend state first. The legend can only be
+      // measured after ECharts has rendered the updated option.
+      applyOptionWithWrappedTitle(
+        chart,
+        applyResponsiveLegend(
+          chart,
+          applyStyling(option),
+          legendHeight,
+          legendGap,
+        ),
+      );
 
       applyYAxisBreakMark(chart, option);
-      updateRenderedLegendHeight();
+      if (measure) {
+        updateRenderedLegendHeight();
+      }
     };
+
+    let measurementFrame: number | undefined;
+    const measureAfterLayout = () => {
+      if (measurementFrame !== undefined) {
+        cancelAnimationFrame(measurementFrame);
+      }
+
+      measurementFrame = requestAnimationFrame(() => {
+        measurementFrame = undefined;
+        updateRenderedLegendHeight();
+      });
+    };
+
+    chart.on?.('finished', measureAfterLayout);
 
     applyOption();
 
     let previousWidth = chartContainer.clientWidth;
-    let previousHeight = chartContainer.clientHeight;
 
     const handleResize = () => {
       chart.resize();
 
-      // On mobile, resize can be triggered when scrolling vertically. Reapply
-      // the option only when the chart dimensions actually changed.
+      // Height changes can be caused by the legend itself. Reacting to those
+      // changes would clear the measured height and create a resize loop.
       const currentWidth = chartContainer.clientWidth;
-      const currentHeight = chartContainer.clientHeight;
       const widthChanged = currentWidth !== previousWidth;
-      const heightChanged = currentHeight !== previousHeight;
 
-      if (widthChanged || heightChanged) {
+      if (widthChanged) {
         previousWidth = currentWidth;
-        previousHeight = currentHeight;
-        if (widthChanged) {
-          // A width change can wrap legend text differently, so the previous
-          // measurement is no longer valid.
-          setRenderedLegendHeight(null);
-        }
-        applyOption();
+        legendLayoutInvalidatedRef.current = true;
+        // Use the responsive fallback while the resized legend is being laid
+        // out. The previous layout can be too short for the new text wrap.
+        lastRenderedLegendHeightRef.current = null;
+        setRenderedLegendHeight(null);
+        applyOption(undefined, false);
+        measureAfterLayout();
       }
     };
 
@@ -448,23 +727,34 @@ export function useEChartOption(
 
     resizeObserver?.observe(chartContainer);
 
+    const handleFontLoading = () => {
+      chart.resize();
+      legendLayoutInvalidatedRef.current = true;
+      applyOption(undefined, false);
+      measureAfterLayout();
+    };
+
+    document.fonts?.addEventListener('loadingdone', handleFontLoading);
+
     window.addEventListener('resize', handleResize);
 
     return () => {
       resizeObserver?.disconnect();
+      document.fonts?.removeEventListener('loadingdone', handleFontLoading);
       window.removeEventListener('resize', handleResize);
+      if (measurementFrame !== undefined) {
+        cancelAnimationFrame(measurementFrame);
+      }
+      chart.off?.('finished', measureAfterLayout);
       chartRef.current = null;
       chart.dispose();
     };
   }, [option, renderer, legendGap]);
 
-  useEffect(() => {
-    if (renderedLegendHeight !== null) {
-      // React has now applied the new container height. Resize ECharts again
-      // so its plot grid is laid out against that height.
-      chartRef.current?.resize();
-    }
-  }, [renderedLegendHeight]);
-
-  return { divRef, chartRef, renderedLegendHeight };
+  return {
+    divRef,
+    chartRef,
+    renderedLegendHeight:
+      renderedLegendHeight ?? lastRenderedLegendHeightRef.current,
+  };
 }
