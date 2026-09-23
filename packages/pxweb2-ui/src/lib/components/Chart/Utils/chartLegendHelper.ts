@@ -280,9 +280,9 @@ function applyHorizontalLegendColumns(
             (renderedLegendHeight ?? estimatedLegendHeight) +
             legendGap,
         )
-          // When the grid rectangle is available, position the legend directly
-          // below the plot area rather than calculating it from the full chart.
-      : gridRect.y + gridRect.height + legendGap * 2;
+      : // When the grid rectangle is available, position the legend directly
+        // below the plot area rather than calculating it from the full chart.
+        gridRect.y + gridRect.height + legendGap * 2;
 
   return columns.map((columnData, columnIndex) => ({
     ...legend,
