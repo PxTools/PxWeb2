@@ -73,54 +73,55 @@
     pointer-events: none;
     background:
       repeating-linear-gradient(
-        90deg,
-        transparent 0 var(--drop-border-offset),
-        var(--px-color-border-moderate) var(--drop-border-offset)
-          calc(var(--drop-border-offset) + var(--drop-border-dash)),
-        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
-          calc(
-            var(--drop-border-offset) + var(--drop-border-dash) +
-              var(--drop-border-gap)
-          )
-      ) top / 100% 1px no-repeat,
+          90deg,
+          transparent 0 var(--drop-border-offset),
+          var(--px-color-border-moderate) var(--drop-border-offset)
+            calc(var(--drop-border-offset) + var(--drop-border-dash)),
+          transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+            calc(
+              var(--drop-border-offset) + var(--drop-border-dash) +
+                var(--drop-border-gap)
+            )
+        )
+        top / 100% 1px no-repeat,
       repeating-linear-gradient(
-        90deg,
-        transparent 0 var(--drop-border-offset),
-        var(--px-color-border-moderate) var(--drop-border-offset)
-          calc(var(--drop-border-offset) + var(--drop-border-dash)),
-        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
-          calc(
-            var(--drop-border-offset) + var(--drop-border-dash) +
-              var(--drop-border-gap)
-          )
-      ) bottom / 100% 1px no-repeat,
+          90deg,
+          transparent 0 var(--drop-border-offset),
+          var(--px-color-border-moderate) var(--drop-border-offset)
+            calc(var(--drop-border-offset) + var(--drop-border-dash)),
+          transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+            calc(
+              var(--drop-border-offset) + var(--drop-border-dash) +
+                var(--drop-border-gap)
+            )
+        )
+        bottom / 100% 1px no-repeat,
       repeating-linear-gradient(
-        to bottom,
-        transparent 0 var(--drop-border-offset),
-        var(--px-color-border-moderate) var(--drop-border-offset)
-          calc(var(--drop-border-offset) + var(--drop-border-dash)),
-        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
-          calc(
-            var(--drop-border-offset) + var(--drop-border-dash) +
-              var(--drop-border-gap)
-          )
-      ) left / 1px 100% no-repeat,
+          to bottom,
+          transparent 0 var(--drop-border-offset),
+          var(--px-color-border-moderate) var(--drop-border-offset)
+            calc(var(--drop-border-offset) + var(--drop-border-dash)),
+          transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+            calc(
+              var(--drop-border-offset) + var(--drop-border-dash) +
+                var(--drop-border-gap)
+            )
+        )
+        left / 1px 100% no-repeat,
       repeating-linear-gradient(
-        to bottom,
-        transparent 0 var(--drop-border-offset),
-        var(--px-color-border-moderate) var(--drop-border-offset)
-          calc(var(--drop-border-offset) + var(--drop-border-dash)),
-        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
-          calc(
-            var(--drop-border-offset) + var(--drop-border-dash) +
-              var(--drop-border-gap)
-          )
-      ) right / 1px 100% no-repeat;
+          to bottom,
+          transparent 0 var(--drop-border-offset),
+          var(--px-color-border-moderate) var(--drop-border-offset)
+            calc(var(--drop-border-offset) + var(--drop-border-dash)),
+          transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+            calc(
+              var(--drop-border-offset) + var(--drop-border-dash) +
+                var(--drop-border-gap)
+            )
+        )
+        right / 1px 100% no-repeat;
   }
 }
-
-
-
 
 .dropPlaceholderLabel {
   overflow: hidden;
