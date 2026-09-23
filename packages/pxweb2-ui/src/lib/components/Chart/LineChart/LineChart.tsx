@@ -180,10 +180,16 @@ export function LineChart({
       return undefined;
     }
 
-    return {
-      min: Math.min(...yAxisValues),
-      max: Math.max(...yAxisValues),
-    };
+    let min = yAxisValues[0];
+    let max = yAxisValues[0];
+
+    for (let index = 1; index < yAxisValues.length; index += 1) {
+      const value = yAxisValues[index];
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+
+    return { min, max };
   }, [yAxisValues]);
   const yAxisBreak = useMemo(() => {
     if (!yAxisDataExtent) {
