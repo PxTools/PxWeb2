@@ -172,6 +172,9 @@ describe('LineChart', () => {
       breakArea: { show: false },
       axisLine: { breakLine: false },
     });
+    expect(option.xAxis).toMatchObject({
+      axisLine: { onZero: false },
+    });
     expect(option.grid).toEqual({
       top: 36,
       height: 392,
