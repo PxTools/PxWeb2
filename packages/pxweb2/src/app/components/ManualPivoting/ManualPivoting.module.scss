@@ -98,8 +98,9 @@
   gap: 32px;
   width: 100%;
   padding: 16px 28px 12px 28px;
+  scrollbar-gutter: stable;
 
   &[data-pointer-dragging='true'] {
-    overflow: hidden;
+    overflow: clip;
   }
 }
