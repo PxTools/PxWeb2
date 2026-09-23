@@ -893,7 +893,7 @@ export function ManualPivot({
 
     return (
       <section className={classes.groupColumn}>
-        <Label>{getGroupLabelText(group)}</Label>
+        <Label className={classes.groupLabel}>{getGroupLabelText(group)}</Label>
         <div ref={zoneRef} className={classes.groupZone}>
           <Reorder.Group
             axis="y"
