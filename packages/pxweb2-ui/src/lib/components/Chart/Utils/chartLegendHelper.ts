@@ -25,6 +25,11 @@ const LEGEND_ITEM_GAP = 8;
 const LEGEND_FONT_SIZE = 14;
 const LEGEND_SYMBOL_SIZE = 14;
 
+/**
+ * Returns the number of legend columns appropriate for the chart width.
+ * @param chartWidth The chart width in pixels.
+ * @returns The number of columns to use for the legend.
+ */
 export function getLegendColumnCount(chartWidth: number): number {
   if (chartWidth <= SMALL_BREAKPOINT_MAX_WIDTH) {
     return 1;
@@ -35,8 +40,16 @@ export function getLegendColumnCount(chartWidth: number): number {
   return 3;
 }
 
+/**
+ * Splits legend entries into balanced, non-empty columns.
+ * @param data The legend entries to split.
+ * @param columnCount The requested number of columns.
+ * @returns The legend entries grouped into non-empty columns.
+ */
 function splitLegendData<T>(data: T[], columnCount: number): T[][] {
   const columns: T[][] = [];
+  // Distribute the remainder across the first columns so the columns stay
+  // as balanced as possible instead of putting all extra entries at the end.
   const baseColumnSize = Math.floor(data.length / columnCount);
   const extraItems = data.length % columnCount;
   let itemIndex = 0;
@@ -49,10 +62,19 @@ function splitLegendData<T>(data: T[], columnCount: number): T[][] {
   return columns.filter((column) => column.length > 0);
 }
 
+/**
+ * Gets the displayable text from a legend entry.
+ * @param value A legend label or named legend entry.
+ * @returns The text to display for the legend entry.
+ */
 function getLegendText(value: string | { name?: string }): string {
   return typeof value === 'string' ? value : (value.name ?? '');
 }
 
+/**
+ * Gets the root-relative font size used when measuring legend text.
+ * @returns The legend font size in pixels.
+ */
 function getLegendFontSize(): number {
   if (typeof document === 'undefined') {
     return LEGEND_FONT_SIZE;
@@ -65,6 +87,11 @@ function getLegendFontSize(): number {
     : LEGEND_FONT_SIZE;
 }
 
+/**
+ * Calculates the minimum row height for the supplied legend font size.
+ * @param fontSize The legend font size in pixels.
+ * @returns The line height in pixels.
+ */
 function getLegendLineHeight(fontSize: number): number {
   return Math.max(
     LEGEND_LINE_HEIGHT,
@@ -72,22 +99,37 @@ function getLegendLineHeight(fontSize: number): number {
   );
 }
 
+/**
+ * Wraps legend text to fit the available width.
+ * @param text The legend text to wrap.
+ * @param textWidth The available text width in pixels.
+ * @param fontSize The font size used to estimate characters per line.
+ * @returns The wrapped text, using newline characters between lines.
+ */
 function wrapLegendText(
   text: string,
   textWidth: number,
   fontSize = getLegendFontSize(),
 ): string {
+  // Estimate how many characters fit on one line. This is intentionally an
+  // approximation because ECharts measures the final text when it renders.
   const charactersPerLine = Math.max(
     1,
     Math.floor(textWidth / (fontSize * 0.55)),
   );
+
   return text
     .split(/\s+/)
     .reduce((lines, word) => {
+      // Split long words as well as normal text, so a single long series name
+      // cannot force the legend column wider than the available space.
       const chunks = new RegExp(`.{1,${charactersPerLine}}`, 'g').exec(
         word,
       ) ?? [''];
       const lastLine = lines.at(-1) ?? '';
+
+      // Keep the first chunk of the current word on the previous line when it
+      // still fits. The remaining chunks become separate lines below it.
       if (
         lastLine &&
         lastLine.length + 1 + chunks[0].length <= charactersPerLine
@@ -100,6 +142,13 @@ function wrapLegendText(
     .join('\n');
 }
 
+/**
+ * Calculates the rendered height of one legend column.
+ * @param data The legend entries in the column.
+ * @param textWidth The available text width in pixels.
+ * @param fontSize The font size used to measure the entries.
+ * @returns The estimated column height in pixels.
+ */
 function getLegendColumnHeight(
   data: Array<string | { name?: string }>,
   textWidth: number,
@@ -107,6 +156,8 @@ function getLegendColumnHeight(
 ): number {
   const lineHeight = getLegendLineHeight(fontSize);
   return data.reduce((height, item, index) => {
+    // A wrapped label can be taller than its symbol, so use whichever height
+    // is larger for each row before adding the gap to the next row.
     const rowHeight = Math.max(
       LEGEND_SYMBOL_SIZE,
       wrapLegendText(getLegendText(item), textWidth, fontSize).split('\n')
@@ -116,6 +167,13 @@ function getLegendColumnHeight(
   }, 0);
 }
 
+/**
+ * Estimates the height required by a responsive legend at a given width.
+ * @param chartWidth The chart width in pixels.
+ * @param data The legend entries to measure.
+ * @param fontSize The font size used to measure the entries.
+ * @returns The estimated legend height in pixels, or null when there is no data.
+ */
 export function getEstimatedLegendHeight(
   chartWidth: number,
   data: echarts.LegendComponentOption['data'],
@@ -125,6 +183,8 @@ export function getEstimatedLegendHeight(
     return null;
   }
   const columnCount = Math.min(getLegendColumnCount(chartWidth), data.length);
+  // Each column gets an equal share of the chart width. Keep a small amount
+  // of space for the legend symbol and its surrounding padding.
   const textWidth = Math.max(
     80,
     chartWidth / columnCount - LEGEND_COLUMN_PADDING,
@@ -136,6 +196,11 @@ export function getEstimatedLegendHeight(
   );
 }
 
+/**
+ * Gets a conservative legend height fallback across supported breakpoints.
+ * @param data The legend entries to measure.
+ * @returns The largest estimated legend height in pixels, or zero without data.
+ */
 export function getFallbackLegendHeight(
   data: echarts.LegendComponentOption['data'],
 ): number {
@@ -145,6 +210,11 @@ export function getFallbackLegendHeight(
   return estimates.length > 0 ? Math.max(...estimates) : 0;
 }
 
+/**
+ * Gets the chart grid rectangle from ECharts' internal coordinate model.
+ * @param chart The ECharts instance whose grid should be measured.
+ * @returns The grid rectangle, or null when ECharts has not exposed one.
+ */
 export function getGridRect(
   chart: echarts.EChartsType,
 ): { x: number; y: number; width: number; height: number } | null {
@@ -167,6 +237,14 @@ export function getGridRect(
   return gridModel?.coordinateSystem?.getRect?.() ?? null;
 }
 
+/**
+ * Converts one horizontal legend into balanced vertical legend columns.
+ * @param chart The ECharts instance being configured.
+ * @param legend The horizontal legend option to convert.
+ * @param renderedLegendHeight The measured legend height, when available.
+ * @param legendGap The gap between the plot area and legend in pixels.
+ * @returns The converted legend options, one for each column.
+ */
 function applyHorizontalLegendColumns(
   chart: echarts.EChartsType,
   legend: echarts.LegendComponentOption,
@@ -187,6 +265,7 @@ function applyHorizontalLegendColumns(
   const fontSize = getLegendFontSize();
   const lineHeight = getLegendLineHeight(fontSize);
   const columns = splitLegendData(data, columnCount);
+  // The tallest column determines the space needed below the chart.
   const estimatedLegendHeight = Math.max(
     ...columns.map((column) =>
       getLegendColumnHeight(column, textWidth, fontSize),
@@ -201,6 +280,8 @@ function applyHorizontalLegendColumns(
             (renderedLegendHeight ?? estimatedLegendHeight) +
             legendGap,
         )
+          // When the grid rectangle is available, position the legend directly
+          // below the plot area rather than calculating it from the full chart.
       : gridRect.y + gridRect.height + legendGap * 2;
 
   return columns.map((columnData, columnIndex) => ({
@@ -226,6 +307,14 @@ function applyHorizontalLegendColumns(
   }));
 }
 
+/**
+ * Applies responsive sizing and column layout to chart legend options.
+ * @param chart The ECharts instance being configured.
+ * @param option The chart option containing the legend.
+ * @param renderedLegendHeight The measured legend height, when available.
+ * @param legendGap The gap between the plot area and legend in pixels.
+ * @returns The chart option with responsive legend layout applied.
+ */
 export function applyResponsiveLegend(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
@@ -282,6 +371,11 @@ type LegendMeasurableChart = {
   ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
 };
 
+/**
+ * Measures the tallest rendered legend component using ECharts' view groups.
+ * @param chart The ECharts instance whose legend should be measured.
+ * @returns The tallest legend height in pixels, or null when it cannot be measured.
+ */
 export function getRenderedLegendHeight(
   chart: echarts.EChartsType,
 ): number | null {
@@ -309,6 +403,13 @@ export function getRenderedLegendHeight(
   return heights.length > 0 ? Math.max(...heights) : null;
 }
 
+/**
+ * Updates the chart grid bottom to preserve the requested legend gap.
+ * @param chart The ECharts instance whose grid should be updated.
+ * @param option The chart option containing the current grid configuration.
+ * @param legendGap The desired gap below the plot area in pixels.
+ * @returns Nothing. The chart is updated in place when necessary.
+ */
 export function applyLegendGap(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
