@@ -55,13 +55,72 @@
   width: 100%;
   height: var(--drop-preview-height, 40px);
   border-radius: var(--px-border-radius-medium);
-  border: 1px dashed var(--px-color-border-moderate);
+  --drop-border-dash: 4px;
+  --drop-border-gap: 4px;
+  --drop-border-offset: 4.5px;
+  border: 0;
   padding: 8px 10px;
   display: flex;
   align-items: center;
   background: var(--px-color-surface-subtle);
   pointer-events: none;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent 0 var(--drop-border-offset),
+        var(--px-color-border-moderate) var(--drop-border-offset)
+          calc(var(--drop-border-offset) + var(--drop-border-dash)),
+        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+          calc(
+            var(--drop-border-offset) + var(--drop-border-dash) +
+              var(--drop-border-gap)
+          )
+      ) top / 100% 1px no-repeat,
+      repeating-linear-gradient(
+        90deg,
+        transparent 0 var(--drop-border-offset),
+        var(--px-color-border-moderate) var(--drop-border-offset)
+          calc(var(--drop-border-offset) + var(--drop-border-dash)),
+        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+          calc(
+            var(--drop-border-offset) + var(--drop-border-dash) +
+              var(--drop-border-gap)
+          )
+      ) bottom / 100% 1px no-repeat,
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 var(--drop-border-offset),
+        var(--px-color-border-moderate) var(--drop-border-offset)
+          calc(var(--drop-border-offset) + var(--drop-border-dash)),
+        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+          calc(
+            var(--drop-border-offset) + var(--drop-border-dash) +
+              var(--drop-border-gap)
+          )
+      ) left / 1px 100% no-repeat,
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 var(--drop-border-offset),
+        var(--px-color-border-moderate) var(--drop-border-offset)
+          calc(var(--drop-border-offset) + var(--drop-border-dash)),
+        transparent calc(var(--drop-border-offset) + var(--drop-border-dash))
+          calc(
+            var(--drop-border-offset) + var(--drop-border-dash) +
+              var(--drop-border-gap)
+          )
+      ) right / 1px 100% no-repeat;
+  }
 }
+
+
+
 
 .dropPlaceholderLabel {
   overflow: hidden;
@@ -108,4 +167,3 @@
 .groupLabel {
   margin-bottom: 8px;
 }
-
