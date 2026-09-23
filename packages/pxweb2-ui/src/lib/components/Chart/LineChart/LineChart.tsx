@@ -194,6 +194,7 @@ export function LineChart({
         axisLabel: { rotate: 45 },
         axisLine: {
           show: true,
+          onZero: false,
         },
         axisTick: { show: true, alignWithLabel: true },
       },
