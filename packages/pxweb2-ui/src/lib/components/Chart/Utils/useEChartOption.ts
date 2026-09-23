@@ -139,8 +139,8 @@ function wrapLegendText(
   return text
     .split(/\s+/)
     .reduce((lines, word) => {
-      const chunks = word.match(
-        new RegExp(`.{1,${charactersPerLine}}`, 'g'),
+      const chunks = new RegExp(`.{1,${charactersPerLine}}`, 'g').exec(
+        word,
       ) ?? [''];
       const lastLine = lines.at(-1) ?? '';
 
