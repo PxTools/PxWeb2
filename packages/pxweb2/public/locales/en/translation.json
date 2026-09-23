@@ -193,8 +193,8 @@
         "customize": {
           "title": "Customise",
           "auto_pivot": {
-            "title": "Organize table automatically",
-            "aria_label": "Organize table automatically",
+            "title": "Organise table automatically",
+            "aria_label": "Organise table automatically",
             "description": "Automatically arranges rows and columns for a clearer table",
             "screen_reader_announcement": "Table organised after {{table_heading}}"
           },
