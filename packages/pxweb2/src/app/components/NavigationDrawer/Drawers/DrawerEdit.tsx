@@ -198,7 +198,7 @@ export function DrawerEdit() {
             setLoadingPivotType={setLoadingPivotType}
           />
         )}
-        {data && (
+        {data && !isMobile && (
           <PivotManuallyButton onClick={() => setIsManualPivotOpen(true)} />
         )}
         {data && (
