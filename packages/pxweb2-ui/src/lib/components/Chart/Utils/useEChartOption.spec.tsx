@@ -57,12 +57,11 @@ describe('useEChartOption', () => {
   });
 
   it('selects the requested legend column count at each breakpoint', () => {
-    expect(getLegendColumnCount(575)).toBe(1);
-    expect(getLegendColumnCount(576)).toBe(1);
     expect(getLegendColumnCount(767)).toBe(1);
     expect(getLegendColumnCount(768)).toBe(2);
-    expect(getLegendColumnCount(1199)).toBe(2);
-    expect(getLegendColumnCount(1200)).toBe(3);
+    expect(getLegendColumnCount(991)).toBe(2);
+    expect(getLegendColumnCount(992)).toBe(3);
+    expect(getLegendColumnCount(1399)).toBe(3);
     expect(getLegendColumnCount(1400)).toBe(3);
   });
 
