@@ -21,9 +21,18 @@ function getFontColor(): { color: string } {
   return { color: getChartCssVariables()?.fontColor || '#162327' };
 }
 
-const SMALL_BREAKPOINT_MAX_WIDTH = parseInt(BreakpointsSmallMaxWidth, 10);
-const MEDIUM_BREAKPOINT_MAX_WIDTH = parseInt(BreakpointsMediumMaxWidth, 10);
-const LARGE_BREAKPOINT_MAX_WIDTH = parseInt(BreakpointsXlargeMaxWidth, 10);
+const SMALL_BREAKPOINT_MAX_WIDTH = Number.parseInt(
+  BreakpointsSmallMaxWidth,
+  10,
+);
+const MEDIUM_BREAKPOINT_MAX_WIDTH = Number.parseInt(
+  BreakpointsMediumMaxWidth,
+  10,
+);
+const LARGE_BREAKPOINT_MAX_WIDTH = Number.parseInt(
+  BreakpointsXlargeMaxWidth,
+  10,
+);
 const LEGEND_COLUMN_PADDING = 32;
 const LEGEND_LINE_HEIGHT = 20;
 const LEGEND_LINE_HEIGHT_RATIO = 1.4;
