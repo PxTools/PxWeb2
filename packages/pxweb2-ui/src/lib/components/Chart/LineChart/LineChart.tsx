@@ -128,7 +128,6 @@ export function LineChart({
   isMediumOrSmallerScreen = false,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
-
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing

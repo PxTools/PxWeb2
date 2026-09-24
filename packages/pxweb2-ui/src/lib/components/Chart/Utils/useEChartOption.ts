@@ -10,6 +10,7 @@ import {
   getRenderedLegendHeight,
 } from './chartLegendHelper';
 
+// Re-export legend helpers to preserve the public import surface used by chart consumers and tests.
 export {
   getFallbackLegendHeight,
   getEstimatedLegendHeight,
