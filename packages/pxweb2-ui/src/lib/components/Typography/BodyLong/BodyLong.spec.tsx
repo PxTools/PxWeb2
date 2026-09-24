@@ -4,7 +4,7 @@ import BodyLong from './BodyLong';
 
 describe('BodyLong', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<BodyLong />);
+    const { baseElement } = render(<BodyLong>Test body</BodyLong>);
     expect(baseElement).toBeTruthy();
   });
 });

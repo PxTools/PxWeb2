@@ -28,6 +28,7 @@ describe('YearRangeFilter', () => {
     originalSubjectTree: [],
     subjectOrderList: [],
     availableTables: [],
+    availableTablesWhenQueryApplied: [],
     filteredTables: [],
     availableFilters: {
       subjectTree: [],
