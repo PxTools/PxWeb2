@@ -55,9 +55,9 @@
   width: 100%;
   height: var(--drop-preview-height, 40px);
   border-radius: var(--px-border-radius-medium);
-  --drop-border-dash: 4px;
-  --drop-border-gap: 4px;
-  --drop-border-offset: 4.5px;
+  --drop-border-dash: 5px;
+  --drop-border-gap: 0px;
+  --drop-border-offset: 2.5px;
   border: 0;
   padding: 8px 10px;
   display: flex;
