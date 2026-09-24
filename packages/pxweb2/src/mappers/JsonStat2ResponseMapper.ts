@@ -121,6 +121,7 @@ export function mapJsonStat2Response(
   const metadata: PxTableMetadata = {
     id: response.extension?.px?.tableid ?? '',
     language: response.extension?.px?.language ?? '',
+    availableLanguages: [],
     label: response.label ?? '',
     description: '',
     updated: response.updated ? new Date(response.updated) : new Date(),
