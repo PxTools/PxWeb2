@@ -334,7 +334,10 @@ export function useEChartOption(
 
     resizeObserver?.observe(chartContainer);
 
-    document.fonts?.addEventListener('loadingdone', legendLayout.handleFontLoading);
+    document.fonts?.addEventListener(
+      'loadingdone',
+      legendLayout.handleFontLoading,
+    );
 
     window.addEventListener('resize', legendLayout.handleResize);
 
