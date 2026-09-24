@@ -12,6 +12,7 @@ import {
 import { useEChartOption } from '../Utils/useEChartOption';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
+  getAdaptiveYAxisMin,
   getAdaptiveYAxisMax,
   getAdaptiveYAxisInterval,
   getChartCssVariables,
@@ -174,10 +175,16 @@ export function LineChart({
       return undefined;
     }
 
-    return {
-      min: Math.min(...yAxisValues),
-      max: Math.max(...yAxisValues),
-    };
+    let min = yAxisValues[0];
+    let max = yAxisValues[0];
+
+    for (let index = 1; index < yAxisValues.length; index += 1) {
+      const value = yAxisValues[index];
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+
+    return { min, max };
   }, [yAxisValues]);
   const yAxisBreak = useMemo(() => {
     if (!yAxisDataExtent) {
@@ -193,6 +200,7 @@ export function LineChart({
 
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
+  const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
@@ -242,13 +250,14 @@ export function LineChart({
         axisLabel: { rotate: 45 },
         axisLine: {
           show: true,
+          onZero: false,
         },
         axisTick: { show: true, alignWithLabel: true },
       },
       yAxis: {
         name: dataset.unit,
         scale: false,
-        min: 0,
+        min: yAxisMin,
         max: getAdaptiveYAxisMax,
         interval: yAxisInterval,
         ...(yAxisBreak
@@ -351,6 +360,7 @@ export function LineChart({
     resolvedColors,
     yAxisBreak,
     yAxisInterval,
+    yAxisMin,
     xAxisName,
     visibleLegendData,
     isMediumOrSmallerScreen,
