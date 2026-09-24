@@ -431,3 +431,116 @@ export function applyLegendGap(
     chart.setOption({ grid: { ...grid, bottom: nextBottom } });
   }
 }
+
+export type LegendLayoutController = {
+  update: () => void;
+  handleResize: () => void;
+  handleFontLoading: () => void;
+  scheduleUpdate: () => void;
+  dispose: () => void;
+};
+
+type LegendLayoutControllerOptions = {
+  chart: echarts.EChartsType;
+  chartContainer: HTMLDivElement;
+  option: echarts.EChartsOption;
+  legendGap?: number;
+  lastRenderedLegendHeightRef: { current: number | null };
+  legendLayoutInvalidatedRef: { current: boolean };
+  setRenderedLegendHeight: (height: number | null) => void;
+  applyOption: (legendHeight?: number) => void;
+};
+
+export function createLegendLayoutController({
+  chart,
+  chartContainer,
+  option,
+  legendGap,
+  lastRenderedLegendHeightRef,
+  legendLayoutInvalidatedRef,
+  setRenderedLegendHeight,
+  applyOption,
+}: LegendLayoutControllerOptions): LegendLayoutController {
+  const update = () => {
+    const measuredHeight = getRenderedLegendHeight(chart);
+    const legend = Array.isArray(option.legend)
+      ? option.legend.find((item) => item.orient === 'horizontal')
+      : option.legend;
+    const estimatedHeight = getEstimatedLegendHeight(
+      chart.getWidth(),
+      legend?.data,
+    );
+    const effectiveHeight =
+      measuredHeight === null
+        ? estimatedHeight
+        : Math.max(measuredHeight, estimatedHeight ?? 0);
+
+    if (effectiveHeight === null) {
+      return;
+    }
+
+    const heightChanged =
+      measuredHeight !== null &&
+      measuredHeight !== lastRenderedLegendHeightRef.current;
+    const layoutInvalidated = legendLayoutInvalidatedRef.current;
+    lastRenderedLegendHeightRef.current = effectiveHeight;
+    setRenderedLegendHeight(effectiveHeight);
+
+    if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
+      legendLayoutInvalidatedRef.current = false;
+      applyOption(effectiveHeight);
+    }
+
+    if (typeof legendGap === 'number') {
+      applyLegendGap(chart, option, legendGap);
+    }
+  };
+
+  let measurementFrame: number | undefined;
+  const scheduleUpdate = () => {
+    if (measurementFrame !== undefined) {
+      cancelAnimationFrame(measurementFrame);
+    }
+
+    measurementFrame = requestAnimationFrame(() => {
+      measurementFrame = undefined;
+      update();
+    });
+  };
+
+  let previousWidth = chartContainer.clientWidth;
+  const handleResize = () => {
+    chart.resize();
+
+    const currentWidth = chartContainer.clientWidth;
+    if (currentWidth === previousWidth) {
+      return;
+    }
+
+    previousWidth = currentWidth;
+    legendLayoutInvalidatedRef.current = true;
+    lastRenderedLegendHeightRef.current = null;
+    setRenderedLegendHeight(null);
+    applyOption();
+    scheduleUpdate();
+  };
+
+  const handleFontLoading = () => {
+    chart.resize();
+    legendLayoutInvalidatedRef.current = true;
+    applyOption();
+    scheduleUpdate();
+  };
+
+  return {
+    update,
+    handleResize,
+    handleFontLoading,
+    scheduleUpdate,
+    dispose: () => {
+      if (measurementFrame !== undefined) {
+        cancelAnimationFrame(measurementFrame);
+      }
+    },
+  };
+}

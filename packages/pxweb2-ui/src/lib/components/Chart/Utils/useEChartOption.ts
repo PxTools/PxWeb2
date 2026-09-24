@@ -3,11 +3,9 @@ import * as echarts from 'echarts';
 
 import { getChartCssVariables } from '../Utils/chartHelper';
 import {
-  applyLegendGap,
   applyResponsiveLegend,
-  getEstimatedLegendHeight,
+  createLegendLayoutController,
   getGridRect,
-  getRenderedLegendHeight,
 } from './chartLegendHelper';
 
 // Re-export legend helpers to preserve the public import surface used by chart consumers and tests.
@@ -293,45 +291,7 @@ export function useEChartOption(
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
-    const updateRenderedLegendHeight = () => {
-      const measuredHeight = getRenderedLegendHeight(chart);
-
-      const legend = Array.isArray(option.legend)
-        ? option.legend.find((item) => item.orient === 'horizontal')
-        : option.legend;
-      const estimatedHeight = getEstimatedLegendHeight(
-        chart.getWidth(),
-        legend?.data,
-      );
-      const effectiveHeight =
-        measuredHeight === null
-          ? estimatedHeight
-          : Math.max(measuredHeight, estimatedHeight ?? 0);
-
-      if (effectiveHeight === null) {
-        return;
-      }
-
-      const heightChanged =
-        measuredHeight !== null &&
-        measuredHeight !== lastRenderedLegendHeightRef.current;
-      const layoutInvalidated = legendLayoutInvalidatedRef.current;
-      lastRenderedLegendHeightRef.current = effectiveHeight;
-      setRenderedLegendHeight((previousHeight) =>
-        previousHeight === effectiveHeight ? previousHeight : effectiveHeight,
-      );
-
-      if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
-        legendLayoutInvalidatedRef.current = false;
-        applyOption(effectiveHeight, false);
-      }
-
-      if (typeof legendGap === 'number') {
-        applyLegendGap(chart, option, legendGap);
-      }
-    };
-
-    const applyOption = (legendHeight?: number, measure = true) => {
+    const applyOption = (legendHeight?: number) => {
       // Apply the new selection or legend state first. The legend can only be
       // measured after ECharts has rendered the updated option.
       applyOptionWithWrappedTitle(
@@ -345,77 +305,48 @@ export function useEChartOption(
       );
 
       applyYAxisBreakMark(chart, option);
-      if (measure) {
-        updateRenderedLegendHeight();
-      }
     };
 
-    let measurementFrame: number | undefined;
-    const measureAfterLayout = () => {
-      if (measurementFrame !== undefined) {
-        cancelAnimationFrame(measurementFrame);
-      }
+    const legendLayout = createLegendLayoutController({
+      chart,
+      chartContainer,
+      option,
+      legendGap,
+      lastRenderedLegendHeightRef,
+      legendLayoutInvalidatedRef,
+      setRenderedLegendHeight: (height) => {
+        setRenderedLegendHeight((previousHeight) =>
+          previousHeight === height ? previousHeight : height,
+        );
+      },
+      applyOption,
+    });
 
-      measurementFrame = requestAnimationFrame(() => {
-        measurementFrame = undefined;
-        updateRenderedLegendHeight();
-      });
-    };
-
-    chart.on?.('finished', measureAfterLayout);
+    chart.on?.('finished', legendLayout.scheduleUpdate);
 
     applyOption();
-
-    let previousWidth = chartContainer.clientWidth;
-
-    const handleResize = () => {
-      chart.resize();
-
-      // Height changes can be caused by the legend itself. Reacting to those
-      // changes would clear the measured height and create a resize loop.
-      const currentWidth = chartContainer.clientWidth;
-      const widthChanged = currentWidth !== previousWidth;
-
-      if (widthChanged) {
-        previousWidth = currentWidth;
-        legendLayoutInvalidatedRef.current = true;
-        // Use the responsive fallback while the resized legend is being laid
-        // out. The previous layout can be too short for the new text wrap.
-        lastRenderedLegendHeightRef.current = null;
-        setRenderedLegendHeight(null);
-        applyOption(undefined, false);
-        measureAfterLayout();
-      }
-    };
+    legendLayout.update();
 
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? null
-        : new ResizeObserver(() => {
-            handleResize();
-          });
+        : new ResizeObserver(legendLayout.handleResize);
 
     resizeObserver?.observe(chartContainer);
 
-    const handleFontLoading = () => {
-      chart.resize();
-      legendLayoutInvalidatedRef.current = true;
-      applyOption(undefined, false);
-      measureAfterLayout();
-    };
+    document.fonts?.addEventListener('loadingdone', legendLayout.handleFontLoading);
 
-    document.fonts?.addEventListener('loadingdone', handleFontLoading);
-
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', legendLayout.handleResize);
 
     return () => {
       resizeObserver?.disconnect();
-      document.fonts?.removeEventListener('loadingdone', handleFontLoading);
-      window.removeEventListener('resize', handleResize);
-      if (measurementFrame !== undefined) {
-        cancelAnimationFrame(measurementFrame);
-      }
-      chart.off?.('finished', measureAfterLayout);
+      document.fonts?.removeEventListener(
+        'loadingdone',
+        legendLayout.handleFontLoading,
+      );
+      window.removeEventListener('resize', legendLayout.handleResize);
+      chart.off?.('finished', legendLayout.scheduleUpdate);
+      legendLayout.dispose();
       chartRef.current = null;
       chart.dispose();
     };
