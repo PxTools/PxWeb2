@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.12.0](https://github.com/PxTools/PxWeb2/compare/v2.11.0...v2.12.0) (2026-09-24)
+
+
+### :sparkles: Features
+
+* chart tooltip improvements ([#1466](https://github.com/PxTools/PxWeb2/issues/1466)) ([8ff60a3](https://github.com/PxTools/PxWeb2/commit/8ff60a3415301d9e1cb33c42323d2d74435cf744))
+* Show break in y-axis ([#1490](https://github.com/PxTools/PxWeb2/issues/1490)) ([6c46c20](https://github.com/PxTools/PxWeb2/commit/6c46c20d5ed8547c009ec255532c64ca884e762e))
+
+
+### :bug: Bug Fixes
+
+* linegraph y-axis allways started on 0, even if there were negative values to plot ([3173aa0](https://github.com/PxTools/PxWeb2/commit/3173aa0472eab729820d1f17fa7a3e32cad42d65))
+* Range error on large indexes when spread to Math.min and Math.max ([61a9be2](https://github.com/PxTools/PxWeb2/commit/61a9be2c2bf0cfe8376227205430327986f40025))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump eslint from 10.9.1 to 10.10.0 ([#1503](https://github.com/PxTools/PxWeb2/issues/1503)) ([719a8e4](https://github.com/PxTools/PxWeb2/commit/719a8e494aceecedc5a8ad2b8d82ccc467dfc225))
+* **deps-dev:** bump html-validate from 11.11.0 to 11.13.0 ([#1501](https://github.com/PxTools/PxWeb2/issues/1501)) ([6bcca7f](https://github.com/PxTools/PxWeb2/commit/6bcca7fd476fb98dbe3f43c418fa7e3184fdf2db))
+* **deps-dev:** bump playwright from 1.62.1 to 1.63.0 ([#1499](https://github.com/PxTools/PxWeb2/issues/1499)) ([d84ac56](https://github.com/PxTools/PxWeb2/commit/d84ac568a2e282212a6bde81db984a1cdedf7b96))
+* **deps-dev:** bump wrangler from 4.127.1 to 4.129.0 ([#1502](https://github.com/PxTools/PxWeb2/issues/1502)) ([d78e963](https://github.com/PxTools/PxWeb2/commit/d78e963521e8183a46d2bcf298cfda6a8bba2a9a))
+* **deps:** bump chromaui/action from 18.7.1 to 18.7.2 ([#1500](https://github.com/PxTools/PxWeb2/issues/1500)) ([59daf27](https://github.com/PxTools/PxWeb2/commit/59daf274b2c2774298d3b756b078a8f6bc861e1b))
+* **deps:** bump docker/setup-qemu-action from 4.2.0 to 4.3.0 ([#1497](https://github.com/PxTools/PxWeb2/issues/1497)) ([82d082e](https://github.com/PxTools/PxWeb2/commit/82d082ea8ada472852ea9e28a28a9e6d3fa9b79a))
+
+
+### :broom: Chores
+
+* Fix eslint 10 compatability ([#1480](https://github.com/PxTools/PxWeb2/issues/1480)) ([f18cccf](https://github.com/PxTools/PxWeb2/commit/f18cccfa6595fbca880f77ec17a17cc0d7bf7b20))
+* update dependencies across packages  ([37b71ab](https://github.com/PxTools/PxWeb2/commit/37b71ab0949714b370eaba1b2ba39daf18586e4c))
+* update dependencies across packages ([#1505](https://github.com/PxTools/PxWeb2/issues/1505))  ([8fb8c8a](https://github.com/PxTools/PxWeb2/commit/8fb8c8a6be35163e7824a931b76c3f15d11b6e4d))
+* Upgrade eslint from v9 to v10 ([#1481](https://github.com/PxTools/PxWeb2/issues/1481)) ([1905bb9](https://github.com/PxTools/PxWeb2/commit/1905bb94c9b302468de8963d49c8a73fe23d70c1))
+
 ## [2.11.0](https://github.com/PxTools/PxWeb2/compare/v2.10.0...v2.11.0) (2026-09-10)
 
 
