@@ -333,7 +333,9 @@ export function useEChartOption(
       applyOption,
     });
 
-    // Listen for the 'finished' event from ECharts to schedule a legend layout update.
+    // Make the Legend layout controller react to chart updates and browser events:
+
+    // 1. Listen for the 'finished' event from ECharts to schedule a legend layout update.
     // The finished event fires after ECharts has finished rendering or updating the chart.
     // At that point, the legend has been drawn and can be measured accurately.
     chart.on?.('finished', legendLayout.scheduleUpdate);
@@ -341,6 +343,7 @@ export function useEChartOption(
     applyOption();
     legendLayout.update();
 
+    // 2. Observe the chart container for size changes using the ResizeObserver API.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? null
@@ -348,15 +351,17 @@ export function useEChartOption(
 
     resizeObserver?.observe(chartContainer);
 
-    // Listen for the browser’s loadingdone event, which fires when document fonts have finished loading
+    // 3.Listen for the browser’s loadingdone event, which fires when document fonts have finished loading
     document.fonts?.addEventListener(
       'loadingdone',
       legendLayout.handleFontLoading,
     );
 
+    // 4. Listen for the browser’s resize event to update the legend layout.
     window.addEventListener('resize', legendLayout.handleResize);
 
     return () => {
+      // Clean up the ResizeObserver, font loading event listener, and window resize event listener.
       resizeObserver?.disconnect();
       document.fonts?.removeEventListener(
         'loadingdone',
