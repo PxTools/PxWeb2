@@ -359,13 +359,27 @@ export function applyResponsiveLegend(
   };
 }
 
+/**
+ * The small part of the ECharts API needed to measure rendered legends.
+ *
+ * These methods are optional because ECharts does not expose all of them in
+ * its public TypeScript type, and they may not be available until the chart
+ * has finished rendering. The chart is cast to this type only when measuring
+ * the actual legend height.
+ */
 type LegendMeasurableChart = {
+  /** Gives access to ECharts' internal component model. */
   getModel?: () =>
     | {
+        /** Finds one component of the requested type, such as `legend`. */
         getComponent?: (mainType: string) => unknown;
+
+        /** Finds all components of the requested type, including multiple legends. */
         getComponentsByType?: (mainType: string) => unknown[];
       }
     | undefined;
+
+  /** Gets the rendered view for a specific ECharts component model. */
   getViewOfComponentModel?: (
     componentModel: unknown,
   ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
@@ -433,24 +447,63 @@ export function applyLegendGap(
 }
 
 export type LegendLayoutController = {
+  /** Measures the legend immediately and updates the chart layout if needed. */
   update: () => void;
+
+  /** Resizes the chart and schedules a new legend measurement after the container changes size. */
   handleResize: () => void;
+
+  /** Recalculates the legend layout after document fonts finish loading. */
   handleFontLoading: () => void;
+
+  /** Queues one legend measurement on the next animation frame. */
   scheduleUpdate: () => void;
+
+  /** Cancels any pending measurement when the chart is being destroyed. */
   dispose: () => void;
 };
 
 type LegendLayoutControllerOptions = {
+  /** The ECharts instance whose legend and grid are being managed. */
   chart: echarts.EChartsType;
+
+  /** The DOM element whose width is used to detect layout changes. */
   chartContainer: HTMLDivElement;
+
+  /** The original chart option containing the legend configuration and data. */
   option: echarts.EChartsOption;
+
+  /** The spacing, in pixels, between the plot area and the legend. */
   legendGap?: number;
+
+  /** Stores the most recently rendered legend height without causing a React render. */
   lastRenderedLegendHeightRef: { current: number | null };
+
+  /** Indicates that a resize or font change requires the legend layout to be recalculated. */
   legendLayoutInvalidatedRef: { current: boolean };
+
+  /** Updates React state with the latest measured or estimated legend height. */
   setRenderedLegendHeight: (height: number | null) => void;
+
+  /** Applies updated ECharts options after the legend height is known. */
   applyOption: (legendHeight?: number) => void;
 };
 
+/**
+ * Creates a controller that keeps the responsive legend layout in sync with
+ * the rendered ECharts chart.
+ *
+ * The controller measures the legend after ECharts renders, falls back to an
+ * estimated height when measurement is not available yet, and reports the
+ * effective height to React. When the chart width or loaded fonts change, it
+ * invalidates the layout, reapplies the chart options, and schedules a new
+ * measurement on the next animation frame.
+ *
+ * Call `update` for the initial measurement, `scheduleUpdate` after ECharts
+ * finishes rendering, and the resize/font handlers when the surrounding
+ * layout changes. Call `dispose` when the chart is destroyed to cancel any
+ * pending measurement.
+ */
 export function createLegendLayoutController({
   chart,
   chartContainer,
@@ -461,47 +514,73 @@ export function createLegendLayoutController({
   setRenderedLegendHeight,
   applyOption,
 }: LegendLayoutControllerOptions): LegendLayoutController {
+  // Measure the legend and use the result to keep the chart height and grid
+  // spacing in sync with the legend that ECharts actually rendered.
   const update = () => {
+    // ECharts can expose the real rendered height after drawing the legend.
     const measuredHeight = getRenderedLegendHeight(chart);
+
+    // Find the horizontal legend because that is the legend whose height this
+    // controller manages. Vertical legends have a different layout strategy.
     const legend = Array.isArray(option.legend)
       ? option.legend.find((item) => item.orient === 'horizontal')
       : option.legend;
+
+    // Before ECharts has rendered the legend, estimate its height from the
+    // chart width and labels so the chart still has a usable initial height.
     const estimatedHeight = getEstimatedLegendHeight(
       chart.getWidth(),
       legend?.data,
     );
+
+    // Prefer the real measurement, but never use less space than the estimate.
     const effectiveHeight =
       measuredHeight === null
         ? estimatedHeight
         : Math.max(measuredHeight, estimatedHeight ?? 0);
 
+    // There is no legend height to apply when the legend has no data and no
+    // rendered measurement is available.
     if (effectiveHeight === null) {
       return;
     }
 
+    // A changed measured height or an invalidated layout means ECharts needs
+    // to receive updated legend options.
     const heightChanged =
       measuredHeight !== null &&
       measuredHeight !== lastRenderedLegendHeightRef.current;
     const layoutInvalidated = legendLayoutInvalidatedRef.current;
+
+    // Keep both the non-rendering ref and the React state in sync. The ref is
+    // used for comparisons; the state lets the chart component recalculate
+    // its rendered height.
     lastRenderedLegendHeightRef.current = effectiveHeight;
     setRenderedLegendHeight(effectiveHeight);
 
+    // Only reapply options after a real ECharts measurement is available. An
+    // estimate is enough for sizing but should not trigger a layout loop.
     if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
       legendLayoutInvalidatedRef.current = false;
       applyOption(effectiveHeight);
     }
 
+    // Keep the requested gap between the plot area and the legend in pixels.
     if (typeof legendGap === 'number') {
       applyLegendGap(chart, option, legendGap);
     }
   };
 
+  // Store the scheduled frame so repeated events can replace it instead of
+  // creating several measurements for the same layout change.
   let measurementFrame: number | undefined;
   const scheduleUpdate = () => {
     if (measurementFrame !== undefined) {
       cancelAnimationFrame(measurementFrame);
     }
 
+    // Wait until the browser has completed the current rendering work before
+    // measuring the legend, ensuring that its dimensions are up to date.
     measurementFrame = requestAnimationFrame(() => {
       measurementFrame = undefined;
       update();
@@ -510,6 +589,8 @@ export function createLegendLayoutController({
 
   let previousWidth = chartContainer.clientWidth;
   const handleResize = () => {
+    // Let ECharts recalculate its internal dimensions before measuring the
+    // legend again.
     chart.resize();
 
     const currentWidth = chartContainer.clientWidth;
@@ -517,6 +598,8 @@ export function createLegendLayoutController({
       return;
     }
 
+    // A width change can alter column count and text wrapping, so discard the
+    // old height and rebuild the legend layout after rendering completes.
     previousWidth = currentWidth;
     legendLayoutInvalidatedRef.current = true;
     lastRenderedLegendHeightRef.current = null;
@@ -526,6 +609,8 @@ export function createLegendLayoutController({
   };
 
   const handleFontLoading = () => {
+    // Loaded fonts can change label widths and wrapping even when the chart
+    // container itself has not changed size.
     chart.resize();
     legendLayoutInvalidatedRef.current = true;
     applyOption();
