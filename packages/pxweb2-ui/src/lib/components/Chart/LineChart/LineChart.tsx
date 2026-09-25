@@ -65,11 +65,15 @@ export function downloadChartImage(
     .replace(/[^a-z0-9]+/gi, '-')
     .replace(/^-|-$/g, '');
 
-  chart.setOption({ title: [{ show: true }, { show: true }] });
+  chart.setOption({
+    title: [{ show: true }, { show: true }],
+  });
   try {
     link.href = chart.getDataURL({ type });
   } finally {
-    chart.setOption({ title: [{ show: false }, { show: false }] });
+    chart.setOption({
+      title: [{ show: false }, { show: false }],
+    });
   }
   link.download = `${filename || 'chart'}.${type}`;
   link.click();
@@ -237,7 +241,7 @@ export function LineChart({
           subtext: staticTitle,
           left: 'left',
           show: false,
-          bottom: '10',
+          bottom: '0',
         },
       ],
 
@@ -274,7 +278,7 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        bottom: 0,
+        bottom: 80,
       },
       series,
       tooltip: {
