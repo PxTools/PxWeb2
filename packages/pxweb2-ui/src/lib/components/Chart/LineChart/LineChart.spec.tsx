@@ -160,7 +160,6 @@ describe('LineChart', () => {
       bottom: 0,
       textStyle: {
         overflow: 'break',
-        lineHeight: 20,
       },
     });
 
