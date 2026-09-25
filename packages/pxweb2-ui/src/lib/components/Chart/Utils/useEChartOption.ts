@@ -269,10 +269,19 @@ export function useEChartOption(
   renderer: 'canvas' | 'svg' = 'svg',
   legendGap?: number,
 ) {
+  // Ref to the chart container div and the ECharts instance.
   const divRef = useRef<HTMLDivElement | null>(null);
+
+  // Ref to the ECharts instance.
   const chartRef = useRef<echarts.EChartsType | null>(null);
+
+  // Ref to store the last rendered legend height, used to determine if a re-render is necessary.
   const lastRenderedLegendHeightRef = useRef<number | null>(null);
+
+  // Ref to store whether the legend layout is invalidated and needs to be recalculated.
   const legendLayoutInvalidatedRef = useRef(false);
+
+  // State to store the currently rendered legend height, used to trigger re-renders when it changes.
   const [renderedLegendHeight, setRenderedLegendHeight] = useState<
     number | null
   >(null);
@@ -284,6 +293,7 @@ export function useEChartOption(
       return;
     }
 
+    // Reset the last rendered legend height and the current rendered legend height before initializing the chart.
     lastRenderedLegendHeightRef.current = null;
     setRenderedLegendHeight(null);
 
@@ -307,6 +317,7 @@ export function useEChartOption(
       applyYAxisBreakMark(chart, option);
     };
 
+    // Create the legend layout controller, which manages the layout and updates of the chart legend.
     const legendLayout = createLegendLayoutController({
       chart,
       chartContainer,
@@ -322,6 +333,9 @@ export function useEChartOption(
       applyOption,
     });
 
+    // Listen for the 'finished' event from ECharts to schedule a legend layout update.
+    // The finished event fires after ECharts has finished rendering or updating the chart.
+    // At that point, the legend has been drawn and can be measured accurately.
     chart.on?.('finished', legendLayout.scheduleUpdate);
 
     applyOption();
@@ -334,6 +348,7 @@ export function useEChartOption(
 
     resizeObserver?.observe(chartContainer);
 
+    // Listen for the browser’s loadingdone event, which fires when document fonts have finished loading
     document.fonts?.addEventListener(
       'loadingdone',
       legendLayout.handleFontLoading,
