@@ -124,6 +124,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={colors}
         translations={mockTranslations}
+        staticTitle="Statisk tittel"
       />,
     );
 
@@ -136,7 +137,7 @@ describe('LineChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      bottom: 0,
+      bottom: 80,
     });
 
     expect(option.yAxis).toMatchObject({
@@ -167,7 +168,13 @@ describe('LineChart', () => {
       fontColor: undefined,
     });
 
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Statisk tittel"
+      />,
+    );
 
     expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
@@ -190,6 +197,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={[]}
         translations={mockTranslations}
+        staticTitle="Statisk tittel"
       />,
     );
 
@@ -203,7 +211,11 @@ describe('LineChart', () => {
 
   it('renders chart container with height based on number of series', () => {
     const { container } = render(
-      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Statisk tittel"
+      />,
     );
 
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
@@ -215,7 +227,13 @@ describe('LineChart', () => {
   });
 
   it('returns empty tooltip text for empty params', () => {
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Statisk tittel"
+      />,
+    );
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -225,7 +243,13 @@ describe('LineChart', () => {
   });
 
   it('formats tooltip rows with symbol svg, labels, values and fallback color', () => {
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Statisk tittel"
+      />,
+    );
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -274,6 +298,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           isMediumOrSmallerScreen={true}
           translations={mockTranslations}
+          staticTitle="Statisk tittel"
         />,
       );
 
@@ -300,6 +325,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           isMediumOrSmallerScreen={false}
           translations={mockTranslations}
+          staticTitle="Statisk tittel"
         />,
       );
 
@@ -314,6 +340,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           isMediumOrSmallerScreen={true}
           translations={mockTranslations}
+          staticTitle="Statisk tittel"
         />,
       );
 
@@ -342,6 +369,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           isMediumOrSmallerScreen={true}
           translations={mockTranslations}
+          staticTitle="Statisk tittel"
         />,
       );
 
@@ -373,7 +401,11 @@ describe('LineChart', () => {
 it('renders empty state when multiple units are selected', () => {
   vi.mocked(checkMultipleUnits).mockReturnValue(true);
   const { getByText } = render(
-    <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+    <LineChart
+      pxtable={mockPxTable}
+      translations={mockTranslations}
+      staticTitle="Statisk tittel"
+    />,
   );
   expect(getByText('Cannot display chart')).toBeTruthy();
 });
