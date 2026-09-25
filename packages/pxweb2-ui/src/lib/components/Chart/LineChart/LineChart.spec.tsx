@@ -25,6 +25,7 @@ vi.mock('../Utils/chartDataMapper', () => ({
 }));
 
 vi.mock('../Utils/useEChartOption', () => ({
+  getFallbackLegendHeight: vi.fn(() => 120),
   useEChartOption: vi.fn(),
 }));
 
@@ -128,6 +129,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
+      renderedLegendHeight: null,
     });
   });
 
@@ -153,7 +155,10 @@ describe('LineChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      bottom: 0,
+      orient: 'horizontal',
+      textStyle: {
+        overflow: 'break',
+      },
     });
 
     expect(option.yAxis).toMatchObject({
@@ -169,6 +174,7 @@ describe('LineChart', () => {
     });
     expect(option.grid).toEqual({
       top: 36,
+      height: 392,
       bottom: 156,
       left: '0',
       right: '0',
@@ -247,7 +253,7 @@ describe('LineChart', () => {
     );
   });
 
-  it('renders chart container with height based on number of series', () => {
+  it('keeps the plot height stable and adds space for the legend', () => {
     const { container } = render(
       <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
     );
@@ -257,7 +263,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('38.4rem'); // 36 + 3 * 0.8 = 38.4
+    expect(chartDiv?.style.height).toBe('38.75rem'); // 29 + (3 * 40 + 36) / 16
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
@@ -308,6 +314,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      renderedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
@@ -365,6 +372,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      renderedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);

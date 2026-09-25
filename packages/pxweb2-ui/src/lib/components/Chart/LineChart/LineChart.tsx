@@ -9,7 +9,11 @@ import {
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
-import { useEChartOption } from '../Utils/useEChartOption';
+import {
+  getFallbackLegendHeight,
+  useEChartOption,
+} from '../Utils/useEChartOption';
+import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
@@ -38,9 +42,9 @@ type TooltipParam = {
   color?: string;
 };
 
-const LEGEND_ITEM_HEIGHT = 40;
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
+const CHART_PLOT_HEIGHT_REM = 29;
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
@@ -83,7 +87,6 @@ export function LineChart({
   isMediumOrSmallerScreen = false,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
-
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing
@@ -125,6 +128,7 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
+
   const yAxisValues = useMemo(() => {
     return dataset.source
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
@@ -160,10 +164,11 @@ export function LineChart({
 
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
-  const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
+  const pixelsPerRem = useResponsivePixelsPerRem();
+  const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
   const option = useMemo<echarts.EChartsOption>(() => {
-    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, 'line', resolvedColors).map(
       (seriesOption) => ({
         ...seriesOption,
@@ -177,7 +182,11 @@ export function LineChart({
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
+        height:
+          CHART_PLOT_HEIGHT_REM * pixelsPerRem -
+          TOP_CHART_PADDING -
+          X_AXIS_LABEL_TO_LEGEND_GAP,
+        bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: '0',
         right: '0',
         //'same' keeps axis labels inside the grid rect
@@ -218,7 +227,10 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        bottom: 0,
+        orient: 'horizontal',
+        textStyle: {
+          overflow: 'break',
+        },
       },
       series,
       tooltip: {
@@ -307,15 +319,22 @@ export function LineChart({
     yAxisInterval,
     yAxisMin,
     xAxisName,
-    visibleLegendData,
     isMediumOrSmallerScreen,
+    visibleLegendData,
+    pixelsPerRem,
   ]);
 
-  const { divRef, chartRef } = useEChartOption(
+  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
     option,
     'svg',
     X_AXIS_LABEL_TO_LEGEND_GAP,
   );
+
+  const calculatedLegendHeight =
+    renderedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
+  const height =
+    CHART_PLOT_HEIGHT_REM +
+    (X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) / pixelsPerRem;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
@@ -396,8 +415,6 @@ export function LineChart({
       zrender?.off('click', handleChartClick);
     };
   }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
-
-  const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <>

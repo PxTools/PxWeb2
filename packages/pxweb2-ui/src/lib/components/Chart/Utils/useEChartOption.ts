@@ -1,7 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 
 import { getChartCssVariables } from '../Utils/chartHelper';
+import {
+  applyResponsiveLegend,
+  createLegendLayoutController,
+  getGridRect,
+} from './chartLegendHelper';
+
+// Re-export legend helpers to preserve the public import surface used by chart consumers and tests.
+export {
+  getFallbackLegendHeight,
+  getEstimatedLegendHeight,
+  getLegendColumnCount,
+} from './chartLegendHelper';
 
 const textStyle = {
   fontFamily: 'PxWeb-font, sans-serif',
@@ -26,15 +38,21 @@ function applyOptionWithWrappedTitle(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
 ) {
+  // Keep option updates in one place so legend entries removed from the new
+  // option are also removed from the chart instead of being kept by ECharts.
+  const setOption = (nextOption: echarts.EChartsOption) => {
+    chart.setOption(nextOption, { replaceMerge: ['legend'] });
+  };
+
   if (!isSingleTitleOption(option.title)) {
-    chart.setOption(option);
+    setOption(option);
     return;
   }
 
   const titleTextStyle = option.title.textStyle ?? {};
   const titleWidth = Math.max(80, chart.getWidth() - 32);
 
-  chart.setOption({
+  setOption({
     ...option,
     title: {
       ...option.title,
@@ -49,28 +67,6 @@ function applyOptionWithWrappedTitle(
       },
     },
   });
-}
-
-type LegendMeasurableChart = {
-  getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
-  getViewOfComponentModel?: (
-    componentModel: unknown,
-  ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
-};
-
-function getRenderedLegendHeight(chart: echarts.EChartsType): number | null {
-  const measurable = chart as unknown as LegendMeasurableChart;
-  const legendModel = measurable.getModel?.()?.getComponent?.('legend');
-
-  if (!legendModel) {
-    return null;
-  }
-
-  const height = measurable
-    .getViewOfComponentModel?.(legendModel)
-    ?.group?.getBoundingRect?.().height;
-
-  return typeof height === 'number' && Number.isFinite(height) ? height : null;
 }
 
 function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
@@ -168,25 +164,6 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
   };
 }
 
-// Keeps a constant distance between the x axis labels and the legend, no matter how many legend rows are rendered.
-function applyLegendGap(
-  chart: echarts.EChartsType,
-  option: echarts.EChartsOption,
-  legendGap: number,
-) {
-  const legendHeight = getRenderedLegendHeight(chart);
-
-  if (legendHeight === null) {
-    return;
-  }
-
-  const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
-
-  chart.setOption({
-    grid: { ...grid, bottom: Math.round(legendHeight + legendGap) },
-  });
-}
-
 type BreakMeasurableChart = {
   getModel?: () => { getComponent?: (mainType: string) => unknown } | undefined;
   convertToPixel?: (
@@ -212,26 +189,6 @@ function getYAxisBreakRange(
   }
 
   return { start: singleBreak.start, end: singleBreak.end };
-}
-
-function getGridRect(
-  chart: echarts.EChartsType,
-): { x: number; y: number; width: number; height: number } | null {
-  const measurable = chart as unknown as BreakMeasurableChart;
-  const gridModel = measurable.getModel?.()?.getComponent?.('grid') as
-    | {
-        coordinateSystem?: {
-          getRect?: () => {
-            x: number;
-            y: number;
-            width: number;
-            height: number;
-          };
-        };
-      }
-    | undefined;
-
-  return gridModel?.coordinateSystem?.getRect?.() ?? null;
 }
 
 // Draws a compact "//" mark directly on the y-axis at the break, instead of relying on
@@ -312,52 +269,116 @@ export function useEChartOption(
   renderer: 'canvas' | 'svg' = 'svg',
   legendGap?: number,
 ) {
+  // Ref to the chart container div and the ECharts instance.
   const divRef = useRef<HTMLDivElement | null>(null);
+
+  // Ref to the ECharts instance.
   const chartRef = useRef<echarts.EChartsType | null>(null);
 
+  // Ref to store the last rendered legend height, used to determine if a re-render is necessary.
+  const lastRenderedLegendHeightRef = useRef<number | null>(null);
+
+  // Ref to store whether the legend layout is invalidated and needs to be recalculated.
+  const legendLayoutInvalidatedRef = useRef(false);
+
+  // State to store the currently rendered legend height, used to trigger re-renders when it changes.
+  const [renderedLegendHeight, setRenderedLegendHeight] = useState<
+    number | null
+  >(null);
+
+  // The legend height is measured by ECharts, then used by LineChart to set
+  // the total chart height (plot area + gap + legend).
   useEffect(() => {
     if (!divRef.current) {
       return;
     }
 
+    // Reset the last rendered legend height and the current rendered legend height before initializing the chart.
+    lastRenderedLegendHeightRef.current = null;
+    setRenderedLegendHeight(null);
+
     const chartContainer = divRef.current;
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
-    const applyOption = () => {
-      applyOptionWithWrappedTitle(chart, applyStyling(option));
-
-      if (typeof legendGap === 'number') {
-        applyLegendGap(chart, option, legendGap);
-      }
+    const applyOption = (legendHeight?: number) => {
+      // Apply the new selection or legend state first. The legend can only be
+      // measured after ECharts has rendered the updated option.
+      applyOptionWithWrappedTitle(
+        chart,
+        applyResponsiveLegend(
+          chart,
+          applyStyling(option),
+          legendHeight,
+          legendGap,
+        ),
+      );
 
       applyYAxisBreakMark(chart, option);
     };
 
+    // Create the legend layout controller, which manages the layout and updates of the chart legend.
+    const legendLayout = createLegendLayoutController({
+      chart,
+      chartContainer,
+      option,
+      legendGap,
+      lastRenderedLegendHeightRef,
+      legendLayoutInvalidatedRef,
+      setRenderedLegendHeight: (height) => {
+        setRenderedLegendHeight((previousHeight) =>
+          previousHeight === height ? previousHeight : height,
+        );
+      },
+      applyOption,
+    });
+
+    // Make the Legend layout controller react to chart updates and browser events:
+
+    // 1. Listen for the 'finished' event from ECharts to schedule a legend layout update.
+    // The finished event fires after ECharts has finished rendering or updating the chart.
+    // At that point, the legend has been drawn and can be measured accurately.
+    chart.on?.('finished', legendLayout.scheduleUpdate);
+
     applyOption();
+    legendLayout.update();
 
-    const handleResize = () => {
-      chart.resize();
-    };
-
+    // 2. Observe the chart container for size changes using the ResizeObserver API.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? null
-        : new ResizeObserver(() => {
-            handleResize();
-          });
+        : new ResizeObserver(legendLayout.handleResize);
 
     resizeObserver?.observe(chartContainer);
 
-    window.addEventListener('resize', handleResize);
+    // 3.Listen for the browser’s loadingdone event, which fires when document fonts have finished loading
+    document.fonts?.addEventListener(
+      'loadingdone',
+      legendLayout.handleFontLoading,
+    );
+
+    // 4. Listen for the browser’s resize event to update the legend layout.
+    window.addEventListener('resize', legendLayout.handleResize);
 
     return () => {
+      // Clean up the ResizeObserver, font loading event listener, and window resize event listener.
       resizeObserver?.disconnect();
-      window.removeEventListener('resize', handleResize);
+      document.fonts?.removeEventListener(
+        'loadingdone',
+        legendLayout.handleFontLoading,
+      );
+      window.removeEventListener('resize', legendLayout.handleResize);
+      chart.off?.('finished', legendLayout.scheduleUpdate);
+      legendLayout.dispose();
       chartRef.current = null;
       chart.dispose();
     };
   }, [option, renderer, legendGap]);
 
-  return { divRef, chartRef };
+  return {
+    divRef,
+    chartRef,
+    renderedLegendHeight:
+      renderedLegendHeight ?? lastRenderedLegendHeightRef.current,
+  };
 }
