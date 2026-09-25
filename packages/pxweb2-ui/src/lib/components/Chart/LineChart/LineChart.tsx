@@ -13,6 +13,7 @@ import {
   getFallbackLegendHeight,
   useEChartOption,
 } from '../Utils/useEChartOption';
+import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
@@ -45,48 +46,6 @@ const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
 const CHART_PLOT_HEIGHT_REM = 29;
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
-
-function getPixelsPerRem(): number {
-  if (typeof document === 'undefined') {
-    return 16;
-  }
-
-  const rootFontSize = Number.parseFloat(
-    getComputedStyle(document.documentElement).fontSize,
-  );
-
-  return Number.isFinite(rootFontSize) && rootFontSize > 0 ? rootFontSize : 16;
-}
-
-function useResponsivePixelsPerRem(): number {
-  const [pixelsPerRem, setPixelsPerRem] = useState(getPixelsPerRem);
-
-  useEffect(() => {
-    const updatePixelsPerRem = () => {
-      const nextPixelsPerRem = getPixelsPerRem();
-      setPixelsPerRem((previousPixelsPerRem) =>
-        previousPixelsPerRem === nextPixelsPerRem
-          ? previousPixelsPerRem
-          : nextPixelsPerRem,
-      );
-    };
-
-    const resizeObserver =
-      typeof ResizeObserver === 'undefined'
-        ? null
-        : new ResizeObserver(updatePixelsPerRem);
-
-    resizeObserver?.observe(document.documentElement);
-    window.addEventListener('resize', updatePixelsPerRem);
-
-    return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener('resize', updatePixelsPerRem);
-    };
-  }, []);
-
-  return pixelsPerRem;
-}
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -274,7 +233,6 @@ export function LineChart({
         bottom: 0,
         textStyle: {
           overflow: 'break',
-          lineHeight: 20,
         },
       },
       series,
