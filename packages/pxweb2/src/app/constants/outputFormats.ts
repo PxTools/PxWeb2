@@ -9,6 +9,16 @@ export interface FileFormat {
 
 export const fileFormats: FileFormat[] = [
   {
+    value: 'png',
+    outputFormat: OutputFormatType.PNG,
+    iconName: 'FileImage',
+  },
+  {
+    value: 'svg',
+    outputFormat: OutputFormatType.SVG,
+    iconName: 'FileImage',
+  },
+  {
     value: 'excel',
     outputFormat: OutputFormatType.XLSX,
     iconName: 'FileText',
