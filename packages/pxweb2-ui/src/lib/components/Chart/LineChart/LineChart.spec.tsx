@@ -129,6 +129,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
+      renderedLegendHeight: null,
     });
   });
 
@@ -155,9 +156,6 @@ describe('LineChart', () => {
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
       orient: 'horizontal',
-      left: 0,
-      right: 0,
-      bottom: 0,
       textStyle: {
         overflow: 'break',
       },
@@ -316,6 +314,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      renderedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
@@ -373,6 +372,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      renderedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
