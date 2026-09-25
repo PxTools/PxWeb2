@@ -198,7 +198,7 @@
             "title": "تحسين تخطيط الجدول",
             "aria_label": "تحسين تخطيط الجدول",
             "description": "ينظم الصفوف والأعمدة تلقائيًا لتخطيط جدول أوضح",
-            "screen_reader_announcement": "تم تحسين تخطيط الجدول وتنظيمه بعد {{first_variables}} و {{last_variable}}"
+            "screen_reader_announcement": "تم تحسين تخطيط الجدول وتنظيمه بعد {{table_heading}}"
           },
           "pivot": {
             "title": "تدوير الجدول",
@@ -206,10 +206,26 @@
             "description": "",
             "screen_reader_announcement": "جدول مدور بعد {{first_variables}} و {{last_variable}}"
           },
-          "rearrange": {
+          "manual_pivoting": {
+            "description": "قم بفرز الصفوف والأعمدة بنفسك لاختيار ما يتم عرضه في أي مكان في الجدول",
             "title": "إعادة ترتيب الجدول",
-            "description": "نص الوصف..."
-          },
+            "manual_pivoting_modal": {
+              "label": "إعادة ترتيب الجدول",
+              "header": "إعادة ترتيب الجدول بنفسك",
+              "info_text": "اختر ما يتم عرضه في أي مكان في الجدول عن طريق نقل العناصر بين الصفوف والأعمدة وتغيير الترتيب",
+              "stub_title": "الصفوف",
+              "header_title": "الأعمدة",
+              "cancel_button": "يلغي",
+              "confirm_button": "يحفظ",
+              "emty_list": "اسقط المتغير هنا",
+              "dialog_opened": "تم فتح مربع حوار ترتيب الجدول يدويًا. يمكن إعادة ترتيب الصفوف والأعمدة.",
+              "keyboard_instructions": "اضغط على مفتاح المسافة أو Enter لتحديد عنصر. استخدم مفاتيح الأسهم لتحريكه، ثم اضغط على Enter لإفلاته. اضغط على Escape للإلغاء.",
+              "item_selected": "تم تحديد {{item}}. استخدم مفاتيح الأسهم للتحريك، وEnter للإفلات، وEscape للإلغاء.",
+              "item_moved": "تم نقل {{item}} إلى الموضع {{position}} في {{group}}.",
+              "item_dropped": "تم إفلات {{item}} في {{group}}.",
+              "move_cancelled": "تم إلغاء نقل {{item}}."
+            }
+            },
           "change_order": {
             "title": "تغيير الترتيب",
             "description": "نص الوصف..."

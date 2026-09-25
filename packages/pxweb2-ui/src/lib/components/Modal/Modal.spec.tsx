@@ -144,7 +144,7 @@ describe('Modal', () => {
     expect(screen.getByText('Test Heading')).toBeDefined();
   });
 
-  it('should handle Enter key press on buttons', () => {
+  it('should handle keyboard activation on buttons', () => {
     const onCloseMock = vi.fn();
 
     render(
@@ -155,9 +155,42 @@ describe('Modal', () => {
 
     const confirmButton = screen.getByText('common.generic_buttons.save');
 
-    fireEvent.keyUp(confirmButton, { key: 'Enter' });
+    fireEvent.click(confirmButton);
 
-    expect(onCloseMock).toHaveBeenCalledWith(true, 'Enter');
+    expect(onCloseMock).toHaveBeenCalledWith(true);
+  });
+
+  it('should close when pressing Enter on the cancel button', () => {
+    const onCloseMock = vi.fn();
+
+    render(
+      <Modal isOpen={true} onClose={onCloseMock}>
+        <span>test</span>
+      </Modal>,
+    );
+
+    const cancelButton = screen.getByText('common.generic_buttons.cancel');
+
+    fireEvent.keyDown(cancelButton, { key: 'Enter' });
+    fireEvent.keyUp(cancelButton, { key: 'Enter' });
+
+    expect(onCloseMock).toHaveBeenCalledWith(false, 'Enter');
+  });
+
+  it('should ignore a keyup without a matching button keydown', () => {
+    const onCloseMock = vi.fn();
+
+    render(
+      <Modal isOpen={true} onClose={onCloseMock}>
+        <span>test</span>
+      </Modal>,
+    );
+
+    const cancelButton = screen.getByText('common.generic_buttons.cancel');
+
+    fireEvent.keyUp(cancelButton, { key: 'Enter' });
+
+    expect(onCloseMock).not.toHaveBeenCalled();
   });
 
   it('should expose overlay marker and toggle dialog visibility when opening and closing', () => {
