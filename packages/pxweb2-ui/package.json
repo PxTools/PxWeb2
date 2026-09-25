@@ -17,11 +17,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tanstack/react-virtual": "^3.14.11",
+    "@tanstack/react-virtual": "^3.14.13",
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
-    "motion": "^13.2.0"
+    "motion": "^13.3.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.3.1",
