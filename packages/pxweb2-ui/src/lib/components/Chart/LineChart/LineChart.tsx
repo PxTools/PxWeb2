@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type * as echarts from 'echarts';
+// import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import cl from 'clsx';
 
 import styles from './LineChart.module.scss';
@@ -47,7 +48,60 @@ type ChartImageType = 'png' | 'svg';
 
 export type ChartInstance = echarts.EChartsType;
 
-export function downloadChartImage(
+export async function exportPngFromSvgChart(
+  sourceChart: echarts.EChartsType,
+  fileName: string,
+) {
+  // Hidden container
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.left = '-10000px';
+  container.style.top = '0';
+
+  const width = sourceChart.getWidth();
+  const height = sourceChart.getHeight();
+
+  container.style.width = `${width}px`;
+  container.style.height = `${height}px`;
+
+  document.body.appendChild(container);
+
+  try {
+    // Create temporary Canvas chart
+    const exportChart = echarts.init(container, null, {
+      renderer: 'canvas',
+    });
+
+    // Clone source options
+    const option = sourceChart.getOption();
+
+    exportChart.setOption(option, true);
+
+    // Ensure rendering is complete
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const dataUrl = exportChart.getDataURL({
+      type: 'png',
+      pixelRatio: 2,
+      backgroundColor: '#fff',
+    });
+
+    console.log(dataUrl.slice(0, 30));
+    // Should be:
+    // data:image/png;base64,...
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `${fileName}.png`;
+    link.click();
+
+    exportChart.dispose();
+  } finally {
+    document.body.removeChild(container);
+  }
+}
+
+export async function downloadChartImage(
   chart: echarts.EChartsType | null,
   title: string,
   type: ChartImageType,
@@ -55,11 +109,11 @@ export function downloadChartImage(
   if (!chart || chart.isDisposed()) {
     return;
   }
+
   const titleOptions = chart.getOption().title as
     Array<{ text?: unknown }> | undefined;
   const chartTitle = title.trim() || titleOptions?.[0]?.text?.toString() || '';
 
-  const link = document.createElement('a');
   const filename = chartTitle
     .trim()
     .replace(/[^a-z0-9]+/gi, '-')
@@ -68,6 +122,14 @@ export function downloadChartImage(
   chart.setOption({
     title: [{ show: true }, { show: true }],
   });
+
+  if (type === 'png') {
+    await exportPngFromSvgChart(chart, filename || 'chart');
+
+    return;
+  }
+  const link = document.createElement('a');
+  console.log(chart.getDataURL({ type: 'png' }).substring(0, 150));
   try {
     link.href = chart.getDataURL({ type, backgroundColor: 'white' });
   } finally {
