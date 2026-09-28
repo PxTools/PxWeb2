@@ -2,10 +2,12 @@ import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 import {
   BreakpointsXsmallMaxWidth,
+  BreakpointsSmallMaxWidth,
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
-} from '@pxweb2/pxweb2-ui';
+  } from '@pxweb2/pxweb2-ui';
+import ScreenSize from 'packages/pxweb2-ui/src/lib/types/screenSize';
 
 // Define the type for the context
 export type AppContextType = {
@@ -15,6 +17,7 @@ export type AppContextType = {
   isXXLargeDesktop: boolean;
   isTablet: boolean;
   isMobile: boolean;
+  screenSize: ScreenSize;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
@@ -31,6 +34,7 @@ export const AppContext = createContext<AppContextType>({
   isXXLargeDesktop: false,
   isTablet: false,
   isMobile: false,
+  screenSize: 'large',
   skipToMainFocused: false,
   setSkipToMainFocused: () => {
     return;
@@ -56,10 +60,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Keep state if window screen size is mobile, tablet, or desktop.
    */
-  const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const xLargeBreakpoint = Number(BreakpointsXlargeMaxWidth.replace('px', ''));
+  const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const tabletBreakpoint = Number(BreakpointsMediumMaxWidth.replace('px', ''));
+  const smallBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const mobileBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
+
   const [isXLargeDesktop, setIsXLargeDesktop] = useState(
     window.innerWidth > largeBreakpoint,
   );
@@ -72,6 +78,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= mobileBreakpoint,
   );
+  const [screenSize, setScreenSize] = useState<ScreenSize>(
+    window.innerWidth > xLargeBreakpoint
+      ? 'xxlarge'
+      : window.innerWidth > largeBreakpoint
+      ? 'xlarge'
+      : window.innerWidth > tabletBreakpoint
+      ? 'large'
+      : window.innerWidth > smallBreakpoint
+      ? 'medium'
+      : window.innerWidth > mobileBreakpoint
+      ? 'small'
+      : 'xsmall',
+  );
 
   // Use effect to set the isMobile and isTablet state
   useEffect(() => {
@@ -80,6 +99,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsXXLargeDesktop(window.innerWidth > xLargeBreakpoint);
       setIsTablet(window.innerWidth <= tabletBreakpoint);
       setIsMobile(window.innerWidth <= mobileBreakpoint);
+      setScreenSize(
+        window.innerWidth > xLargeBreakpoint
+          ? 'xxlarge'
+          : window.innerWidth > largeBreakpoint
+          ? 'xlarge'
+          : window.innerWidth > tabletBreakpoint
+          ? 'large'
+          : window.innerWidth > smallBreakpoint
+          ? 'medium'
+          : window.innerWidth > mobileBreakpoint
+          ? 'small'
+          : 'xsmall',
+      );
     };
 
     window.addEventListener('resize', handleResize);
@@ -87,7 +119,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
+  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint, smallBreakpoint]);
 
   const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
@@ -112,6 +144,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      screenSize,
       languageFilter,
       setLanguageFilter,
     }),
@@ -122,6 +155,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isXXLargeDesktop,
       isTablet,
       isMobile,
+      screenSize,
       skipToMainFocused,
       setSkipToMainFocused,
       title,

@@ -26,6 +26,7 @@ import {
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
+import ScreenSize from '../../../types/screenSize';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information
@@ -44,7 +45,15 @@ type TooltipParam = {
 
 const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
-const CHART_PLOT_HEIGHT_REM = 29;
+// Height of plot area in pixels for different screen sizes.
+const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
+  xxlarge: 680,
+  xlarge: 542,
+  large: 528,
+  medium: 500,
+  small: 400,
+  xsmall: 300,
+};
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
@@ -76,7 +85,7 @@ interface LineChartProps {
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
   readonly translations: LineChartTranslations;
-  readonly isMediumOrSmallerScreen?: boolean;
+  readonly screenSize?: ScreenSize;
 }
 
 export function LineChart({
@@ -84,7 +93,7 @@ export function LineChart({
   colors,
   emptyStateSvgName,
   translations,
-  isMediumOrSmallerScreen = false,
+  screenSize = 'large',
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
   // Stores the position of the chart series the user is currently hovering.
@@ -93,6 +102,10 @@ export function LineChart({
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
+  const isMediumOrSmallerScreen =
+    screenSize === 'medium' ||
+    screenSize === 'small' ||
+    screenSize === 'xsmall';
 
   const xAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
@@ -166,6 +179,7 @@ export function LineChart({
   }, [yAxisBreak, yAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
+  const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
@@ -183,7 +197,7 @@ export function LineChart({
       grid: {
         top: TOP_CHART_PADDING,
         height:
-          CHART_PLOT_HEIGHT_REM * pixelsPerRem -
+          CHART_PLOT_HEIGHT_PX[screenSize] -
           TOP_CHART_PADDING -
           X_AXIS_LABEL_TO_LEGEND_GAP,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
@@ -313,15 +327,15 @@ export function LineChart({
       },
     };
   }, [
+    visibleLegendData,
     dataset,
     resolvedColors,
-    yAxisBreak,
-    yAxisInterval,
-    yAxisMin,
+    screenSize,
     xAxisName,
+    yAxisMin,
+    yAxisInterval,
+    yAxisBreak,
     isMediumOrSmallerScreen,
-    visibleLegendData,
-    pixelsPerRem,
   ]);
 
   const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
@@ -332,8 +346,9 @@ export function LineChart({
 
   const calculatedLegendHeight =
     renderedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
+
   const height =
-    CHART_PLOT_HEIGHT_REM +
+    chartPlotHeightRem +
     (X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) / pixelsPerRem;
 
   useEffect(() => {

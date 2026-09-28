@@ -174,7 +174,7 @@ describe('LineChart', () => {
     });
     expect(option.grid).toEqual({
       top: 36,
-      height: 392,
+      height: 456,
       bottom: 156,
       left: '0',
       right: '0',
@@ -198,7 +198,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        isMediumOrSmallerScreen
+        screenSize="medium"
       />,
     );
 
@@ -253,7 +253,7 @@ describe('LineChart', () => {
     );
   });
 
-  it('keeps the plot height stable and adds space for the legend', () => {
+  it('uses the large-screen plot height and adds space for the legend', () => {
     const { container } = render(
       <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
     );
@@ -263,7 +263,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('38.75rem'); // 29 + (3 * 40 + 36) / 16
+    expect(chartDiv?.style.height).toBe('42.75rem'); // 528 / 16 + (3 * 40 + 36) / 16
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
@@ -419,7 +419,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
@@ -445,7 +445,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={false}
+          screenSize="large"
           translations={mockTranslations}
         />,
       );
@@ -459,7 +459,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
@@ -487,7 +487,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
