@@ -69,7 +69,7 @@ export function downloadChartImage(
     title: [{ show: true }, { show: true }],
   });
   try {
-    link.href = chart.getDataURL({ type });
+    link.href = chart.getDataURL({ type, backgroundColor: 'white' });
   } finally {
     chart.setOption({
       title: [{ show: false }, { show: false }],
