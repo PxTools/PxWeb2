@@ -49,6 +49,32 @@ export const AppContext = createContext<AppContextType>({
   },
 });
 
+const getScreenSize = (
+  width: number,
+  xLargeBreakpoint: number,
+  largeBreakpoint: number,
+  tabletBreakpoint: number,
+  smallBreakpoint: number,
+  mobileBreakpoint: number,
+): ScreenSize => {
+  if (width > xLargeBreakpoint) {
+    return 'xxlarge';
+  }
+  if (width > largeBreakpoint) {
+    return 'xlarge';
+  }
+  if (width > tabletBreakpoint) {
+    return 'large';
+  }
+  if (width > smallBreakpoint) {
+    return 'medium';
+  }
+  if (width > mobileBreakpoint) {
+    return 'small';
+  }
+  return 'xsmall';
+};
+
 // Provider component
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -79,17 +105,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     window.innerWidth <= mobileBreakpoint,
   );
   const [screenSize, setScreenSize] = useState<ScreenSize>(
-    window.innerWidth > xLargeBreakpoint
-      ? 'xxlarge'
-      : window.innerWidth > largeBreakpoint
-        ? 'xlarge'
-        : window.innerWidth > tabletBreakpoint
-          ? 'large'
-          : window.innerWidth > smallBreakpoint
-            ? 'medium'
-            : window.innerWidth > mobileBreakpoint
-              ? 'small'
-              : 'xsmall',
+    getScreenSize(
+      window.innerWidth,
+      xLargeBreakpoint,
+      largeBreakpoint,
+      tabletBreakpoint,
+      smallBreakpoint,
+      mobileBreakpoint,
+    ),
   );
 
   // Use effect to set the isMobile and isTablet state
@@ -100,17 +123,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsTablet(window.innerWidth <= tabletBreakpoint);
       setIsMobile(window.innerWidth <= mobileBreakpoint);
       setScreenSize(
-        window.innerWidth > xLargeBreakpoint
-          ? 'xxlarge'
-          : window.innerWidth > largeBreakpoint
-            ? 'xlarge'
-            : window.innerWidth > tabletBreakpoint
-              ? 'large'
-              : window.innerWidth > smallBreakpoint
-                ? 'medium'
-                : window.innerWidth > mobileBreakpoint
-                  ? 'small'
-                  : 'xsmall',
+        getScreenSize(
+          window.innerWidth,
+          xLargeBreakpoint,
+          largeBreakpoint,
+          tabletBreakpoint,
+          smallBreakpoint,
+          mobileBreakpoint,
+        ),
       );
     };
 
