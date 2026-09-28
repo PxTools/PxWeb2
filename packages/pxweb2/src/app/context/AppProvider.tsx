@@ -6,7 +6,7 @@ import {
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
-  } from '@pxweb2/pxweb2-ui';
+} from '@pxweb2/pxweb2-ui';
 import ScreenSize from 'packages/pxweb2-ui/src/lib/types/screenSize';
 
 // Define the type for the context
@@ -82,14 +82,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     window.innerWidth > xLargeBreakpoint
       ? 'xxlarge'
       : window.innerWidth > largeBreakpoint
-      ? 'xlarge'
-      : window.innerWidth > tabletBreakpoint
-      ? 'large'
-      : window.innerWidth > smallBreakpoint
-      ? 'medium'
-      : window.innerWidth > mobileBreakpoint
-      ? 'small'
-      : 'xsmall',
+        ? 'xlarge'
+        : window.innerWidth > tabletBreakpoint
+          ? 'large'
+          : window.innerWidth > smallBreakpoint
+            ? 'medium'
+            : window.innerWidth > mobileBreakpoint
+              ? 'small'
+              : 'xsmall',
   );
 
   // Use effect to set the isMobile and isTablet state
@@ -103,14 +103,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         window.innerWidth > xLargeBreakpoint
           ? 'xxlarge'
           : window.innerWidth > largeBreakpoint
-          ? 'xlarge'
-          : window.innerWidth > tabletBreakpoint
-          ? 'large'
-          : window.innerWidth > smallBreakpoint
-          ? 'medium'
-          : window.innerWidth > mobileBreakpoint
-          ? 'small'
-          : 'xsmall',
+            ? 'xlarge'
+            : window.innerWidth > tabletBreakpoint
+              ? 'large'
+              : window.innerWidth > smallBreakpoint
+                ? 'medium'
+                : window.innerWidth > mobileBreakpoint
+                  ? 'small'
+                  : 'xsmall',
       );
     };
 
@@ -119,7 +119,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint, smallBreakpoint]);
+  }, [
+    mobileBreakpoint,
+    tabletBreakpoint,
+    largeBreakpoint,
+    xLargeBreakpoint,
+    smallBreakpoint,
+  ]);
 
   const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
