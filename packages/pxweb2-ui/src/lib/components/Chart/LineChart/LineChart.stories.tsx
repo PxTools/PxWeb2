@@ -17,6 +17,12 @@ const getTranslations = (t: TFunction) => ({
   showLess: t(
     'presentation_page.main_content.chart.line_chart.legend.show_less',
   ),
+  emptyStateTitle: t(
+    'presentation_page.main_content.chart.line_chart.empty_state.title',
+  ),
+  emptyStateDescription: t(
+    'presentation_page.main_content.chart.line_chart.empty_state.description',
+  ),
 });
 
 type LineChartWithTranslationsProps = Omit<
