@@ -78,7 +78,7 @@ export async function exportPngFromSvgChart(
     exportChart.setOption(option, true);
 
     // Ensure rendering is complete
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const dataUrl = exportChart.getDataURL({
       type: 'png',
