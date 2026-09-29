@@ -75,10 +75,22 @@ export async function exportPngFromSvgChart(
     // Clone source options
     const option = sourceChart.getOption();
 
-    exportChart.setOption(option, true);
+    //exportChart.setOption(option, true);
 
     // Ensure rendering is complete
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    option.animation = false;
+
+    await new Promise<void>((resolve) => {
+      const handler = () => {
+        exportChart.off('finished', handler);
+        resolve();
+      };
+
+      exportChart.on('finished', handler);
+      exportChart.setOption(option, true);
+    });
 
     const dataUrl = exportChart.getDataURL({
       type: 'png',
@@ -123,15 +135,19 @@ export async function downloadChartImage(
     title: [{ show: true }, { show: true }],
   });
 
-  if (type === 'png') {
-    await exportPngFromSvgChart(chart, filename || 'chart');
+  // if (type === 'png') {
+  //   await exportPngFromSvgChart(chart, filename || 'chart');
 
-    return;
-  }
+  //   return;
+  // }
   const link = document.createElement('a');
   console.log(chart.getDataURL({ type: 'png' }).substring(0, 150));
   try {
-    link.href = chart.getDataURL({ type, backgroundColor: 'white' });
+    if (type === 'png') {
+      await exportPngFromSvgChart(chart, filename || 'chart');
+    } else {
+      link.href = chart.getDataURL({ type, backgroundColor: '#fff' });
+    }
   } finally {
     chart.setOption({
       title: [{ show: false }, { show: false }],
