@@ -238,8 +238,8 @@
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
             "parquet": "Parquet (.parquet)",
-            "png": "الرسم البياني (png)",
-            "svg": "الرسم البياني (svg)"
+            "png": "الرسم البياني (.png)",
+            "svg": "الرسم البياني (.svg)"
           }
         },
         "savequery": {
