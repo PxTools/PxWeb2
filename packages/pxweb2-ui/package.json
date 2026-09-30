@@ -9,6 +9,8 @@
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006",
+    "typecheck": "tsc --noEmit -p tsconfig.lib.json && tsc --noEmit -p tsconfig.storybook.json",
+    "typecheck:tests": "tsc --noEmit -p tsconfig.spec.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
