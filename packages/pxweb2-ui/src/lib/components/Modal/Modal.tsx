@@ -213,10 +213,10 @@ export function Modal({
         </div>
       </div>
       {/* tabIndex to fix the div being focusable for some reason */}
-      <div className={cl(classes.body)} tabIndex={-1}>
+      <div data-modal-body className={cl(classes.body)} tabIndex={-1}>
         {children}
       </div>
-      <div className={cl(classes.footer)}>
+      <div data-modal-footer className={cl(classes.footer)}>
         <div className={cl(classes.buttonGroup)}>
           <Button
             variant="primary"

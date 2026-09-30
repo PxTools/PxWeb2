@@ -7,6 +7,20 @@
   align-items: center;
   border-radius: var(--px-border-radius-xlarge);
   background: var(--px-color-surface-default);
+  min-height: 664px;
+}
+
+.manualPivotModal > [data-modal-body] {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.manualPivotModal > [data-modal-footer] {
+  flex: 0 0 auto;
+}
+
+.manualPivotModal:has([data-pointer-dragging='true']) > [data-modal-body] {
+  overflow: visible;
 }
 
 .wrapper {
@@ -27,7 +41,6 @@
 .groupZone {
   position: relative;
   width: 100%;
-  min-height: 664px;
 }
 
 .list {
@@ -101,7 +114,7 @@
   scrollbar-gutter: stable;
 
   &[data-pointer-dragging='true'] {
-    overflow: clip;
+    overflow: visible;
   }
 }
 
