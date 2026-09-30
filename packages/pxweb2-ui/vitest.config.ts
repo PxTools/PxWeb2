@@ -10,9 +10,6 @@ export default mergeConfig(
   defineConfig({
     test: {
       globals: true,
-      cache: {
-        dir: '../../node_modules/.vitest',
-      },
       environment: 'jsdom',
       testTimeout: 20000,
       hookTimeout: 20000,
@@ -31,5 +28,6 @@ export default mergeConfig(
         provider: 'istanbul',
       },
     },
+    cacheDir: '../../node_modules/.vitest',
   }),
 );
