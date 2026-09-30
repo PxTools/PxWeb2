@@ -45,9 +45,11 @@ const mockConfigs: Record<string, Config> = {
     baseApplicationPath: '/',
     apiUrl: 'test',
     maxDataCells: 150000,
+    useDynamicContentInTitle: false,
     showBreadCrumbOnStartPage: true,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
+    features: { chartEnabled: true },
   },
   defaultLangInPath: {
     language: {
@@ -63,9 +65,11 @@ const mockConfigs: Record<string, Config> = {
     baseApplicationPath: '/',
     apiUrl: 'test',
     maxDataCells: 150000,
+    useDynamicContentInTitle: false,
     showBreadCrumbOnStartPage: true,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
+    features: { chartEnabled: true },
   },
   positionBeforeWithBasePath: {
     language: {
@@ -81,9 +85,11 @@ const mockConfigs: Record<string, Config> = {
     baseApplicationPath: '/pxweb2/',
     apiUrl: 'test',
     maxDataCells: 150000,
+    useDynamicContentInTitle: false,
     showBreadCrumbOnStartPage: true,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
+    features: { chartEnabled: true },
   },
   positionAfterWithBasePath: {
     language: {
@@ -99,9 +105,11 @@ const mockConfigs: Record<string, Config> = {
     baseApplicationPath: '/pxweb2/',
     apiUrl: 'test',
     maxDataCells: 150000,
+    useDynamicContentInTitle: false,
     showBreadCrumbOnStartPage: true,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
+    features: { chartEnabled: true },
   },
 };
 

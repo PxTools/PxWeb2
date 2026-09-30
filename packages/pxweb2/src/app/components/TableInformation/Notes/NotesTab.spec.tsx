@@ -24,6 +24,7 @@ describe('NotesTab', () => {
         pxTableMetadata={{
           id: 'test-id',
           language: 'en',
+          availableLanguages: [],
           label: 'Test Table',
           updated: new Date('2024-01-01'),
           source: '',
@@ -42,6 +43,7 @@ describe('NotesTab', () => {
           contents: '',
           subjectCode: '',
           subjectArea: '',
+          definitions: {},
         }}
       />,
     );
@@ -59,6 +61,7 @@ describe('NotesTab', () => {
         pxTableMetadata={{
           id: 'test-id',
           language: 'en',
+          availableLanguages: [],
           label: 'Test Table',
           updated: new Date('2024-01-01'),
           source: '',
@@ -77,6 +80,7 @@ describe('NotesTab', () => {
           contents: '',
           subjectCode: '',
           subjectArea: '',
+          definitions: {},
         }}
       />,
     );

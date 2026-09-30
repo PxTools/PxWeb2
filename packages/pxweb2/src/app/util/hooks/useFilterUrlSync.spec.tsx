@@ -105,12 +105,14 @@ const subjectTree = [
 
 const baseState = (): StartPageState => ({
   availableTables: tableExamles,
+  availableTablesWhenQueryApplied: [],
   filteredTables: tableExamles,
   availableFilters: {
     subjectTree: subjectTree,
     timeUnits: new Map<string, number>(),
     yearRange: { min: 0, max: 9999 },
     variables: new Map<string, number>(),
+    status: new Map<'active' | 'discontinued', number>(),
   },
   activeFilters: [],
   loading: false,
