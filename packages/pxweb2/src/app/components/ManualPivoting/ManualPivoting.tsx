@@ -951,7 +951,10 @@ export function ManualPivot({
                     ) : null}
                     <Reorder.Item
                       as="li"
-                      className={[classes.draggableItem, isDraggedItem && classes.draggableItemDragging]
+                      className={[
+                        classes.draggableItem,
+                        isDraggedItem && classes.draggableItemDragging,
+                      ]
                         .filter(Boolean)
                         .join(' ')}
                       data-variable-id={variable.id}
