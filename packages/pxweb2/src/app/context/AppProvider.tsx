@@ -6,7 +6,7 @@ import {
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
-  ScreenSize
+  ScreenSize,
 } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
