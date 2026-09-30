@@ -26,7 +26,7 @@ import {
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
-import ScreenSize from '../../../types/screenSize';
+import type { ScreenSize } from '../../../types/screenSize';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information

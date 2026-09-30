@@ -6,8 +6,8 @@ import {
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
+  ScreenSize
 } from '@pxweb2/pxweb2-ui';
-import ScreenSize from 'packages/pxweb2-ui/src/lib/types/screenSize';
 
 // Define the type for the context
 export type AppContextType = {
