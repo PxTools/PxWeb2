@@ -195,7 +195,7 @@
           "auto_pivot": {
             "title": "Organiser tabellen automatisk",
             "aria_label": "Rydd opp i tabellen",
-            "description": "Sorterer rader og kolonner automatiskt for en mer oversiktlig tabell",
+            "description": "Sorterer rader og kolonner automatisk for en mer oversiktlig tabell",
             "screen_reader_announcement": "Tabell organisert etter {{table_heading}}"
           },
           "pivot": {
@@ -205,7 +205,7 @@
             "screen_reader_announcement": "Tabell rotert etter {{first_variables}} og {{last_variable}}"
           },
           "manual_pivoting": {
-            "description": "Sorter rader og kolloner selv for å velge hva som vises hvor i tabellen",
+            "description": "Sorter rader og kolonner selv for å velge hva som vises hvor i tabellen",
             "title": "Organiser tabellen selv",
             "manual_pivoting_modal": {
               "label": "Organiser tabellen selv",
