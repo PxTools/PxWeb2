@@ -16,7 +16,13 @@ const DataItem = ({
   const { t } = useTranslation();
   return (
     <div
-      className={`${classes.dataItem}${isDragging ? ` ${classes.dataItemDragging}` : ''}${isKeyboardDragging ? ` ${classes.dataItemKeyboardDragging}` : ''}`}
+      className={[
+        classes.dataItem,
+        isDragging && classes.dataItemDragging,
+        isKeyboardDragging && classes.dataItemKeyboardDragging,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <Icon iconName="DragVertical" />
       <Label>{t('dataItem', { defaultValue: label })}</Label>
