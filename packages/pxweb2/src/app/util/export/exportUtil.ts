@@ -6,6 +6,7 @@ import {
   TablesService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+import { downloadChartImage, type ChartInstance } from '@pxweb2/pxweb2-ui';
 
 export type TimeFilter = 'from' | 'top' | 'selected';
 
@@ -25,31 +26,43 @@ export async function exportToFile(
   lang: string,
   variablesSelection: VariablesSelection,
   outputFormat: OutputFormatType,
+  chart: ChartInstance | null = null,
 ): Promise<void> {
   const outputFormatParams: Array<OutputFormatParamType> =
     getOutputFormatParams(outputFormat);
   const fileExtension: string = getFileExtension(outputFormat);
-
-  await TablesService.getTableDataByPost(
-    tabId,
-    lang,
-    outputFormat,
-    outputFormatParams,
-    variablesSelection,
-  ).then((response) => {
-    let blob: Blob;
-    if (outputFormat === OutputFormatType.JSON_STAT2) {
-      blob = new Blob([JSON.stringify(response)]);
-    } else {
-      blob = new Blob([response]);
-    }
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    const timestamp = getTimestamp();
-    link.download = `${tabId}_${timestamp}.${fileExtension}`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  });
+  if (
+    outputFormat === OutputFormatType.PNG ||
+    outputFormat === OutputFormatType.SVG
+  ) {
+    downloadChartImage(
+      chart,
+      tabId,
+      outputFormat === OutputFormatType.PNG ? 'png' : 'svg',
+    );
+    //return; // Skip export for image formats as they are not supported in this function
+  } else {
+    await TablesService.getTableDataByPost(
+      tabId,
+      lang,
+      outputFormat,
+      outputFormatParams,
+      variablesSelection,
+    ).then((response) => {
+      let blob: Blob;
+      if (outputFormat === OutputFormatType.JSON_STAT2) {
+        blob = new Blob([JSON.stringify(response)]);
+      } else {
+        blob = new Blob([response]);
+      }
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      const timestamp = getTimestamp();
+      link.download = `${tabId}_${timestamp}.${fileExtension}`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+  }
 }
 
 /**
@@ -74,6 +87,10 @@ export function getFileExtension(outputFormat: OutputFormatType): string {
       return 'html';
     case OutputFormatType.PARQUET:
       return 'parquet';
+    case OutputFormatType.PNG:
+      return 'png';
+    case OutputFormatType.SVG:
+      return 'svg';
     default:
       return 'csv'; // Default to CSV if no match found
   }
@@ -110,6 +127,10 @@ export function getOutputFormatParams(
       outputFormatParams = [OutputFormatParamType.INCLUDE_TITLE];
       break;
     case OutputFormatType.PARQUET:
+      break;
+    case OutputFormatType.PNG:
+      break;
+    case OutputFormatType.SVG:
       break;
     default:
   }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type * as echarts from 'echarts';
+// import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import cl from 'clsx';
 
 import styles from './LineChart.module.scss';
@@ -43,6 +44,119 @@ const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
 const TOP_CHART_PADDING = 36;
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
+type ChartImageType = 'png' | 'svg';
+
+export type ChartInstance = echarts.EChartsType;
+
+export async function exportPngFromSvgChart(
+  sourceChart: echarts.EChartsType,
+  fileName: string,
+) {
+  // Hidden container
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.left = '-10000px';
+  container.style.top = '0';
+
+  const width = sourceChart.getWidth();
+  const height = sourceChart.getHeight();
+
+  container.style.width = `${width}px`;
+  container.style.height = `${height}px`;
+
+  document.body.appendChild(container);
+
+  try {
+    // Create temporary Canvas chart
+    const exportChart = echarts.init(container, null, {
+      renderer: 'canvas',
+    });
+
+    // Clone source options
+    const option = sourceChart.getOption();
+
+    //exportChart.setOption(option, true);
+
+    // Ensure rendering is complete
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    option.animation = false;
+
+    await new Promise<void>((resolve) => {
+      const handler = () => {
+        exportChart.off('finished', handler);
+        resolve();
+      };
+
+      exportChart.on('finished', handler);
+      exportChart.setOption(option, true);
+    });
+
+    const dataUrl = exportChart.getDataURL({
+      type: 'png',
+      pixelRatio: 2,
+      backgroundColor: '#fff',
+    });
+
+    console.log(dataUrl.slice(0, 30));
+    // Should be:
+    // data:image/png;base64,...
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `${fileName}.png`;
+    link.click();
+
+    exportChart.dispose();
+  } finally {
+    document.body.removeChild(container);
+  }
+}
+
+export async function downloadChartImage(
+  chart: echarts.EChartsType | null,
+  title: string,
+  type: ChartImageType,
+) {
+  if (!chart || chart.isDisposed()) {
+    return;
+  }
+
+  const titleOptions = chart.getOption().title as
+    Array<{ text?: unknown }> | undefined;
+  const chartTitle = title.trim() || titleOptions?.[0]?.text?.toString() || '';
+
+  const filename = chartTitle
+    .trim()
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-|-$/g, '');
+
+  chart.setOption({
+    title: [{ show: true }, { show: true }],
+  });
+
+  // if (type === 'png') {
+  //   await exportPngFromSvgChart(chart, filename || 'chart');
+
+  //   return;
+  // }
+  const link = document.createElement('a');
+  console.log(chart.getDataURL({ type: 'png' }).substring(0, 150));
+  try {
+    if (type === 'png') {
+      await exportPngFromSvgChart(chart, filename || 'chart');
+    } else {
+      link.href = chart.getDataURL({ type, backgroundColor: '#fff' });
+    }
+  } finally {
+    chart.setOption({
+      title: [{ show: false }, { show: false }],
+    });
+  }
+  link.download = `${filename || 'chart'}.${type}`;
+  link.click();
+}
+
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
     case 'rect':
@@ -63,24 +177,30 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 interface LineChartTranslations {
   readonly showMore: string;
   readonly showLess: string;
+  // readonly downloadPng: string;
+  // readonly downloadSvg: string;
   readonly emptyStateTitle: string;
   readonly emptyStateDescription: string;
 }
 
 interface LineChartProps {
   readonly pxtable: PxTable;
+  readonly staticTitle: string;
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
   readonly translations: LineChartTranslations;
   readonly isMediumOrSmallerScreen?: boolean;
+  readonly onChartReady?: (chart: ChartInstance | null) => void;
 }
 
 export function LineChart({
   pxtable,
+  staticTitle,
   colors,
   emptyStateSvgName,
   translations,
   isMediumOrSmallerScreen = false,
+  onChartReady,
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
 
@@ -115,6 +235,8 @@ export function LineChart({
   const hasLegendOverflow = dataset.series.length > 5;
   const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
   const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
+  const chartTitle = dataset.title;
+  const chartSourcePart1 = dataset.origin;
   const memoizedAllLegendData = useMemo(
     () => dataset.series.map((series) => series.name),
     [dataset.series],
@@ -185,6 +307,22 @@ export function LineChart({
         // 'all' keeps the axis names inside the grid rect
         outerBoundsContain: 'all',
       },
+      title: [
+        {
+          text: chartTitle,
+          left: 'left',
+          show: false,
+          top: 'top',
+        },
+        {
+          text: chartSourcePart1,
+          subtext: staticTitle,
+          left: 'left',
+          show: false,
+          bottom: '0',
+        },
+      ],
+
       xAxis: {
         type: 'category' as const,
         name: xAxisName,
@@ -218,7 +356,7 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        bottom: 0,
+        bottom: 80,
       },
       series,
       tooltip: {
@@ -247,19 +385,17 @@ export function LineChart({
             hoveredSeriesIndexRef.current ??
             (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
 
-          // Without a series index, we cannot match the tooltip item to the
-          // chart's series metadata.
-          if (selectedSeriesIndex == null) {
-            return '';
-          }
-
           // The first item contains the label for the current x-axis value.
           const title = axisParams[0].axisValueLabel;
 
-          // Keep only tooltip items belonging to the selected series.
-          const hoveredParams = axisParams.filter(
-            (param) => param.seriesIndex === selectedSeriesIndex,
-          );
+          // Without a selected series, show all series for this axis point;
+          // otherwise keep only the tooltip items for the selected series.
+          const hoveredParams =
+            selectedSeriesIndex == null
+              ? axisParams
+              : axisParams.filter(
+                  (param) => param.seriesIndex === selectedSeriesIndex,
+                );
 
           // Turn each selected tooltip item into one line of HTML.
           const rows = hoveredParams
@@ -302,6 +438,7 @@ export function LineChart({
     };
   }, [
     dataset,
+    chartTitle,
     resolvedColors,
     yAxisBreak,
     yAxisInterval,
@@ -316,6 +453,14 @@ export function LineChart({
     'svg',
     X_AXIS_LABEL_TO_LEGEND_GAP,
   );
+
+  useEffect(() => {
+    onChartReady?.(chartRef.current);
+
+    return () => {
+      onChartReady?.(null);
+    };
+  }, [chartRef, option, onChartReady]);
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing

@@ -151,7 +151,11 @@ describe('DrawerSave', () => {
       // Scope to the file formats list by its accessible name (linked via aria-labelledby)
       const list = screen.getByRole('list', { name: 'Save to file' });
       const buttons = within(list).getAllByRole('button');
-      expect(buttons).toHaveLength(fileFormats.length);
+      // Without a chart instance, png/svg formats are filtered out of the list
+      const expectedFormats = fileFormats.filter(
+        (format) => format.value !== 'png' && format.value !== 'svg',
+      );
+      expect(buttons).toHaveLength(expectedFormats.length);
 
       // Check that each expected format is present by accessible name
       const expectedNames = [
@@ -195,6 +199,7 @@ describe('DrawerSave', () => {
         'en',
         expect.any(Object),
         OutputFormatType.XLSX,
+        undefined,
       );
 
       // Loading state while promise is pending

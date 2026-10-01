@@ -142,10 +142,12 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
     ? option.title.map((titleItem) => ({
         ...titleItem,
         textStyle: { ...titleItem.textStyle, ...textStyle },
+        subtextStyle: { ...titleItem.subtextStyle, ...textStyle },
       }))
     : {
         ...option.title,
         textStyle: { ...option.title?.textStyle, ...textStyle },
+        subtextStyle: { ...option.title?.subtextStyle, ...textStyle },
       };
 
   const tooltip = Array.isArray(option.tooltip)
@@ -183,7 +185,7 @@ function applyLegendGap(
   const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
 
   chart.setOption({
-    grid: { ...grid, bottom: Math.round(legendHeight + legendGap) },
+    grid: { ...grid, bottom: Math.round(legendHeight + legendGap + 80) },
   });
 }
 

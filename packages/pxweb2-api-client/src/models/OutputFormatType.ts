@@ -3,11 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum OutputFormatType {
-    PX = 'px',
-    JSON_STAT2 = 'json-stat2',
-    CSV = 'csv',
-    XLSX = 'xlsx',
-    HTML = 'html',
-    JSON_PX = 'json-px',
-    PARQUET = 'parquet',
+  PX = 'px',
+  JSON_STAT2 = 'json-stat2',
+  CSV = 'csv',
+  XLSX = 'xlsx',
+  HTML = 'html',
+  JSON_PX = 'json-px',
+  PARQUET = 'parquet',
+  PNG = 'png',
+  SVG = 'svg',
 }
