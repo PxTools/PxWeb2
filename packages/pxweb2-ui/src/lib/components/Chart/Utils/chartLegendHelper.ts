@@ -313,10 +313,7 @@ export function applyResponsiveLegend(
                 width: Math.max(80, chartWidth - 40),
               },
             }
-          : applyHorizontalLegendColumns(
-              chart,
-              legendItem,
-            ),
+          : applyHorizontalLegendColumns(chart, legendItem),
       ),
     };
   }
@@ -325,10 +322,7 @@ export function applyResponsiveLegend(
   }
   return {
     ...option,
-    legend: applyHorizontalLegendColumns(
-      chart,
-      legend,
-    ),
+    legend: applyHorizontalLegendColumns(chart, legend),
   };
 }
 
@@ -353,9 +347,7 @@ type LegendMeasurableChart = {
     | undefined;
 
   /** Gets the rendered view for a specific ECharts component model. */
-  getViewOfComponentModel?: (
-    componentModel: unknown,
-  ) =>
+  getViewOfComponentModel?: (componentModel: unknown) =>
     | {
         group?: {
           getBoundingRect?: () => { y: number; height: number };
@@ -445,7 +437,8 @@ export function getRenderedXAxisExtentBelowGrid(
  */
 function getRenderedXAxisBottom(chart: echarts.EChartsType): number | null {
   const measurable = chart as unknown as LegendMeasurableChart;
-  const axisModels = measurable.getModel?.()?.getComponentsByType?.('xAxis') ?? [];
+  const axisModels =
+    measurable.getModel?.()?.getComponentsByType?.('xAxis') ?? [];
   const bottoms = axisModels
     .map((axisModel) => {
       const rect =

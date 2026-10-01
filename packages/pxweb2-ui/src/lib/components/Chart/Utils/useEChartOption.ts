@@ -306,10 +306,7 @@ export function useEChartOption(
       // measured after ECharts has rendered the updated option.
       applyOptionWithWrappedTitle(
         chart,
-        applyResponsiveLegend(
-          chart,
-          applyStyling(option),
-        ),
+        applyResponsiveLegend(chart, applyStyling(option)),
       );
 
       applyYAxisBreakMark(chart, option);
