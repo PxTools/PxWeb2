@@ -39,6 +39,9 @@ This policy relies on npm v11 support for `min-release-age`.
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
+   - Before you begin: 
+     - Make sure you have an updated version of main
+     - Run npm install in the root directory
    - For security reasons, we want to wait at least 9 days before updating packages.
    - First update Storybook to the latest version that is outside the cooldown of 9 days:
      - Go to Storybook and find the correct version to update to
