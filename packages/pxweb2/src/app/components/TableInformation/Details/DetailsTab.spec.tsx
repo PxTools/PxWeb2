@@ -40,6 +40,7 @@ vi.mock('react-i18next', () => ({
 const mockTableMetadata: PxTableMetadata = {
   id: '1',
   language: 'en',
+  availableLanguages: [],
   label: 'Test Table',
   infofile: 'Test Infofile',
   updated: new Date(),
@@ -60,11 +61,13 @@ const mockTableMetadata: PxTableMetadata = {
   variables: [],
   contacts: [],
   notes: [],
+  definitions: {},
 };
 
 const mockOnlyMandatoryTableMetadata: PxTableMetadata = {
   id: '1',
   language: 'en',
+  availableLanguages: [],
   label: 'Test Table',
   infofile: 'Test Infofile',
   updated: new Date(),
@@ -80,6 +83,7 @@ const mockOnlyMandatoryTableMetadata: PxTableMetadata = {
   variables: [],
   contacts: [],
   notes: [],
+  definitions: {},
 };
 
 const basePeriodDetails: ContentDetails[] = [
