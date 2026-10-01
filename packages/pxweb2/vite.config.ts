@@ -28,7 +28,7 @@ const themeInjectorPlugin = (): Plugin => ({
 });
 
 export default defineConfig({
-  root: __dirname,
+  root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/pxweb2',
   base: './',
   server: {
