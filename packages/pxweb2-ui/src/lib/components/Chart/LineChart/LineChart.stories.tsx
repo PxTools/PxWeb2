@@ -11,12 +11,6 @@ import type { Variable } from '../../../shared-types/variable';
 import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
 const getTranslations = (t: TFunction) => ({
-  emptyStateTitle: t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
-  ),
-  emptyStateDescription: t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
-  ),
   showMore: t(
     'presentation_page.main_content.chart.line_chart.legend.show_more',
   ),
@@ -287,20 +281,20 @@ export const SparseData: Story = {
 export const ManySeriesOnLargeScreen: Story = {
   args: {
     pxtable: manySeriesPxTable,
-    isMediumOrSmallerScreen: false,
+    screenSize: 'large',
   },
 };
 
 export const ManySeriesOnSmallScreen: Story = {
   args: {
     pxtable: manySeriesPxTable,
-    isMediumOrSmallerScreen: true,
+    screenSize: 'small',
   },
 };
 
 export const LongLegendLabels: Story = {
   args: {
     pxtable: longLegendLabelsPxTable,
-    isMediumOrSmallerScreen: false,
+    screenSize: 'large',
   },
 };
