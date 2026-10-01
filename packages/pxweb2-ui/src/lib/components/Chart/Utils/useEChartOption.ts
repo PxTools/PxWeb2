@@ -301,7 +301,7 @@ export function useEChartOption(
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
 
-    const applyOption = (legendHeight?: number) => {
+    const applyOption = () => {
       // Apply the new selection or legend state first. The legend can only be
       // measured after ECharts has rendered the updated option.
       applyOptionWithWrappedTitle(
@@ -309,8 +309,6 @@ export function useEChartOption(
         applyResponsiveLegend(
           chart,
           applyStyling(option),
-          legendHeight,
-          legendGap,
         ),
       );
 

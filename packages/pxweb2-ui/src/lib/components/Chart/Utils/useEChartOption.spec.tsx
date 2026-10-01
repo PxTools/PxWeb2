@@ -465,8 +465,8 @@ describe('useEChartOption', () => {
         data: ['A', 'B'],
         orient: 'vertical',
         left: 0,
-        top: 352,
-        bottom: undefined,
+        top: undefined,
+        bottom: 0,
         width: 400,
         itemWidth: 14,
         itemHeight: 14,
@@ -476,7 +476,8 @@ describe('useEChartOption', () => {
       expect.objectContaining({
         data: ['C', 'D'],
         left: 400,
-        top: 352,
+        top: undefined,
+        bottom: 0,
         width: 400,
         itemWidth: 14,
         itemHeight: 14,
@@ -485,7 +486,8 @@ describe('useEChartOption', () => {
       expect.objectContaining({
         data: ['E'],
         left: 800,
-        top: 352,
+        top: undefined,
+        bottom: 28,
         width: 400,
         itemWidth: 14,
         itemHeight: 14,
@@ -498,13 +500,39 @@ describe('useEChartOption', () => {
     const chartMock = {
       ...createChartMock(1200),
       getModel: vi.fn(() => ({
-        getComponentsByType: vi.fn(() => ['short', 'tall']),
+        getComponent: vi.fn(() => ({
+          coordinateSystem: {
+            getRect: vi.fn(() => ({
+              x: 0,
+              y: 20,
+              width: 1200,
+              height: 200,
+            })),
+          },
+        })),
+        getComponentsByType: vi.fn((type: string) =>
+          type === 'xAxis'
+            ? [
+                {
+                  axis: {
+                    axisBuilder: {
+                      group: {
+                        getBoundingRect: vi.fn(() => ({ y: 210, height: 58 })),
+                      },
+                    },
+                  },
+                },
+              ]
+            : ['short', 'tall'],
+        ),
       })),
       getViewOfComponentModel: vi.fn((legendModel: unknown) => ({
         group: {
-          getBoundingRect: vi.fn(() => ({
-            height: legendModel === 'tall' ? 140 : 80,
-          })),
+          getBoundingRect: vi.fn(() =>
+            legendModel === 'x-axis'
+              ? { y: 210, height: 58 }
+              : { height: legendModel === 'tall' ? 140 : 80 },
+          ),
         },
       })),
     } as unknown as EChartsType;
@@ -521,7 +549,7 @@ describe('useEChartOption', () => {
     );
 
     expect(chartMock.setOption).toHaveBeenCalledWith(
-      expect.objectContaining({ grid: { bottom: 140 } }),
+      expect.objectContaining({ grid: { bottom: 188 } }),
     );
   });
 

@@ -241,15 +241,11 @@ export function getGridRect(
  * Converts one horizontal legend into balanced vertical legend columns.
  * @param chart The ECharts instance being configured.
  * @param legend The horizontal legend option to convert.
- * @param renderedLegendHeight The measured legend height, when available.
- * @param legendGap The gap between the plot area and legend in pixels.
  * @returns The converted legend options, one for each column.
  */
 function applyHorizontalLegendColumns(
   chart: echarts.EChartsType,
   legend: echarts.LegendComponentOption,
-  renderedLegendHeight?: number,
-  legendGap = 0,
 ): echarts.LegendComponentOption[] {
   const data = legend.data;
   if (!Array.isArray(data) || data.length === 0) {
@@ -265,33 +261,18 @@ function applyHorizontalLegendColumns(
   const fontSize = getLegendFontSize();
   const lineHeight = getLegendLineHeight(fontSize);
   const columns = splitLegendData(data, columnCount);
-  // The tallest column determines the space needed below the chart.
-  const estimatedLegendHeight = Math.max(
-    ...columns.map((column) =>
-      getLegendColumnHeight(column, textWidth, fontSize),
-    ),
+  const columnHeights = columns.map((column) =>
+    getLegendColumnHeight(column, textWidth, fontSize),
   );
-  const gridRect = getGridRect(chart);
-  const legendTop =
-    gridRect == null
-      ? Math.max(
-          0,
-          chart.getHeight() -
-            (renderedLegendHeight ?? estimatedLegendHeight) +
-            legendGap,
-        )
-      : // When the grid rectangle is available, position the legend directly
-        // below the plot area rather than calculating it from the full chart.
-        gridRect.y + gridRect.height + legendGap * 2;
-
+  const tallestColumnHeight = Math.max(...columnHeights);
   return columns.map((columnData, columnIndex) => ({
     ...legend,
     data: columnData,
     orient: 'vertical',
     left: columnIndex * columnWidth,
     right: undefined,
-    top: legendTop,
-    bottom: undefined,
+    top: undefined,
+    bottom: tallestColumnHeight - columnHeights[columnIndex],
     width: columnWidth,
     itemWidth: LEGEND_SYMBOL_SIZE,
     itemHeight: LEGEND_SYMBOL_SIZE,
@@ -311,15 +292,11 @@ function applyHorizontalLegendColumns(
  * Applies responsive sizing and column layout to chart legend options.
  * @param chart The ECharts instance being configured.
  * @param option The chart option containing the legend.
- * @param renderedLegendHeight The measured legend height, when available.
- * @param legendGap The gap between the plot area and legend in pixels.
  * @returns The chart option with responsive legend layout applied.
  */
 export function applyResponsiveLegend(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
-  renderedLegendHeight?: number,
-  legendGap = 0,
 ): echarts.EChartsOption {
   const chartWidth = chart.getWidth();
   const legend = option.legend;
@@ -339,8 +316,6 @@ export function applyResponsiveLegend(
           : applyHorizontalLegendColumns(
               chart,
               legendItem,
-              renderedLegendHeight,
-              legendGap,
             ),
       ),
     };
@@ -353,8 +328,6 @@ export function applyResponsiveLegend(
     legend: applyHorizontalLegendColumns(
       chart,
       legend,
-      renderedLegendHeight,
-      legendGap,
     ),
   };
 }
@@ -382,8 +355,39 @@ type LegendMeasurableChart = {
   /** Gets the rendered view for a specific ECharts component model. */
   getViewOfComponentModel?: (
     componentModel: unknown,
-  ) => { group?: { getBoundingRect?: () => { height: number } } } | undefined;
+  ) =>
+    | {
+        group?: {
+          getBoundingRect?: () => { y: number; height: number };
+        };
+      }
+    | undefined;
 };
+
+type AxisBounds = {
+  y: number;
+  height: number;
+};
+
+function getAxisBounds(axisModel: unknown): AxisBounds | undefined {
+  const model = axisModel as {
+    axis?: {
+      axisBuilder?: {
+        group?: { getBoundingRect?: () => AxisBounds };
+      };
+    };
+  };
+  const axisBuilderBounds = model.axis?.axisBuilder?.group?.getBoundingRect?.();
+  if (
+    axisBuilderBounds &&
+    Number.isFinite(axisBuilderBounds.y) &&
+    Number.isFinite(axisBuilderBounds.height)
+  ) {
+    return axisBuilderBounds;
+  }
+
+  return undefined;
+}
 
 /**
  * Measures the tallest rendered legend component using ECharts' view groups.
@@ -418,6 +422,48 @@ export function getRenderedLegendHeight(
 }
 
 /**
+ * Measures the rendered x-axis content extending below the grid rectangle.
+ * @param chart The ECharts instance whose x-axis should be measured.
+ * @returns The rendered x-axis overflow below the grid, in pixels.
+ */
+export function getRenderedXAxisExtentBelowGrid(
+  chart: echarts.EChartsType,
+): number {
+  const gridRect = getGridRect(chart);
+  const xAxisBottom = getRenderedXAxisBottom(chart);
+  if (gridRect === null || xAxisBottom === null) {
+    return 0;
+  }
+  const gridBottom = gridRect.y + gridRect.height;
+  return Math.max(0, xAxisBottom - gridBottom);
+}
+
+/**
+ * Gets the bottom edge of the lowest rendered x-axis component.
+ * @param chart The ECharts instance whose x-axis should be measured.
+ * @returns The rendered x-axis bottom in chart coordinates, or null when unavailable.
+ */
+function getRenderedXAxisBottom(chart: echarts.EChartsType): number | null {
+  const measurable = chart as unknown as LegendMeasurableChart;
+  const axisModels = measurable.getModel?.()?.getComponentsByType?.('xAxis') ?? [];
+  const bottoms = axisModels
+    .map((axisModel) => {
+      const rect =
+        getAxisBounds(axisModel) ??
+        measurable
+          .getViewOfComponentModel?.(axisModel)
+          ?.group?.getBoundingRect?.();
+      if (!rect || !Number.isFinite(rect.y) || !Number.isFinite(rect.height)) {
+        return null;
+      }
+      return rect.y + rect.height;
+    })
+    .filter((bottom): bottom is number => bottom !== null);
+
+  return bottoms.length > 0 ? Math.max(...bottoms) : null;
+}
+
+/**
  * Updates the chart grid bottom to preserve the requested legend gap.
  * @param chart The ECharts instance whose grid should be updated.
  * @param option The chart option containing the current grid configuration.
@@ -434,7 +480,8 @@ export function applyLegendGap(
     return;
   }
   const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
-  const nextBottom = Math.round(legendHeight + legendGap);
+  const xAxisExtent = getRenderedXAxisExtentBelowGrid(chart);
+  const nextBottom = Math.round(xAxisExtent + legendHeight + legendGap);
   const measurable = chart as unknown as {
     getModel?: () => { getComponent?: (mainType: string) => unknown };
   };
@@ -485,8 +532,8 @@ type LegendLayoutControllerOptions = {
   /** Updates React state with the latest measured or estimated legend height. */
   setRenderedLegendHeight: (height: number | null) => void;
 
-  /** Applies updated ECharts options after the legend height is known. */
-  applyOption: (legendHeight?: number) => void;
+  /** Applies updated ECharts options after the legend layout is known. */
+  applyOption: () => void;
 };
 
 /**
@@ -534,10 +581,19 @@ export function createLegendLayoutController({
     );
 
     // Prefer the real measurement, but never use less space than the estimate.
-    const effectiveHeight =
+    const effectiveLegendHeight =
       measuredHeight === null
         ? estimatedHeight
         : Math.max(measuredHeight, estimatedHeight ?? 0);
+
+    // The chart container also needs to reserve the rendered x-axis overflow
+    // before the legend. This is measured only after ECharts has rendered.
+    const xAxisExtent =
+      measuredHeight === null ? 0 : getRenderedXAxisExtentBelowGrid(chart);
+    const effectiveHeight =
+      effectiveLegendHeight === null
+        ? null
+        : effectiveLegendHeight + xAxisExtent;
 
     // There is no legend height to apply when the legend has no data and no
     // rendered measurement is available.
@@ -548,8 +604,7 @@ export function createLegendLayoutController({
     // A changed measured height or an invalidated layout means ECharts needs
     // to receive updated legend options.
     const heightChanged =
-      measuredHeight !== null &&
-      measuredHeight !== lastRenderedLegendHeightRef.current;
+      effectiveHeight !== lastRenderedLegendHeightRef.current;
     const layoutInvalidated = legendLayoutInvalidatedRef.current;
 
     // Keep both the non-rendering ref and the React state in sync. The ref is
@@ -562,7 +617,7 @@ export function createLegendLayoutController({
     // estimate is enough for sizing but should not trigger a layout loop.
     if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
       legendLayoutInvalidatedRef.current = false;
-      applyOption(effectiveHeight);
+      applyOption();
     }
 
     // Keep the requested gap between the plot area and the legend in pixels.
