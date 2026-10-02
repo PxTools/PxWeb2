@@ -8,6 +8,10 @@
   border-radius: var(--px-border-radius-xlarge);
   background: var(--px-color-surface-default);
   min-height: 664px;
+  min-height: min(664px, calc(100vh - 2rem));
+  min-height: min(664px, calc(100dvh - 2rem));
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
 }
 
 .manualPivotModal > [data-modal-body] {
@@ -17,10 +21,6 @@
 
 .manualPivotModal > [data-modal-footer] {
   flex: 0 0 auto;
-}
-
-.manualPivotModal:has([data-pointer-dragging='true']) > [data-modal-body] {
-  overflow: visible;
 }
 
 .wrapper {
@@ -113,9 +113,6 @@
   padding: 16px 28px 12px 28px;
   scrollbar-gutter: stable;
 
-  &[data-pointer-dragging='true'] {
-    overflow: visible;
-  }
 }
 
 .groupLabel {
