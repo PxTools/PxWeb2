@@ -25,15 +25,18 @@ describe('useResponsivePixelsPerRem', () => {
     expect(screen.getByTestId('pixels-per-rem').textContent).toBe('20');
   });
 
-  it.each(['auto', '0px', '-2px'])('uses 16px when the root font size is %s', (fontSize) => {
-    vi.spyOn(window, 'getComputedStyle').mockReturnValue({
-      fontSize,
-    } as CSSStyleDeclaration);
+  it.each(['auto', '0px', '-2px'])(
+    'uses 16px when the root font size is %s',
+    (fontSize) => {
+      vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+        fontSize,
+      } as CSSStyleDeclaration);
 
-    render(<HookHost />);
+      render(<HookHost />);
 
-    expect(screen.getByTestId('pixels-per-rem').textContent).toBe('16');
-  });
+      expect(screen.getByTestId('pixels-per-rem').textContent).toBe('16');
+    },
+  );
 
   it('updates the value when the window is resized', () => {
     let fontSize = '16px';
