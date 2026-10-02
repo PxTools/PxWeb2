@@ -128,8 +128,8 @@ function wrapLegendText(
     .reduce((lines, word) => {
       // Split long words as well as normal text, so a single long series name
       // cannot force the legend column wider than the available space.
-      const chunks = new RegExp(`.{1,${charactersPerLine}}`, 'g').exec(
-        word,
+      const chunks = word.match(
+        new RegExp(`.{1,${charactersPerLine}}`, 'g'),
       ) ?? [''];
       const lastLine = lines.at(-1) ?? '';
 
