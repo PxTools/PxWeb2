@@ -174,8 +174,8 @@ describe('LineChart', () => {
     });
     expect(option.grid).toEqual({
       top: 36,
-      height: 456,
-      bottom: 156,
+      height: 476,
+      bottom: 136,
       left: '0',
       right: '0',
       outerBoundsContain: 'all',
@@ -263,7 +263,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('42.75rem'); // 528 / 16 + (3 * 40 + 36) / 16
+    expect(chartDiv?.style.height).toBe('41.5rem'); // 528 / 16 + (120 + 16) / 16
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
