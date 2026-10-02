@@ -181,6 +181,7 @@ export function LineChart({
   const pixelsPerRem = useResponsivePixelsPerRem();
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
+  
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, 'line', resolvedColors).map(
@@ -191,15 +192,16 @@ export function LineChart({
           : { focus: 'series' as const },
       }),
     ) as echarts.EChartsOption['series'];
+    const gridHeight =
+      CHART_PLOT_HEIGHT_PX[screenSize] -
+      TOP_CHART_PADDING -
+      X_AXIS_LABEL_TO_LEGEND_GAP;
 
     return {
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        height:
-          CHART_PLOT_HEIGHT_PX[screenSize] -
-          TOP_CHART_PADDING -
-          X_AXIS_LABEL_TO_LEGEND_GAP,
+        height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: '0',
         right: '0',

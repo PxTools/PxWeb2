@@ -34,9 +34,10 @@ export function getLegendColumnCount(chartWidth: number): number {
   if (chartWidth <= SMALL_BREAKPOINT_MAX_WIDTH) {
     return 1;
   }
-  if (chartWidth <= LARGE_BREAKPOINT_MAX_WIDTH) {
-    return chartWidth <= MEDIUM_BREAKPOINT_MAX_WIDTH ? 2 : 3;
+  if ((chartWidth <= LARGE_BREAKPOINT_MAX_WIDTH) && (chartWidth <= MEDIUM_BREAKPOINT_MAX_WIDTH)) {
+    return 2;
   }
+
   return 3;
 }
 
@@ -59,6 +60,7 @@ function splitLegendData<T>(data: T[], columnCount: number): T[][] {
     columns.push(data.slice(itemIndex, itemIndex + columnSize));
     itemIndex += columnSize;
   }
+
   return columns.filter((column) => column.length > 0);
 }
 
@@ -118,7 +120,7 @@ function wrapLegendText(
     Math.floor(textWidth / (fontSize * 0.55)),
   );
 
-  return text
+  const wrappedText = text
     .split(/\s+/)
     .reduce((lines, word) => {
       // Split long words as well as normal text, so a single long series name
@@ -137,9 +139,12 @@ function wrapLegendText(
         lines[lines.length - 1] = `${lastLine} ${chunks.shift()}`;
       }
       lines.push(...chunks);
+      
       return lines;
     }, [] as string[])
     .join('\n');
+
+  return wrappedText;
 }
 
 /**
@@ -155,6 +160,7 @@ function getLegendColumnHeight(
   fontSize = getLegendFontSize(),
 ): number {
   const lineHeight = getLegendLineHeight(fontSize);
+
   return data.reduce((height, item, index) => {
     // A wrapped label can be taller than its symbol, so use whichever height
     // is larger for each row before adding the gap to the next row.
@@ -163,7 +169,9 @@ function getLegendColumnHeight(
       wrapLegendText(getLegendText(item), textWidth, fontSize).split('\n')
         .length * lineHeight,
     );
-    return height + rowHeight + (index < data.length - 1 ? LEGEND_ITEM_GAP : 0);
+    const legendItemGap = index < data.length - 1 ? LEGEND_ITEM_GAP : 0;
+
+    return height + rowHeight + legendItemGap;
   }, 0);
 }
 
@@ -182,6 +190,7 @@ export function getEstimatedLegendHeight(
   if (!Array.isArray(data) || data.length === 0) {
     return null;
   }
+
   const columnCount = Math.min(getLegendColumnCount(chartWidth), data.length);
   // Each column gets an equal share of the chart width. Keep a small amount
   // of space for the legend symbol and its surrounding padding.
@@ -189,6 +198,7 @@ export function getEstimatedLegendHeight(
     80,
     chartWidth / columnCount - LEGEND_COLUMN_PADDING,
   );
+
   return Math.max(
     ...splitLegendData(data, columnCount).map((column) =>
       getLegendColumnHeight(column, textWidth, fontSize),
