@@ -171,7 +171,24 @@ describe('LineChart', () => {
     });
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
+      axisLabel: {
+        rotate: 45,
+        interval: 0,
+        align: 'right',
+        padding: 5,
+        verticalAlign: 'top',
+        overflow: 'break',
+        hideOverlap: true,
+      },
     });
+    const xAxis = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis;
+    expect(xAxis?.axisLabel?.formatter).toBeTypeOf('function');
+    expect(xAxis?.axisLabel).not.toHaveProperty('width');
+    expect(
+      (xAxis?.axisLabel?.formatter as (value: unknown) => string)(
+        'A'.repeat(150),
+      ),
+    ).toContain('\n');
     expect(option.grid).toEqual({
       top: 36,
       height: 476,
