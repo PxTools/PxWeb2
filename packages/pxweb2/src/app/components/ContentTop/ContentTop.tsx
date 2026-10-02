@@ -220,7 +220,7 @@ export function ContentTop({
           id="px-main-content"
           className={cl(classes[`heading-information`])}
         >
-          <Heading level="1" size="large">
+          <Heading id="px-table-title" level="1" size="large">
             {tableTitle}
           </Heading>
           <div className={cl(classes.information)}>
