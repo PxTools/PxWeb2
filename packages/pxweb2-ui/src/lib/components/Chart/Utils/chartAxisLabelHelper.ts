@@ -28,10 +28,7 @@ function wrapText(text: string, maxCharacters: number): string[] {
     const firstChunk = chunks.shift() ?? '';
     const lastLine = lines.at(-1);
 
-    if (
-      lastLine &&
-      lastLine.length + 1 + firstChunk.length <= maxCharacters
-    ) {
+    if (lastLine && lastLine.length + 1 + firstChunk.length <= maxCharacters) {
       lines[lines.length - 1] = `${lastLine} ${firstChunk}`;
     } else {
       lines.push(firstChunk);
@@ -79,8 +76,7 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
         const lineCharacterLimit = Math.max(
           1,
           Math.floor(
-            availableLineWidth /
-              (fontSize * AVERAGE_CHARACTER_WIDTH_RATIO),
+            availableLineWidth / (fontSize * AVERAGE_CHARACTER_WIDTH_RATIO),
           ),
         );
         const lines = wrapText(text, lineCharacterLimit);
