@@ -2,9 +2,11 @@ import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 import {
   BreakpointsXsmallMaxWidth,
+  BreakpointsSmallMaxWidth,
   BreakpointsMediumMaxWidth,
   BreakpointsLargeMaxWidth,
   BreakpointsXlargeMaxWidth,
+  ScreenSize,
 } from '@pxweb2/pxweb2-ui';
 
 // Define the type for the context
@@ -15,6 +17,7 @@ export type AppContextType = {
   isXXLargeDesktop: boolean;
   isTablet: boolean;
   isMobile: boolean;
+  screenSize: ScreenSize;
   skipToMainFocused: boolean;
   setSkipToMainFocused: (focused: boolean) => void;
   title: string;
@@ -31,6 +34,7 @@ export const AppContext = createContext<AppContextType>({
   isXXLargeDesktop: false,
   isTablet: false,
   isMobile: false,
+  screenSize: 'large',
   skipToMainFocused: false,
   setSkipToMainFocused: () => {
     return;
@@ -45,6 +49,32 @@ export const AppContext = createContext<AppContextType>({
   },
 });
 
+const getScreenSize = (
+  width: number,
+  xLargeBreakpoint: number,
+  largeBreakpoint: number,
+  tabletBreakpoint: number,
+  smallBreakpoint: number,
+  mobileBreakpoint: number,
+): ScreenSize => {
+  if (width > xLargeBreakpoint) {
+    return 'xxlarge';
+  }
+  if (width > largeBreakpoint) {
+    return 'xlarge';
+  }
+  if (width > tabletBreakpoint) {
+    return 'large';
+  }
+  if (width > smallBreakpoint) {
+    return 'medium';
+  }
+  if (width > mobileBreakpoint) {
+    return 'small';
+  }
+  return 'xsmall';
+};
+
 // Provider component
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -56,10 +86,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Keep state if window screen size is mobile, tablet, or desktop.
    */
-  const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const xLargeBreakpoint = Number(BreakpointsXlargeMaxWidth.replace('px', ''));
+  const largeBreakpoint = Number(BreakpointsLargeMaxWidth.replace('px', ''));
   const tabletBreakpoint = Number(BreakpointsMediumMaxWidth.replace('px', ''));
+  const smallBreakpoint = Number(BreakpointsSmallMaxWidth.replace('px', ''));
   const mobileBreakpoint = Number(BreakpointsXsmallMaxWidth.replace('px', ''));
+
   const [isXLargeDesktop, setIsXLargeDesktop] = useState(
     window.innerWidth > largeBreakpoint,
   );
@@ -72,6 +104,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= mobileBreakpoint,
   );
+  const [screenSize, setScreenSize] = useState<ScreenSize>(
+    getScreenSize(
+      window.innerWidth,
+      xLargeBreakpoint,
+      largeBreakpoint,
+      tabletBreakpoint,
+      smallBreakpoint,
+      mobileBreakpoint,
+    ),
+  );
 
   // Use effect to set the isMobile and isTablet state
   useEffect(() => {
@@ -80,6 +122,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsXXLargeDesktop(window.innerWidth > xLargeBreakpoint);
       setIsTablet(window.innerWidth <= tabletBreakpoint);
       setIsMobile(window.innerWidth <= mobileBreakpoint);
+      setScreenSize(
+        getScreenSize(
+          window.innerWidth,
+          xLargeBreakpoint,
+          largeBreakpoint,
+          tabletBreakpoint,
+          smallBreakpoint,
+          mobileBreakpoint,
+        ),
+      );
     };
 
     window.addEventListener('resize', handleResize);
@@ -87,7 +139,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [mobileBreakpoint, tabletBreakpoint, largeBreakpoint, xLargeBreakpoint]);
+  }, [
+    mobileBreakpoint,
+    tabletBreakpoint,
+    largeBreakpoint,
+    xLargeBreakpoint,
+    smallBreakpoint,
+  ]);
 
   const getSavedQueryId = React.useCallback(() => {
     let savedQueryId: string = '';
@@ -112,6 +170,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       setSkipToMainFocused,
       title,
       setTitle,
+      screenSize,
       languageFilter,
       setLanguageFilter,
     }),
@@ -122,6 +181,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       isXXLargeDesktop,
       isTablet,
       isMobile,
+      screenSize,
       skipToMainFocused,
       setSkipToMainFocused,
       title,
