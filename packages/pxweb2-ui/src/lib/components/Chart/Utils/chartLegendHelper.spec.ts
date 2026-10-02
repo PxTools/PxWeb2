@@ -109,16 +109,16 @@ describe('applyResponsiveLegend', () => {
     expect(option.legend).toMatchObject({ data: ['A', 'B', 'C', 'D', 'E'] });
   });
 
-  it('wraps long legend labels to the available column width', () => {
+  it('wraps legend labels at word boundaries to the available column width', () => {
     const chart = createChartMock(100);
     const result = applyResponsiveLegend(chart, {
-      legend: { data: ['ABCDEFGHIJKLM'] },
+      legend: { data: ['ABCDEFGHIJ KLM'] },
     });
     const legend = (result.legend as LegendComponentOption[])[0];
 
     expect(legend.formatter).toBeTypeOf('function');
     expect(
-      (legend.formatter as (name: string) => string)('ABCDEFGHIJKLM'),
+      (legend.formatter as (name: string) => string)('ABCDEFGHIJ KLM'),
     ).toBe('ABCDEFGHIJ\nKLM');
   });
 
