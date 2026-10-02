@@ -43,7 +43,7 @@ type TooltipParam = {
   color?: string;
 };
 
-const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
+const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {

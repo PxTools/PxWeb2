@@ -361,7 +361,14 @@ type AxisBounds = {
   height: number;
 };
 
+/**
+ * Reads the rendered bounds from an axis model's internal builder group.
+ * @param axisModel The ECharts axis model to inspect.
+ * @returns The axis group's vertical position and height, or undefined when unavailable.
+ */
 function getAxisBounds(axisModel: unknown): AxisBounds | undefined {
+  // ECharts does not expose this internal axis-builder structure in its public
+  // types, so describe only the parts needed to read the rendered bounds.
   const model = axisModel as {
     axis?: {
       axisBuilder?: {
@@ -369,7 +376,13 @@ function getAxisBounds(axisModel: unknown): AxisBounds | undefined {
       };
     };
   };
+
+  // The axis may not be fully rendered yet, so safely walk the optional
+  // objects and method instead of assuming every part is available.
   const axisBuilderBounds = model.axis?.axisBuilder?.group?.getBoundingRect?.();
+
+  // Ignore missing or invalid measurements; callers can try another source
+  // of bounds when the axis builder cannot provide a usable rectangle.
   if (
     axisBuilderBounds &&
     Number.isFinite(axisBuilderBounds.y) &&
