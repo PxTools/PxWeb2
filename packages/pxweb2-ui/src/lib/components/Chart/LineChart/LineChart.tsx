@@ -181,7 +181,7 @@ export function LineChart({
   const pixelsPerRem = useResponsivePixelsPerRem();
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
-  
+
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, 'line', resolvedColors).map(

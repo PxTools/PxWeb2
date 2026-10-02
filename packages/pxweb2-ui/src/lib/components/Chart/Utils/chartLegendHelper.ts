@@ -34,7 +34,10 @@ export function getLegendColumnCount(chartWidth: number): number {
   if (chartWidth <= SMALL_BREAKPOINT_MAX_WIDTH) {
     return 1;
   }
-  if ((chartWidth <= LARGE_BREAKPOINT_MAX_WIDTH) && (chartWidth <= MEDIUM_BREAKPOINT_MAX_WIDTH)) {
+  if (
+    chartWidth <= LARGE_BREAKPOINT_MAX_WIDTH &&
+    chartWidth <= MEDIUM_BREAKPOINT_MAX_WIDTH
+  ) {
     return 2;
   }
 
@@ -139,7 +142,7 @@ function wrapLegendText(
         lines[lines.length - 1] = `${lastLine} ${chunks.shift()}`;
       }
       lines.push(...chunks);
-      
+
       return lines;
     }, [] as string[])
     .join('\n');
