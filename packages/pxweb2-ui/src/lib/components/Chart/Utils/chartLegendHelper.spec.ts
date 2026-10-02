@@ -156,9 +156,9 @@ describe('ECharts geometry measurements', () => {
   });
 
   it('uses the tallest finite rendered legend height', () => {
-    expect(getRenderedLegendHeight(createRenderedLegendChart([24, 48, 36]))).toBe(
-      48,
-    );
+    expect(
+      getRenderedLegendHeight(createRenderedLegendChart([24, 48, 36])),
+    ).toBe(48);
     expect(getRenderedLegendHeight(createChartMock())).toBeNull();
   });
 
