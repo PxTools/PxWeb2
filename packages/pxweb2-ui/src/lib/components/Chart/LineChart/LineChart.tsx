@@ -13,7 +13,6 @@ import {
   getFallbackLegendHeight,
   useEChartOption,
 } from '../Utils/useEChartOption';
-import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
@@ -181,7 +180,6 @@ export function LineChart({
 
   const pixelsPerRem = useResponsivePixelsPerRem();
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
-  const xAxisLabelConfig = createResponsiveXAxisLabelConfig(pixelsPerRem);
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
@@ -219,15 +217,7 @@ export function LineChart({
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
         axisLabel: {
-          rotate: 45,
-          interval: 0,
-          align: 'right',
-          padding: 5,
-          lineHeight: xAxisLabelConfig.lineHeight,
-          verticalAlign: 'top',
-          overflow: 'break',
-          hideOverlap: true,
-          formatter: xAxisLabelConfig.formatter,
+          rotate: 45
         },
         axisLine: {
           show: true,
