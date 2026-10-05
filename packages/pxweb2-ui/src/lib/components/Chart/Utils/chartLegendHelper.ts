@@ -247,7 +247,7 @@ export function getGridRect(
         };
       }
     | undefined;
-    
+
   return gridModel?.coordinateSystem?.getRect?.() ?? null;
 }
 
