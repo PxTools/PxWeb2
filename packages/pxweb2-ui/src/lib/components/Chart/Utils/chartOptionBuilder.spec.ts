@@ -12,6 +12,10 @@ const mockDataset: EChartsDataset = {
     { name: '2022', men: 100, women: 110 },
     { name: '2023', men: 120, women: 130 },
   ],
+  formattedValues: [
+    { men: '100', women: '110' },
+    { men: '120', women: '130' },
+  ],
   series: [
     { key: 'men', name: 'Men' },
     { key: 'women', name: 'Women' },
@@ -80,6 +84,7 @@ describe('buildSeriesOption', () => {
         { key: 'total', name: 'Total' },
       ],
       source: [{ name: '2022', men: 100, women: 110, total: 210 }],
+      formattedValues: [{ men: '100', women: '110', total: '210' }],
     };
 
     const series = buildSeriesOption(datasetWithThreeSeries, 'bar', [

@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.11.0](https://github.com/PxTools/PxWeb2/compare/v2.10.0...v2.11.0) (2026-09-10)
+
+
+### :sparkles: Features
+
+* Add graph legend handling ([#1460](https://github.com/PxTools/PxWeb2/issues/1460)) ([a308485](https://github.com/PxTools/PxWeb2/commit/a3084853cd4e9e28567d50fd6dbf457262088fb3))
+* Chart autopivot ([#1346](https://github.com/PxTools/PxWeb2/issues/1346)) ([763b42a](https://github.com/PxTools/PxWeb2/commit/763b42a5f9786158446e0df8ec8d84262436190f))
+* Improve chart axis functionality ([#1358](https://github.com/PxTools/PxWeb2/issues/1358)) ([d9ce7cb](https://github.com/PxTools/PxWeb2/commit/d9ce7cb1c1ed5e321046228be240fa4e4647e8d4))
+* visual styling of non data elements 108 ([#1461](https://github.com/PxTools/PxWeb2/issues/1461)) ([79edff3](https://github.com/PxTools/PxWeb2/commit/79edff30d236584fa2104215f9ed79e4aa97594a))
+
+
+### :bug: Bug Fixes
+
+* Add correct styling to linechart showmore button ([#1476](https://github.com/PxTools/PxWeb2/issues/1476)) ([7979cdb](https://github.com/PxTools/PxWeb2/commit/7979cdb9cae0c5fd54ab84935c6260ca7a7fab16))
+* change link target to open in the same tab ([#1493](https://github.com/PxTools/PxWeb2/issues/1493)) ([c312a5b](https://github.com/PxTools/PxWeb2/commit/c312a5b867e9194d40e1ac41f2d12e2edc86cff7))
+* Minor EmptyState changes ([#1477](https://github.com/PxTools/PxWeb2/issues/1477)) ([918a365](https://github.com/PxTools/PxWeb2/commit/918a365814464c2ac2de9bb0d28032105bdabe33))
+* resolve type errors by converting numbers to strings in 2 translations in Presentation component ([#1459](https://github.com/PxTools/PxWeb2/issues/1459)) ([12303a4](https://github.com/PxTools/PxWeb2/commit/12303a49b1ecbda4db63055c81770e976ce9b85d))
+
+
+### :books: Documentation
+
+* update MAINTAINERS file ([#1491](https://github.com/PxTools/PxWeb2/issues/1491)) ([185d1ee](https://github.com/PxTools/PxWeb2/commit/185d1ee82c1014b4ef6e91c9c6025bfb209e413a))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([#1465](https://github.com/PxTools/PxWeb2/issues/1465)) ([ae261f8](https://github.com/PxTools/PxWeb2/commit/ae261f88fb6703078d8c6d1920681cb8596f6adb))
+* **deps-dev:** bump @typescript-eslint/parser from 8.66.0 to 8.67.0 ([#1456](https://github.com/PxTools/PxWeb2/issues/1456)) ([905f464](https://github.com/PxTools/PxWeb2/commit/905f46455700a244a0d84434335aeb0811c8da0e))
+* **deps-dev:** bump fast-uri from 3.1.5 to 3.1.7 ([#1478](https://github.com/PxTools/PxWeb2/issues/1478)) ([fb58b79](https://github.com/PxTools/PxWeb2/commit/fb58b7948abef1af479cd304e1b0700280ad0264))
+* **deps-dev:** bump html-validate from 11.6.2 to 11.7.0 ([#1464](https://github.com/PxTools/PxWeb2/issues/1464)) ([fa47f2c](https://github.com/PxTools/PxWeb2/commit/fa47f2cf7bdff896c5b69bae9fff704ea32c8640))
+* **deps-dev:** bump wrangler from 4.120.0 to 4.123.0 ([#1455](https://github.com/PxTools/PxWeb2/issues/1455)) ([1e98e61](https://github.com/PxTools/PxWeb2/commit/1e98e61ad05f36dd5b2cc579e155b62fb3de1257))
+* **deps-dev:** bump wrangler from 4.125.0 to 4.127.1 ([#1487](https://github.com/PxTools/PxWeb2/issues/1487)) ([b63f3d6](https://github.com/PxTools/PxWeb2/commit/b63f3d62b04338cf5b1457682a2ce04d9fea5243))
+* **deps:** bump chromaui/action from 18.1.0 to 18.5.0 ([#1475](https://github.com/PxTools/PxWeb2/issues/1475)) ([eab19f0](https://github.com/PxTools/PxWeb2/commit/eab19f06e04d77a5ca8af65ce8b2b27351866647))
+* **deps:** bump chromaui/action from 18.5.0 to 18.7.1 ([#1486](https://github.com/PxTools/PxWeb2/issues/1486)) ([b7dcac7](https://github.com/PxTools/PxWeb2/commit/b7dcac703b8f77fb4754cf57d736c9c5e241cd94))
+* **deps:** bump docker/setup-buildx-action from 4.2.0 to 4.3.0 ([#1474](https://github.com/PxTools/PxWeb2/issues/1474)) ([aa7dc60](https://github.com/PxTools/PxWeb2/commit/aa7dc6028816423499da4e29ecb78bf4a76ced01))
+* **deps:** bump github/codeql-action/upload-sarif ([#1458](https://github.com/PxTools/PxWeb2/issues/1458)) ([4feebc7](https://github.com/PxTools/PxWeb2/commit/4feebc78d9b59da82fe14fb1160d0dadd51e5602))
+* **deps:** bump github/codeql-action/upload-sarif ([#1473](https://github.com/PxTools/PxWeb2/issues/1473)) ([7acced0](https://github.com/PxTools/PxWeb2/commit/7acced0ff2c09ef6975ed453c9e4be528a2a2e16))
+* **deps:** bump github/codeql-action/upload-sarif ([#1489](https://github.com/PxTools/PxWeb2/issues/1489)) ([47563a9](https://github.com/PxTools/PxWeb2/commit/47563a97c53c6acd116de5c76daad12abec64445))
+* **deps:** bump motion from 13.0.0 to 13.1.0 ([#1457](https://github.com/PxTools/PxWeb2/issues/1457)) ([e93a6db](https://github.com/PxTools/PxWeb2/commit/e93a6db17d4adf3a692c81898c46ebcc9612fc28))
+* **deps:** bump nginxinc/nginx-unprivileged ([#1470](https://github.com/PxTools/PxWeb2/issues/1470)) ([9a8b2d0](https://github.com/PxTools/PxWeb2/commit/9a8b2d019ed69e60117561fc473a5b83e96af286))
+
+
+### :broom: Chores
+
+* Update node image in dockerfile to latest 24 ([#1483](https://github.com/PxTools/PxWeb2/issues/1483)) ([65d31d7](https://github.com/PxTools/PxWeb2/commit/65d31d726b534ddac22a7d0f75e35d3515963884))
+* Update non major dependencies ([#1479](https://github.com/PxTools/PxWeb2/issues/1479)) ([47e3830](https://github.com/PxTools/PxWeb2/commit/47e38304915eea8ba63ad2cec5cd2f1fb2da034b))
+
 ## [2.10.0](https://github.com/PxTools/PxWeb2/compare/v2.9.2...v2.10.0) (2026-08-18)
 
 

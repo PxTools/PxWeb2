@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { LoaderFunctionArgs } from 'react-router';
+import type { LoaderFunctionArgs, RouterContextProvider } from 'react-router';
 
 import { savedQueryRouteLoader } from './savedQueryRouteLoader';
 import { getConfig } from './util/config/getConfig';
@@ -13,8 +13,9 @@ import type { Config as AppConfig } from './util/config/configType';
 const makeArgs = (sqId?: string): LoaderFunctionArgs => ({
   params: sqId ? { sqId } : {},
   request: new Request('http://localhost'),
-  context: undefined,
-  unstable_pattern: '',
+  context: {} as RouterContextProvider,
+  url: new URL('http://localhost'),
+  pattern: '',
 });
 
 vi.mock('./util/config/getConfig', () => ({

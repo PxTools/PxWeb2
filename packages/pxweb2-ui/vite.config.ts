@@ -4,14 +4,14 @@ import dts from 'unplugin-dts/vite';
 import * as path from 'node:path';
 
 export default defineConfig({
-  root: __dirname,
+  root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/libs/pxweb2-ui',
 
   plugins: [
     react(),
     dts({
       entryRoot: 'src',
-      tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
+      tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json'),
     }),
   ],
   build: {

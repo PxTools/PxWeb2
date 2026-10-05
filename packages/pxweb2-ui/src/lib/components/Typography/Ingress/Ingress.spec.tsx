@@ -4,7 +4,7 @@ import Ingress from './Ingress';
 
 describe('Ingress', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Ingress />);
+    const { baseElement } = render(<Ingress>Test ingress</Ingress>);
     expect(baseElement).toBeTruthy();
   });
 });

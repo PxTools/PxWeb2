@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import type * as echarts from 'echarts';
 
 import { LineChart, LegendToggleButton } from './LineChart';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
@@ -9,7 +10,12 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
-import { getChartCssVariables, checkMultipleUnits } from '../Utils/chartHelper';
+import {
+  getChartCssVariables,
+  getAdaptiveYAxisInterval,
+  checkMultipleUnits,
+  getYAxisBreak,
+} from '../Utils/chartHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -38,6 +44,8 @@ vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),
+  getAdaptiveYAxisInterval: vi.fn(),
+  getYAxisBreak: vi.fn(),
   checkMultipleUnits: vi.fn(),
 }));
 
@@ -46,7 +54,14 @@ const mockDataset: EChartsDataset = {
   origin: 'Statistics Demo',
   unit: 'persons',
   dimensions: ['name', 'men', 'women'],
-  source: [{ name: '2024', men: 10, women: 12 }],
+  source: [
+    {
+      name: '2024',
+      men: 10,
+      women: 12,
+    },
+  ],
+  formattedValues: [{ men: '10', women: '12' }],
   series: [
     { key: 'men', name: 'Men' },
     { key: 'women', name: 'Women' },
@@ -104,6 +119,12 @@ describe('LineChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
+    vi.mocked(getYAxisBreak).mockReturnValue({
+      start: 0,
+      end: 9.7,
+      gap: '13%',
+    });
+    vi.mocked(getAdaptiveYAxisInterval).mockReturnValue(5);
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -125,6 +146,8 @@ describe('LineChart', () => {
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
     expect(buildSeriesOption).toHaveBeenCalledWith(mockDataset, 'line', colors);
     expect(getChartCssVariables).not.toHaveBeenCalled();
+    expect(getYAxisBreak).toHaveBeenCalledWith({ min: 10, max: 12 });
+    expect(getAdaptiveYAxisInterval).toHaveBeenCalledWith({ min: 10, max: 12 });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
@@ -135,6 +158,14 @@ describe('LineChart', () => {
 
     expect(option.yAxis).toMatchObject({
       name: 'persons',
+      min: 0,
+      interval: 5,
+      breaks: [{ start: 0, end: 9.7, gap: '13%' }],
+      breakArea: { show: false },
+      axisLine: { breakLine: false },
+    });
+    expect(option.xAxis).toMatchObject({
+      axisLine: { onZero: false },
     });
     expect(option.grid).toEqual({
       top: 36,
@@ -144,6 +175,34 @@ describe('LineChart', () => {
       outerBoundsContain: 'all',
       outerBoundsMode: 'same',
     });
+    expect(option.tooltip).toMatchObject({
+      trigger: 'axis',
+      extraCssText:
+        'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+    });
+    expect(option.series).toEqual([
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+      expect.objectContaining({ emphasis: { focus: 'series' } }),
+    ]);
+  });
+
+  it('disables series emphasis on medium and smaller screens', () => {
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        isMediumOrSmallerScreen
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.series).toEqual([
+      expect.objectContaining({ emphasis: { disabled: true } }),
+      expect.objectContaining({ emphasis: { disabled: true } }),
+      expect.objectContaining({ emphasis: { disabled: true } }),
+    ]);
   });
 
   it('uses fallback colors when colors are not provided', () => {
@@ -201,6 +260,18 @@ describe('LineChart', () => {
     expect(chartDiv?.style.height).toBe('38.4rem'); // 36 + 3 * 0.8 = 38.4
   });
 
+  it('allows vertical page scrolling but prevents horizontal page movement', () => {
+    const { container } = render(
+      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+    );
+
+    const chartDiv = Array.from(container.querySelectorAll('div')).find(
+      (element) => element.style.height,
+    );
+
+    expect(chartDiv?.style.touchAction).toBe('pan-y');
+  });
+
   it('returns empty tooltip text for empty params', () => {
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
 
@@ -211,8 +282,40 @@ describe('LineChart', () => {
     expect(formatter?.([])).toBe('');
   });
 
-  it('formats tooltip rows with symbol svg, labels, values and fallback color', () => {
+  it('returns empty tooltip text when no series is hovered', () => {
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+
+    expect(
+      formatter?.([
+        {
+          axisValueLabel: '2024',
+          seriesIndex: 0,
+          seriesName: 'Men',
+          data: { men: 10, women: 12 },
+        },
+      ]),
+    ).toBe('');
+  });
+
+  it('formats tooltip text only for the hovered series', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+    });
+
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 1 });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
@@ -220,26 +323,75 @@ describe('LineChart', () => {
     const html = formatter?.([
       {
         axisValueLabel: '2024',
+        dataIndex: 0,
         seriesIndex: 0,
         seriesName: 'Men',
-        data: { men: 10, women: 12 },
+        data: {
+          men: 10,
+          women: 12,
+        },
       },
       {
         axisValueLabel: '2024',
+        dataIndex: 0,
         seriesIndex: 1,
         seriesName: 'Women',
         color: '#ff0000',
-        data: { men: 10, women: 12 },
+        data: {
+          men: 10,
+          women: 12,
+        },
       },
     ]);
 
-    expect(html).toContain('<div><div>2024</div>');
-    expect(html).toContain('Men: 10');
-    expect(html).toContain('Women: 12');
-    expect(html).toContain('fill="#666666"');
+    expect(html).toContain(
+      '<div style="font-family:PxWeb-font, sans-serif"><div style="margin-bottom:4px;">2024</div>',
+    );
+    expect(html).toContain('Women: <strong>12</strong>');
+    expect(html).not.toContain('Men: <strong>10</strong>');
     expect(html).toContain('fill="#ff0000"');
-    expect(html).toContain('<circle');
     expect(html).toContain('<rect');
+  });
+
+  it('uses formatted values in the tooltip', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      formattedValues: [{ men: '10', women: '12.35' }],
+    });
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+    });
+
+    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 1 });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+    const html = formatter?.([
+      {
+        axisValueLabel: '2024',
+        dataIndex: 0,
+        seriesIndex: 1,
+        seriesName: 'Women',
+        data: {
+          men: 10,
+          women: 12.345,
+        },
+      },
+    ]);
+
+    expect(html).toContain('Women: <strong>12.35</strong>');
+    expect(html).not.toContain('<strong>12.35 persons</strong>');
+    expect(html).not.toContain('Women: 12.345');
   });
 
   describe('legends', () => {
