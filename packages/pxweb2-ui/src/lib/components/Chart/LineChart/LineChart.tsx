@@ -10,6 +10,7 @@ import {
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
 import { useEChartOption } from '../Utils/useEChartOption';
+import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
@@ -160,6 +161,10 @@ export function LineChart({
 
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
+
+  // const pixelsPerRem = useResponsivePixelsPerRem(); TODO
+  const pixelsPerRem = 16;
+  const xAxisLabelConfig = createResponsiveXAxisLabelConfig(pixelsPerRem);
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
@@ -191,7 +196,17 @@ export function LineChart({
         nameLocation: 'end',
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
-        axisLabel: { rotate: 45 },
+        axisLabel: {
+          rotate: 45,
+          interval: 0,
+          align: 'right',
+          padding: 5,
+          lineHeight: xAxisLabelConfig.lineHeight,
+          verticalAlign: 'top',
+          overflow: 'break',
+          hideOverlap: true,
+          formatter: xAxisLabelConfig.formatter,
+        },
         axisLine: {
           show: true,
           onZero: false,
