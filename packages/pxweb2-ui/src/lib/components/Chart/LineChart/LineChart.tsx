@@ -217,7 +217,7 @@ export function LineChart({
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
         axisLabel: {
-          rotate: 45
+          rotate: 45,
         },
         axisLine: {
           show: true,
