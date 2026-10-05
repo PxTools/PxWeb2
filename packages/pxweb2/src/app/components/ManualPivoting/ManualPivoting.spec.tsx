@@ -65,7 +65,6 @@ vi.mock('framer-motion', async () => {
 });
 
 vi.mock('@pxweb2/pxweb2-ui', async () => {
-
   return {
     VartypeEnum: {
       REGULAR_VARIABLE: 'RegularVariable',
