@@ -131,7 +131,6 @@ describe('ECharts geometry measurements', () => {
     expect(getGridRect(chartWithGrid)).toEqual(rect);
     expect(getGridRect(createChartMock())).toBeNull();
   });
-
 });
 
 describe('createLegendLayoutController', () => {
