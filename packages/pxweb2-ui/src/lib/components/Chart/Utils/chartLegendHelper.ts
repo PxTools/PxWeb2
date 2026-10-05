@@ -247,6 +247,7 @@ export function getGridRect(
         };
       }
     | undefined;
+    
   return gridModel?.coordinateSystem?.getRect?.() ?? null;
 }
 
@@ -422,9 +423,11 @@ export function getRenderedLegendHeight(
     [model?.getComponent?.('legend')].filter(
       (legendModel): legendModel is unknown => legendModel != null,
     );
+
   if (legendModels.length === 0) {
     return null;
   }
+
   const heights = legendModels
     .map(
       (legendModel) =>
@@ -436,6 +439,7 @@ export function getRenderedLegendHeight(
       (height): height is number =>
         typeof height === 'number' && Number.isFinite(height),
     );
+
   return heights.length > 0 ? Math.max(...heights) : null;
 }
 
@@ -449,10 +453,13 @@ export function getRenderedXAxisExtentBelowGrid(
 ): number {
   const gridRect = getGridRect(chart);
   const xAxisBottom = getRenderedXAxisBottom(chart);
+
   if (gridRect === null || xAxisBottom === null) {
     return 0;
   }
+
   const gridBottom = gridRect.y + gridRect.height;
+
   return Math.max(0, xAxisBottom - gridBottom);
 }
 
