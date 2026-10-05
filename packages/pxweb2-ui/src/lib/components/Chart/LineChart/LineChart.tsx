@@ -345,7 +345,6 @@ export function LineChart({
   const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
     option,
     'svg',
-    X_AXIS_LABEL_TO_LEGEND_GAP,
   );
 
   const calculatedLegendHeight =

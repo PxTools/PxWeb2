@@ -20,19 +20,27 @@ type HookHostProps = {
   renderer?: 'canvas' | 'svg';
   legendGap?: number;
   onChartRef?: (chartRef: { current: EChartsType | null }) => void;
+  onRenderedLegendHeight?: (height: number | null) => void;
 };
 
 function HookHost({
   option,
   renderer,
-  legendGap,
   onChartRef,
+  onRenderedLegendHeight,
 }: Readonly<HookHostProps>) {
-  const { divRef, chartRef } = useEChartOption(option, renderer, legendGap);
+  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
+    option,
+    renderer,
+  );
 
   React.useEffect(() => {
     onChartRef?.(chartRef);
   }, [chartRef, onChartRef]);
+
+  React.useEffect(() => {
+    onRenderedLegendHeight?.(renderedLegendHeight);
+  }, [onRenderedLegendHeight, renderedLegendHeight]);
 
   return <div data-testid="chart-root" ref={divRef} />;
 }
@@ -497,6 +505,7 @@ describe('useEChartOption', () => {
   });
 
   it('uses the tallest rendered legend column for chart spacing', () => {
+    const onRenderedLegendHeight = vi.fn();
     const chartMock = {
       ...createChartMock(1200),
       getModel: vi.fn(() => ({
@@ -545,12 +554,11 @@ describe('useEChartOption', () => {
           grid: { bottom: 36 },
         }}
         legendGap={0}
+        onRenderedLegendHeight={onRenderedLegendHeight}
       />,
     );
 
-    expect(chartMock.setOption).toHaveBeenCalledWith(
-      expect.objectContaining({ grid: { bottom: 188 } }),
-    );
+    expect(onRenderedLegendHeight).toHaveBeenLastCalledWith(188);
   });
 
   it('draws a gridline at the end of a y-axis break', () => {

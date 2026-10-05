@@ -267,7 +267,6 @@ function applyYAxisBreakMark(
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
-  legendGap?: number,
 ) {
   // Ref to the chart container div and the ECharts instance.
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -317,7 +316,6 @@ export function useEChartOption(
       chart,
       chartContainer,
       option,
-      legendGap,
       lastRenderedLegendHeightRef,
       legendLayoutInvalidatedRef,
       setRenderedLegendHeight: (height) => {
@@ -368,7 +366,7 @@ export function useEChartOption(
       chartRef.current = null;
       chart.dispose();
     };
-  }, [option, renderer, legendGap]);
+  }, [option, renderer]);
 
   return {
     divRef,

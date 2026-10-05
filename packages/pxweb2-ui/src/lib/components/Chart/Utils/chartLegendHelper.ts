@@ -489,36 +489,6 @@ function getRenderedXAxisBottom(chart: echarts.EChartsType): number | null {
   return bottoms.length > 0 ? Math.max(...bottoms) : null;
 }
 
-/**
- * Updates the chart grid bottom to preserve the requested legend gap.
- * @param chart The ECharts instance whose grid should be updated.
- * @param option The chart option containing the current grid configuration.
- * @param legendGap The desired gap below the plot area in pixels.
- * @returns Nothing. The chart is updated in place when necessary.
- */
-export function applyLegendGap(
-  chart: echarts.EChartsType,
-  option: echarts.EChartsOption,
-  legendGap: number,
-) {
-  const legendHeight = getRenderedLegendHeight(chart);
-  if (legendHeight === null) {
-    return;
-  }
-  const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
-  const xAxisExtent = getRenderedXAxisExtentBelowGrid(chart);
-  const nextBottom = Math.round(xAxisExtent + legendHeight + legendGap);
-  const measurable = chart as unknown as {
-    getModel?: () => { getComponent?: (mainType: string) => unknown };
-  };
-  const currentGridModel = measurable.getModel?.()?.getComponent?.('grid') as
-    { option?: { bottom?: unknown } } | undefined;
-  const currentBottom = currentGridModel?.option?.bottom ?? grid?.bottom;
-  if (currentBottom !== nextBottom) {
-    chart.setOption({ grid: { ...grid, bottom: nextBottom } });
-  }
-}
-
 export type LegendLayoutController = {
   /** Measures the legend immediately and updates the chart layout if needed. */
   update: () => void;
@@ -581,7 +551,6 @@ export function createLegendLayoutController({
   chart,
   chartContainer,
   option,
-  legendGap,
   lastRenderedLegendHeightRef,
   legendLayoutInvalidatedRef,
   setRenderedLegendHeight,
@@ -644,11 +613,6 @@ export function createLegendLayoutController({
     if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
       legendLayoutInvalidatedRef.current = false;
       applyOption();
-    }
-
-    // Keep the requested gap between the plot area and the legend in pixels.
-    if (typeof legendGap === 'number') {
-      applyLegendGap(chart, option, legendGap);
     }
   };
 

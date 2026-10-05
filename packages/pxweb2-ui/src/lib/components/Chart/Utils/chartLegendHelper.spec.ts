@@ -6,7 +6,6 @@ import type {
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  applyLegendGap,
   applyResponsiveLegend,
   createLegendLayoutController,
   getEstimatedLegendHeight,
@@ -190,60 +189,6 @@ describe('ECharts geometry measurements', () => {
 
     expect(getRenderedXAxisExtentBelowGrid(chart)).toBe(25);
     expect(getRenderedXAxisExtentBelowGrid(createChartMock())).toBe(0);
-  });
-});
-
-describe('applyLegendGap', () => {
-  it('sets the grid bottom from axis overflow, legend height, and requested gap', () => {
-    const gridModel = { option: { bottom: 60 } };
-    const chart = createRenderedLegendChart([40]);
-    const measurableChart = chart as unknown as {
-      getModel: () => {
-        getComponent: (type: string) => unknown;
-        getComponentsByType: (type: string) => unknown[];
-      };
-    };
-    measurableChart.getModel = () => ({
-      getComponent: (type) =>
-        type === 'grid'
-          ? {
-              ...gridModel,
-              coordinateSystem: {
-                getRect: () => ({ x: 0, y: 100, width: 320, height: 200 }),
-              },
-            }
-          : undefined,
-      getComponentsByType: (type) =>
-        type === 'legend'
-          ? [{ height: 40 }]
-          : type === 'xAxis'
-            ? [
-                {
-                  axis: {
-                    axisBuilder: {
-                      group: {
-                        getBoundingRect: () => ({ y: 295, height: 30 }),
-                      },
-                    },
-                  },
-                },
-              ]
-            : [],
-    });
-
-    applyLegendGap(chart, { grid: { left: 10, bottom: 60 } }, 10);
-
-    expect(chart.setOption).toHaveBeenCalledWith({
-      grid: { left: 10, bottom: 75 },
-    });
-  });
-
-  it('does not update the grid until the legend has rendered', () => {
-    const chart = createChartMock();
-
-    applyLegendGap(chart, { grid: { bottom: 40 } }, 10);
-
-    expect(chart.setOption).not.toHaveBeenCalled();
   });
 });
 
