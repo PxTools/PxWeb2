@@ -44,6 +44,7 @@ type TooltipParam = {
 };
 
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
+const X_AXIS_RESERVED_HEIGHT = 80;
 const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
@@ -342,17 +343,20 @@ export function LineChart({
     isMediumOrSmallerScreen,
   ]);
 
-  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
+  const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     'svg',
   );
 
   const calculatedLegendHeight =
-    renderedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
+    estimatedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
 
   const height =
     chartPlotHeightRem +
-    (X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) / pixelsPerRem;
+    (X_AXIS_RESERVED_HEIGHT +
+      X_AXIS_LABEL_TO_LEGEND_GAP +
+      calculatedLegendHeight) /
+      pixelsPerRem;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing

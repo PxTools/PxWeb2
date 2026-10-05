@@ -340,170 +340,15 @@ export function applyResponsiveLegend(
   };
 }
 
-/**
- * The small part of the ECharts API needed to measure rendered legends.
- *
- * These methods are optional because ECharts does not expose all of them in
- * its public TypeScript type, and they may not be available until the chart
- * has finished rendering. The chart is cast to this type only when measuring
- * the actual legend height.
- */
-type LegendMeasurableChart = {
-  /** Gives access to ECharts' internal component model. */
-  getModel?: () =>
-    | {
-        /** Finds one component of the requested type, such as `legend`. */
-        getComponent?: (mainType: string) => unknown;
-
-        /** Finds all components of the requested type, including multiple legends. */
-        getComponentsByType?: (mainType: string) => unknown[];
-      }
-    | undefined;
-
-  /** Gets the rendered view for a specific ECharts component model. */
-  getViewOfComponentModel?: (componentModel: unknown) =>
-    | {
-        group?: {
-          getBoundingRect?: () => { y: number; height: number };
-        };
-      }
-    | undefined;
-};
-
-type AxisBounds = {
-  y: number;
-  height: number;
-};
-
-/**
- * Reads the rendered bounds from an axis model's internal builder group.
- * @param axisModel The ECharts axis model to inspect.
- * @returns The axis group's vertical position and height, or undefined when unavailable.
- */
-function getAxisBounds(axisModel: unknown): AxisBounds | undefined {
-  // ECharts does not expose this internal axis-builder structure in its public
-  // types, so describe only the parts needed to read the rendered bounds.
-  const model = axisModel as {
-    axis?: {
-      axisBuilder?: {
-        group?: { getBoundingRect?: () => AxisBounds };
-      };
-    };
-  };
-
-  // The axis may not be fully rendered yet, so safely walk the optional
-  // objects and method instead of assuming every part is available.
-  const axisBuilderBounds = model.axis?.axisBuilder?.group?.getBoundingRect?.();
-
-  // Ignore missing or invalid measurements; callers can try another source
-  // of bounds when the axis builder cannot provide a usable rectangle.
-  if (
-    axisBuilderBounds &&
-    Number.isFinite(axisBuilderBounds.y) &&
-    Number.isFinite(axisBuilderBounds.height)
-  ) {
-    return axisBuilderBounds;
-  }
-
-  return undefined;
-}
-
-/**
- * Measures the tallest rendered legend component using ECharts' view groups.
- * @param chart The ECharts instance whose legend should be measured.
- * @returns The tallest legend height in pixels, or null when it cannot be measured.
- */
-export function getRenderedLegendHeight(
-  chart: echarts.EChartsType,
-): number | null {
-  const measurable = chart as unknown as LegendMeasurableChart;
-  const model = measurable.getModel?.();
-  const legendModels =
-    model?.getComponentsByType?.('legend') ??
-    [model?.getComponent?.('legend')].filter(
-      (legendModel): legendModel is unknown => legendModel != null,
-    );
-
-  if (legendModels.length === 0) {
-    return null;
-  }
-
-  const heights = legendModels
-    .map(
-      (legendModel) =>
-        measurable
-          .getViewOfComponentModel?.(legendModel)
-          ?.group?.getBoundingRect?.().height,
-    )
-    .filter(
-      (height): height is number =>
-        typeof height === 'number' && Number.isFinite(height),
-    );
-
-  return heights.length > 0 ? Math.max(...heights) : null;
-}
-
-/**
- * Measures the rendered x-axis content extending below the grid rectangle.
- * @param chart The ECharts instance whose x-axis should be measured.
- * @returns The rendered x-axis overflow below the grid, in pixels.
- */
-export function getRenderedXAxisExtentBelowGrid(
-  chart: echarts.EChartsType,
-): number {
-  const gridRect = getGridRect(chart);
-  const xAxisBottom = getRenderedXAxisBottom(chart);
-
-  if (gridRect === null || xAxisBottom === null) {
-    return 0;
-  }
-
-  const gridBottom = gridRect.y + gridRect.height;
-
-  return Math.max(0, xAxisBottom - gridBottom);
-}
-
-/**
- * Gets the bottom edge of the lowest rendered x-axis component.
- * @param chart The ECharts instance whose x-axis should be measured.
- * @returns The rendered x-axis bottom in chart coordinates, or null when unavailable.
- */
-function getRenderedXAxisBottom(chart: echarts.EChartsType): number | null {
-  const measurable = chart as unknown as LegendMeasurableChart;
-  const axisModels =
-    measurable.getModel?.()?.getComponentsByType?.('xAxis') ?? [];
-  const bottoms = axisModels
-    .map((axisModel) => {
-      const rect =
-        getAxisBounds(axisModel) ??
-        measurable
-          .getViewOfComponentModel?.(axisModel)
-          ?.group?.getBoundingRect?.();
-      if (!rect || !Number.isFinite(rect.y) || !Number.isFinite(rect.height)) {
-        return null;
-      }
-      return rect.y + rect.height;
-    })
-    .filter((bottom): bottom is number => bottom !== null);
-
-  return bottoms.length > 0 ? Math.max(...bottoms) : null;
-}
-
 export type LegendLayoutController = {
-  /** Measures the legend immediately and updates the chart layout if needed. */
+  /** Estimates the legend height and reports it to the chart component. */
   update: () => void;
 
-  /** Resizes the chart and schedules a new legend measurement after the container changes size. */
+  /** Resizes the chart and recalculates the legend estimate after the container changes size. */
   handleResize: () => void;
 
-  /** Recalculates the legend layout after document fonts finish loading. */
+  /** Recalculates the legend estimate after document fonts finish loading. */
   handleFontLoading: () => void;
-
-  /** Queues one legend measurement on the next animation frame. */
-  scheduleUpdate: () => void;
-
-  /** Cancels any pending measurement when the chart is being destroyed. */
-  dispose: () => void;
 };
 
 type LegendLayoutControllerOptions = {
@@ -516,19 +361,10 @@ type LegendLayoutControllerOptions = {
   /** The original chart option containing the legend configuration and data. */
   option: echarts.EChartsOption;
 
-  /** The spacing, in pixels, between the plot area and the legend. */
-  legendGap?: number;
+  /** Updates React state with the estimated legend height. */
+  setEstimatedLegendHeight: (height: number | null) => void;
 
-  /** Stores the most recently rendered legend height without causing a React render. */
-  lastRenderedLegendHeightRef: { current: number | null };
-
-  /** Indicates that a resize or font change requires the legend layout to be recalculated. */
-  legendLayoutInvalidatedRef: { current: boolean };
-
-  /** Updates React state with the latest measured or estimated legend height. */
-  setRenderedLegendHeight: (height: number | null) => void;
-
-  /** Applies updated ECharts options after the legend layout is known. */
+  /** Applies updated ECharts options after the chart width or fonts change. */
   applyOption: () => void;
 };
 
@@ -536,106 +372,38 @@ type LegendLayoutControllerOptions = {
  * Creates a controller that keeps the responsive legend layout in sync with
  * the rendered ECharts chart.
  *
- * The controller measures the legend after ECharts renders, falls back to an
- * estimated height when measurement is not available yet, and reports the
- * effective height to React. When the chart width or loaded fonts change, it
- * invalidates the layout, reapplies the chart options, and schedules a new
- * measurement on the next animation frame.
+ * The controller estimates legend height from the chart width, labels, and
+ * font size. When the chart width or loaded fonts change, it recalculates the
+ * estimate and reapplies the responsive legend options.
  *
- * Call `update` for the initial measurement, `scheduleUpdate` after ECharts
- * finishes rendering, and the resize/font handlers when the surrounding
- * layout changes. Call `dispose` when the chart is destroyed to cancel any
- * pending measurement.
+ * Call `update` after the chart is initialized, and the resize/font handlers
+ * when the surrounding layout changes.
  */
 export function createLegendLayoutController({
   chart,
   chartContainer,
   option,
-  lastRenderedLegendHeightRef,
-  legendLayoutInvalidatedRef,
-  setRenderedLegendHeight,
+  setEstimatedLegendHeight,
   applyOption,
 }: LegendLayoutControllerOptions): LegendLayoutController {
-  // Measure the legend and use the result to keep the chart height and grid
-  // spacing in sync with the legend that ECharts actually rendered.
   const update = () => {
-    // ECharts can expose the real rendered height after drawing the legend.
-    const measuredHeight = getRenderedLegendHeight(chart);
-
     // Find the horizontal legend because that is the legend whose height this
     // controller manages. Vertical legends have a different layout strategy.
     const legend = Array.isArray(option.legend)
       ? option.legend.find((item) => item.orient === 'horizontal')
       : option.legend;
 
-    // Before ECharts has rendered the legend, estimate its height from the
-    // chart width and labels so the chart still has a usable initial height.
+    // Use the same width and wrapping rules as the responsive legend layout.
     const estimatedHeight = getEstimatedLegendHeight(
       chart.getWidth(),
       legend?.data,
     );
-
-    // Prefer the real measurement, but never use less space than the estimate.
-    const effectiveLegendHeight =
-      measuredHeight === null
-        ? estimatedHeight
-        : Math.max(measuredHeight, estimatedHeight ?? 0);
-
-    // The chart container also needs to reserve the rendered x-axis overflow
-    // before the legend. This is measured only after ECharts has rendered.
-    const xAxisExtent =
-      measuredHeight === null ? 0 : getRenderedXAxisExtentBelowGrid(chart);
-    const effectiveHeight =
-      effectiveLegendHeight === null
-        ? null
-        : effectiveLegendHeight + xAxisExtent;
-
-    // There is no legend height to apply when the legend has no data and no
-    // rendered measurement is available.
-    if (effectiveHeight === null) {
-      return;
-    }
-
-    // A changed measured height or an invalidated layout means ECharts needs
-    // to receive updated legend options.
-    const heightChanged =
-      effectiveHeight !== lastRenderedLegendHeightRef.current;
-    const layoutInvalidated = legendLayoutInvalidatedRef.current;
-
-    // Keep both the non-rendering ref and the React state in sync. The ref is
-    // used for comparisons; the state lets the chart component recalculate
-    // its rendered height.
-    lastRenderedLegendHeightRef.current = effectiveHeight;
-    setRenderedLegendHeight(effectiveHeight);
-
-    // Only reapply options after a real ECharts measurement is available. An
-    // estimate is enough for sizing but should not trigger a layout loop.
-    if (measuredHeight !== null && (heightChanged || layoutInvalidated)) {
-      legendLayoutInvalidatedRef.current = false;
-      applyOption();
-    }
-  };
-
-  // Store the scheduled frame so repeated events can replace it instead of
-  // creating several measurements for the same layout change.
-  let measurementFrame: number | undefined;
-  const scheduleUpdate = () => {
-    if (measurementFrame !== undefined) {
-      cancelAnimationFrame(measurementFrame);
-    }
-
-    // Wait until the browser has completed the current rendering work before
-    // measuring the legend, ensuring that its dimensions are up to date.
-    measurementFrame = requestAnimationFrame(() => {
-      measurementFrame = undefined;
-      update();
-    });
+    setEstimatedLegendHeight(estimatedHeight);
   };
 
   let previousWidth = chartContainer.clientWidth;
   const handleResize = () => {
-    // Let ECharts recalculate its internal dimensions before measuring the
-    // legend again.
+    // Let ECharts recalculate its dimensions before updating legend columns.
     chart.resize();
 
     const currentWidth = chartContainer.clientWidth;
@@ -643,34 +411,23 @@ export function createLegendLayoutController({
       return;
     }
 
-    // A width change can alter column count and text wrapping, so discard the
-    // old height and rebuild the legend layout after rendering completes.
+    // A width change can alter column count and text wrapping.
     previousWidth = currentWidth;
-    legendLayoutInvalidatedRef.current = true;
-    lastRenderedLegendHeightRef.current = null;
-    setRenderedLegendHeight(null);
     applyOption();
-    scheduleUpdate();
+    update();
   };
 
   const handleFontLoading = () => {
     // Loaded fonts can change label widths and wrapping even when the chart
     // container itself has not changed size.
     chart.resize();
-    legendLayoutInvalidatedRef.current = true;
     applyOption();
-    scheduleUpdate();
+    update();
   };
 
   return {
     update,
     handleResize,
     handleFontLoading,
-    scheduleUpdate,
-    dispose: () => {
-      if (measurementFrame !== undefined) {
-        cancelAnimationFrame(measurementFrame);
-      }
-    },
   };
 }

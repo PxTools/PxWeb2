@@ -12,37 +12,15 @@ import {
   getFallbackLegendHeight,
   getGridRect,
   getLegendColumnCount,
-  getRenderedLegendHeight,
-  getRenderedXAxisExtentBelowGrid,
 } from './chartLegendHelper';
 
 function createChartMock(width = 320, model: Record<string, unknown> = {}) {
   return {
     getWidth: vi.fn(() => width),
     getModel: vi.fn(() => model),
-    getViewOfComponentModel: vi.fn(),
     setOption: vi.fn(),
     resize: vi.fn(),
   } as unknown as EChartsType;
-}
-
-function createRenderedLegendChart(heights: number[]) {
-  const legendModels = heights.map((height) => ({ height }));
-  const chart = createChartMock(320, {
-    getComponentsByType: (type: string) =>
-      type === 'legend' ? legendModels : [],
-  });
-  const measurableChart = chart as unknown as {
-    getViewOfComponentModel: (model: { height: number }) => {
-      group: { getBoundingRect: () => { y: number; height: number } };
-    };
-  };
-  measurableChart.getViewOfComponentModel = (model) => ({
-    group: {
-      getBoundingRect: () => ({ y: 0, height: model.height }),
-    },
-  });
-  return chart;
 }
 
 afterEach(() => {
@@ -154,62 +132,71 @@ describe('ECharts geometry measurements', () => {
     expect(getGridRect(createChartMock())).toBeNull();
   });
 
-  it('uses the tallest finite rendered legend height', () => {
-    expect(
-      getRenderedLegendHeight(createRenderedLegendChart([24, 48, 36])),
-    ).toBe(48);
-    expect(getRenderedLegendHeight(createChartMock())).toBeNull();
-  });
-
-  it('measures only x-axis overflow below the grid', () => {
-    const chart = createChartMock(320, {
-      getComponent: (type: string) =>
-        type === 'grid'
-          ? {
-              coordinateSystem: {
-                getRect: () => ({ x: 0, y: 100, width: 320, height: 200 }),
-              },
-            }
-          : undefined,
-      getComponentsByType: (type: string) =>
-        type === 'xAxis'
-          ? [
-              {
-                axis: {
-                  axisBuilder: {
-                    group: {
-                      getBoundingRect: () => ({ y: 295, height: 30 }),
-                    },
-                  },
-                },
-              },
-            ]
-          : [],
-    });
-
-    expect(getRenderedXAxisExtentBelowGrid(chart)).toBe(25);
-    expect(getRenderedXAxisExtentBelowGrid(createChartMock())).toBe(0);
-  });
 });
 
 describe('createLegendLayoutController', () => {
-  it('uses the estimated height before ECharts exposes rendered measurements', () => {
+  it('reports the estimated height without reapplying the chart option', () => {
     const chart = createChartMock(320);
-    const setRenderedLegendHeight = vi.fn();
+    const setEstimatedLegendHeight = vi.fn();
     const applyOption = vi.fn();
     const controller = createLegendLayoutController({
       chart,
       chartContainer: { clientWidth: 320 } as HTMLDivElement,
       option: { legend: { data: ['A', 'B'] } },
-      lastRenderedLegendHeightRef: { current: null },
-      legendLayoutInvalidatedRef: { current: false },
-      setRenderedLegendHeight,
+      setEstimatedLegendHeight,
       applyOption,
     });
 
     controller.update();
 
-    expect(setRenderedLegendHeight).toHaveBeenCalledWith(48);
+    expect(setEstimatedLegendHeight).toHaveBeenCalledWith(48);
     expect(applyOption).not.toHaveBeenCalled();
+  });
+
+  it('recalculates legend height and options when the chart width changes', () => {
+    const chart = createChartMock(320);
+    let containerWidth = 320;
+    const chartContainer = {
+      get clientWidth() {
+        return containerWidth;
+      },
+    } as HTMLDivElement;
+    const setEstimatedLegendHeight = vi.fn();
+    const applyOption = vi.fn();
+    const controller = createLegendLayoutController({
+      chart,
+      chartContainer,
+      option: { legend: { data: ['A', 'B', 'C'] } },
+      setEstimatedLegendHeight,
+      applyOption,
+    });
+
+    controller.update();
+    containerWidth = 768;
+    vi.mocked(chart.getWidth).mockReturnValue(768);
+    controller.handleResize();
+
+    expect(chart.resize).toHaveBeenCalledOnce();
+    expect(applyOption).toHaveBeenCalledOnce();
+    expect(setEstimatedLegendHeight).toHaveBeenLastCalledWith(48);
+  });
+
+  it('reapplies responsive legend options after document fonts load', () => {
+    const chart = createChartMock(320);
+    const setEstimatedLegendHeight = vi.fn();
+    const applyOption = vi.fn();
+    const controller = createLegendLayoutController({
+      chart,
+      chartContainer: { clientWidth: 320 } as HTMLDivElement,
+      option: { legend: { data: ['A', 'B'] } },
+      setEstimatedLegendHeight,
+      applyOption,
+    });
+
+    controller.handleFontLoading();
+
+    expect(chart.resize).toHaveBeenCalledOnce();
+    expect(applyOption).toHaveBeenCalledOnce();
+    expect(setEstimatedLegendHeight).toHaveBeenCalledWith(48);
   });
 });

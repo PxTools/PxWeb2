@@ -274,27 +274,18 @@ export function useEChartOption(
   // Ref to the ECharts instance.
   const chartRef = useRef<echarts.EChartsType | null>(null);
 
-  // Ref to store the last rendered legend height, used to determine if a re-render is necessary.
-  const lastRenderedLegendHeightRef = useRef<number | null>(null);
-
-  // Ref to store whether the legend layout is invalidated and needs to be recalculated.
-  const legendLayoutInvalidatedRef = useRef(false);
-
-  // State to store the currently rendered legend height, used to trigger re-renders when it changes.
-  const [renderedLegendHeight, setRenderedLegendHeight] = useState<
+  // State stores the responsive legend estimate used to size the chart.
+  const [estimatedLegendHeight, setEstimatedLegendHeight] = useState<
     number | null
   >(null);
 
-  // The legend height is measured by ECharts, then used by LineChart to set
-  // the total chart height (plot area + gap + legend).
+  // The legend estimate is used by LineChart to set the total chart height.
   useEffect(() => {
     if (!divRef.current) {
       return;
     }
 
-    // Reset the last rendered legend height and the current rendered legend height before initializing the chart.
-    lastRenderedLegendHeightRef.current = null;
-    setRenderedLegendHeight(null);
+    setEstimatedLegendHeight(null);
 
     const chartContainer = divRef.current;
     const chart = echarts.init(chartContainer, null, { renderer });
@@ -316,27 +307,18 @@ export function useEChartOption(
       chart,
       chartContainer,
       option,
-      lastRenderedLegendHeightRef,
-      legendLayoutInvalidatedRef,
-      setRenderedLegendHeight: (height) => {
-        setRenderedLegendHeight((previousHeight) =>
+      setEstimatedLegendHeight: (height) => {
+        setEstimatedLegendHeight((previousHeight) =>
           previousHeight === height ? previousHeight : height,
         );
       },
       applyOption,
     });
 
-    // Make the Legend layout controller react to chart updates and browser events:
-
-    // 1. Listen for the 'finished' event from ECharts to schedule a legend layout update.
-    // The finished event fires after ECharts has finished rendering or updating the chart.
-    // At that point, the legend has been drawn and can be measured accurately.
-    chart.on?.('finished', legendLayout.scheduleUpdate);
-
     applyOption();
     legendLayout.update();
 
-    // 2. Observe the chart container for size changes using the ResizeObserver API.
+    // Observe the chart container for size changes using the ResizeObserver API.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? null
@@ -344,13 +326,13 @@ export function useEChartOption(
 
     resizeObserver?.observe(chartContainer);
 
-    // 3.Listen for the browser’s loadingdone event, which fires when document fonts have finished loading
+    // Listen for the browser's loadingdone event, which fires when document fonts have finished loading.
     document.fonts?.addEventListener(
       'loadingdone',
       legendLayout.handleFontLoading,
     );
 
-    // 4. Listen for the browser’s resize event to update the legend layout.
+    // Listen for browser resize events to update the legend layout.
     window.addEventListener('resize', legendLayout.handleResize);
 
     return () => {
@@ -361,8 +343,6 @@ export function useEChartOption(
         legendLayout.handleFontLoading,
       );
       window.removeEventListener('resize', legendLayout.handleResize);
-      chart.off?.('finished', legendLayout.scheduleUpdate);
-      legendLayout.dispose();
       chartRef.current = null;
       chart.dispose();
     };
@@ -371,7 +351,6 @@ export function useEChartOption(
   return {
     divRef,
     chartRef,
-    renderedLegendHeight:
-      renderedLegendHeight ?? lastRenderedLegendHeightRef.current,
+    estimatedLegendHeight,
   };
 }

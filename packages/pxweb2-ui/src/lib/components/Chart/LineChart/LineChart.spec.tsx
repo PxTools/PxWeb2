@@ -129,7 +129,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
-      renderedLegendHeight: null,
+      estimatedLegendHeight: null,
     });
   });
 
@@ -253,7 +253,7 @@ describe('LineChart', () => {
     );
   });
 
-  it('uses the large-screen plot height and adds space for the legend', () => {
+  it('reserves space for the x-axis and legend below the plot', () => {
     const { container } = render(
       <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
     );
@@ -263,7 +263,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('41.5rem'); // 528 / 16 + (120 + 16) / 16
+    expect(chartDiv?.style.height).toBe('46.5rem');
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
@@ -314,7 +314,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
-      renderedLegendHeight: null,
+      estimatedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
@@ -372,7 +372,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
-      renderedLegendHeight: null,
+      estimatedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);

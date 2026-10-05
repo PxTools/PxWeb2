@@ -18,18 +18,17 @@ vi.mock('echarts', () => ({
 type HookHostProps = {
   option: EChartsOption;
   renderer?: 'canvas' | 'svg';
-  legendGap?: number;
   onChartRef?: (chartRef: { current: EChartsType | null }) => void;
-  onRenderedLegendHeight?: (height: number | null) => void;
+  onEstimatedLegendHeight?: (height: number | null) => void;
 };
 
 function HookHost({
   option,
   renderer,
   onChartRef,
-  onRenderedLegendHeight,
+  onEstimatedLegendHeight,
 }: Readonly<HookHostProps>) {
-  const { divRef, chartRef, renderedLegendHeight } = useEChartOption(
+  const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     renderer,
   );
@@ -39,8 +38,8 @@ function HookHost({
   }, [chartRef, onChartRef]);
 
   React.useEffect(() => {
-    onRenderedLegendHeight?.(renderedLegendHeight);
-  }, [onRenderedLegendHeight, renderedLegendHeight]);
+    onEstimatedLegendHeight?.(estimatedLegendHeight);
+  }, [onEstimatedLegendHeight, estimatedLegendHeight]);
 
   return <div data-testid="chart-root" ref={divRef} />;
 }
@@ -303,100 +302,33 @@ describe('useEChartOption', () => {
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
   });
 
-  it('remeasures without reapplying the option when ECharts finishes rendering', () => {
-    let finishedHandler: (() => void) | undefined;
-    let legendHeight = 120;
+  it('does not read rendered legend internals or subscribe to render events', () => {
+    const onEstimatedLegendHeight = vi.fn();
+    const getModel = vi.fn();
+    const getViewOfComponentModel = vi.fn();
     const chartMock = {
-      ...createChartMock(320),
-      on: vi.fn((event: string, handler: () => void) => {
-        if (event === 'finished') {
-          finishedHandler = handler;
-        }
-      }),
-      off: vi.fn(),
-      getModel: vi.fn(() => ({
-        getComponentsByType: vi.fn(() => ['legend']),
-      })),
-      getViewOfComponentModel: vi.fn(() => ({
-        group: { getBoundingRect: vi.fn(() => ({ height: legendHeight })) },
-      })),
+      ...createChartMock(1200),
+      on: vi.fn(),
+      getModel,
+      getViewOfComponentModel,
     } as unknown as EChartsType;
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
     render(
       <HookHost
-        option={{ legend: { data: ['A', 'B'], orient: 'horizontal' } }}
-        legendGap={36}
+        option={{ legend: { data: ['A', 'B', 'C'], orient: 'horizontal' } }}
+        onEstimatedLegendHeight={onEstimatedLegendHeight}
       />,
     );
 
-    const setOptionMock = vi.mocked(chartMock.setOption);
-    const initialSetOptionCalls = setOptionMock.mock.calls.length;
-    expect(finishedHandler).toBeTypeOf('function');
-
-    act(() => {
-      legendHeight = 160;
-      finishedHandler?.();
-    });
-
-    expect(setOptionMock.mock.calls.length).toBe(initialSetOptionCalls);
-  });
-
-  it('reapplies the measured legend height when rendered text grows', async () => {
-    let legendHeight = 80;
-    let finishedHandler: (() => void) | undefined;
-    const chartMock = {
-      ...createChartMock(320),
-      on: vi.fn((event: string, handler: () => void) => {
-        if (event === 'finished') {
-          finishedHandler = handler;
-        }
-      }),
-      off: vi.fn(),
-      getModel: vi.fn(() => ({
-        getComponentsByType: vi.fn(() => ['legend']),
-      })),
-      getViewOfComponentModel: vi.fn(() => ({
-        group: { getBoundingRect: vi.fn(() => ({ height: legendHeight })) },
-      })),
-    } as unknown as EChartsType;
-    vi.mocked(echarts.init).mockReturnValue(chartMock);
-
-    render(
-      <HookHost
-        option={{
-          legend: { data: ['A'], orient: 'horizontal' },
-        }}
-      />,
-    );
-
-    const initialCalls = vi.mocked(chartMock.setOption).mock.calls.length;
-    legendHeight = 160;
-
-    await act(async () => {
-      finishedHandler?.();
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
-
-    expect(vi.mocked(chartMock.setOption).mock.calls.length).toBeGreaterThan(
-      initialCalls,
-    );
+    expect(onEstimatedLegendHeight).toHaveBeenLastCalledWith(20);
+    expect(chartMock.on).not.toHaveBeenCalled();
+    expect(getModel).not.toHaveBeenCalled();
+    expect(getViewOfComponentModel).not.toHaveBeenCalled();
   });
 
   it('recalculates the legend when the option is rebuilt', () => {
-    const chartMock = {
-      ...createChartMock(),
-      getModel: vi.fn(() => ({
-        getComponent: vi.fn(() => ({
-          legend: true,
-        })),
-      })),
-      getViewOfComponentModel: vi.fn(() => ({
-        group: { getBoundingRect: vi.fn(() => ({ height: 80 })) },
-      })),
-    } as unknown as EChartsType;
+    const chartMock = createChartMock();
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
     const { rerender } = render(
@@ -504,46 +436,14 @@ describe('useEChartOption', () => {
     ]);
   });
 
-  it('uses the tallest rendered legend column for chart spacing', () => {
-    const onRenderedLegendHeight = vi.fn();
+  it('reports the estimated legend height for chart spacing', () => {
+    const onEstimatedLegendHeight = vi.fn();
+    const getModel = vi.fn();
+    const getViewOfComponentModel = vi.fn();
     const chartMock = {
       ...createChartMock(1200),
-      getModel: vi.fn(() => ({
-        getComponent: vi.fn(() => ({
-          coordinateSystem: {
-            getRect: vi.fn(() => ({
-              x: 0,
-              y: 20,
-              width: 1200,
-              height: 200,
-            })),
-          },
-        })),
-        getComponentsByType: vi.fn((type: string) =>
-          type === 'xAxis'
-            ? [
-                {
-                  axis: {
-                    axisBuilder: {
-                      group: {
-                        getBoundingRect: vi.fn(() => ({ y: 210, height: 58 })),
-                      },
-                    },
-                  },
-                },
-              ]
-            : ['short', 'tall'],
-        ),
-      })),
-      getViewOfComponentModel: vi.fn((legendModel: unknown) => ({
-        group: {
-          getBoundingRect: vi.fn(() =>
-            legendModel === 'x-axis'
-              ? { y: 210, height: 58 }
-              : { height: legendModel === 'tall' ? 140 : 80 },
-          ),
-        },
-      })),
+      getModel,
+      getViewOfComponentModel,
     } as unknown as EChartsType;
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
@@ -551,14 +451,14 @@ describe('useEChartOption', () => {
       <HookHost
         option={{
           legend: { data: ['A', 'B', 'C'], orient: 'horizontal' },
-          grid: { bottom: 36 },
         }}
-        legendGap={0}
-        onRenderedLegendHeight={onRenderedLegendHeight}
+        onEstimatedLegendHeight={onEstimatedLegendHeight}
       />,
     );
 
-    expect(onRenderedLegendHeight).toHaveBeenLastCalledWith(188);
+    expect(onEstimatedLegendHeight).toHaveBeenLastCalledWith(20);
+    expect(getModel).not.toHaveBeenCalled();
+    expect(getViewOfComponentModel).not.toHaveBeenCalled();
   });
 
   it('draws a gridline at the end of a y-axis break', () => {
