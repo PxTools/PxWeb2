@@ -75,13 +75,8 @@ export async function exportPngFromSvgChart(
     // Clone source options
     const option = sourceChart.getOption();
 
-    //exportChart.setOption(option, true);
-
-    // Ensure rendering is complete
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-
     option.animation = false;
-
+    // Ensure rendering is complete
     await new Promise<void>((resolve) => {
       const handler = () => {
         exportChart.off('finished', handler);
@@ -98,10 +93,6 @@ export async function exportPngFromSvgChart(
       backgroundColor: '#fff',
     });
 
-    console.log(dataUrl.slice(0, 30));
-    // Should be:
-    // data:image/png;base64,...
-
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = `${fileName}.png`;
@@ -109,7 +100,7 @@ export async function exportPngFromSvgChart(
 
     exportChart.dispose();
   } finally {
-    document.body.removeChild(container);
+    container.remove();
   }
 }
 
@@ -135,13 +126,7 @@ export async function downloadChartImage(
     title: [{ show: true }, { show: true }],
   });
 
-  // if (type === 'png') {
-  //   await exportPngFromSvgChart(chart, filename || 'chart');
-
-  //   return;
-  // }
   const link = document.createElement('a');
-  console.log(chart.getDataURL({ type: 'png' }).substring(0, 150));
   try {
     if (type === 'png') {
       await exportPngFromSvgChart(chart, filename || 'chart');
@@ -437,14 +422,16 @@ export function LineChart({
       },
     };
   }, [
-    dataset,
-    chartTitle,
-    resolvedColors,
-    yAxisBreak,
-    yAxisInterval,
-    yAxisMin,
-    xAxisName,
     visibleLegendData,
+    dataset,
+    resolvedColors,
+    chartTitle,
+    chartSourcePart1,
+    staticTitle,
+    xAxisName,
+    yAxisMin,
+    yAxisInterval,
+    yAxisBreak,
     isMediumOrSmallerScreen,
   ]);
 
