@@ -177,6 +177,7 @@ function applyLegendGap(
   legendGap: number,
 ) {
   const legendHeight = getRenderedLegendHeight(chart);
+  const bottomGap = 80;
 
   if (legendHeight === null) {
     return;
@@ -185,7 +186,7 @@ function applyLegendGap(
   const grid = Array.isArray(option.grid) ? option.grid[0] : option.grid;
 
   chart.setOption({
-    grid: { ...grid, bottom: Math.round(legendHeight + legendGap + 80) },
+    grid: { ...grid, bottom: Math.round(legendHeight + legendGap + bottomGap) },
   });
 }
 
