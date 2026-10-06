@@ -263,7 +263,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('46.5rem');
+    expect(chartDiv?.style.height).toBe('42.125rem');
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
