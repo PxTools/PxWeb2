@@ -8,6 +8,8 @@ import {
   getEstimatedLegendHeight,
   getFallbackLegendHeight,
   getLegendColumnCount,
+} from './chartLegendHelper';
+import {
   useEChartOption,
 } from './useEChartOption';
 

@@ -25,8 +25,11 @@ vi.mock('../Utils/chartDataMapper', () => ({
 }));
 
 vi.mock('../Utils/useEChartOption', () => ({
-  getFallbackLegendHeight: vi.fn(() => 120),
   useEChartOption: vi.fn(),
+}));
+
+vi.mock('../Utils/chartLegendHelper', () => ({
+  getFallbackLegendHeight: vi.fn(() => 120),
 }));
 
 vi.mock('../Utils/chartOptionBuilder', async () => {

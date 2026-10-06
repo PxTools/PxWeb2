@@ -9,10 +9,8 @@ import {
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
-import {
-  getFallbackLegendHeight,
-  useEChartOption,
-} from '../Utils/useEChartOption';
+import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
+import { useEChartOption } from '../Utils/useEChartOption';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {

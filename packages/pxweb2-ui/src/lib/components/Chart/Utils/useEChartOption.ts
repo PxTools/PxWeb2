@@ -8,13 +8,6 @@ import {
   getGridRect,
 } from './chartLegendHelper';
 
-// Re-export legend helpers to preserve the public import surface used by chart consumers and tests.
-export {
-  getFallbackLegendHeight,
-  getEstimatedLegendHeight,
-  getLegendColumnCount,
-} from './chartLegendHelper';
-
 const textStyle = {
   fontFamily: 'PxWeb-font, sans-serif',
   fontSize: '0.875rem',

@@ -164,7 +164,7 @@ function getLegendColumnHeight(
 ): number {
   const lineHeight = getLegendLineHeight(fontSize);
 
-  return data.reduce((height, item, index) => {
+  const columnHeight = data.reduce((height, item, index) => {
     // A wrapped label can be taller than its symbol, so use whichever height
     // is larger for each row before adding the gap to the next row.
     const rowHeight = Math.max(
@@ -176,6 +176,8 @@ function getLegendColumnHeight(
 
     return height + rowHeight + legendItemGap;
   }, 0);
+
+  return columnHeight;
 }
 
 /**
