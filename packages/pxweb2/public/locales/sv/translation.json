@@ -314,10 +314,6 @@
           "legend": {
             "show_more": "Visa mer",
             "show_less": "Visa mindre"
-          },
-          "export": {
-            "download_png": "Ladda ner PNG",
-            "download_svg": "Ladda ner SVG"
           }
         }
       },

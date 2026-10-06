@@ -314,10 +314,6 @@
           "legend": {
             "show_more": "Show more",
             "show_less": "Show less"
-          },
-          "export": {
-            "download_png": "Download PNG",
-            "download_svg": "Download SVG"
           }
         }
       },

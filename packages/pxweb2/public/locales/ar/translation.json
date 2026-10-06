@@ -308,10 +308,6 @@
           "legend": {
             "show_more": "أظهر المزيد",
             "show_less": "أظهر أقل"
-          },
-          "export": {
-            "download_png": "تنزيل PNG",
-            "download_svg": "تنزيل SVG"
           }
         }
       },
