@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-// import type * as echarts from 'echarts';
 import * as echarts from 'echarts';
 import cl from 'clsx';
 
@@ -162,8 +161,6 @@ function getTooltipSymbolSvg(symbol: string, color: string): string {
 interface LineChartTranslations {
   readonly showMore: string;
   readonly showLess: string;
-  // readonly downloadPng: string;
-  // readonly downloadSvg: string;
   readonly emptyStateTitle: string;
   readonly emptyStateDescription: string;
 }
