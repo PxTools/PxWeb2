@@ -9,9 +9,7 @@ import {
   getFallbackLegendHeight,
   getLegendColumnCount,
 } from './chartLegendHelper';
-import {
-  useEChartOption,
-} from './useEChartOption';
+import { useEChartOption } from './useEChartOption';
 
 vi.mock('echarts', () => ({
   init: vi.fn(),
