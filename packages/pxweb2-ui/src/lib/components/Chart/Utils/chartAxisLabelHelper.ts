@@ -1,8 +1,14 @@
+// Maximum vertical space, in pixels, allowed for rotated x-axis labels.
 const MAX_X_AXIS_EXTENT = 400;
+// Space held back for the axis and surrounding chart layout.
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
+// Scales the x-axis label font size relative to the root pixel size.
 const AXIS_LABEL_FONT_SIZE_RATIO = 0.875;
+// Scales label line height relative to its font size.
 const AXIS_LABEL_LINE_HEIGHT_RATIO = 1.2;
+// Estimated character width as a fraction of the label font size.
 const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
+// Rotation angle used when estimating the labels' vertical extent.
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
 function splitLongWord(word: string, maxCharacters: number): string[] {
   const characters = Array.from(word);
