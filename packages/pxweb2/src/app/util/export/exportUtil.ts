@@ -35,7 +35,7 @@ export async function exportToFile(
     outputFormat === OutputFormatType.PNG ||
     outputFormat === OutputFormatType.SVG
   ) {
-    downloadChartImage(
+    void downloadChartImage(
       chart,
       tabId,
       outputFormat === OutputFormatType.PNG ? 'png' : 'svg',

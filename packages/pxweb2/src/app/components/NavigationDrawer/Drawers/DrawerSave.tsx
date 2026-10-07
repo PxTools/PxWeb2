@@ -177,7 +177,6 @@ export type DrawerSaveProps = {
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
-  // const StaticTitle = variables.pxTableMetadata?.label;
   const { data, chart } = useTableData();
   const heading = data?.heading;
   const stub = data?.stub;
@@ -323,7 +322,6 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     setLoadingFormat(outputFormat);
 
     // Export the file using the export utility
-    console.log('chart', chart);
     await exportToFile(
       tableId,
       i18n.language,
