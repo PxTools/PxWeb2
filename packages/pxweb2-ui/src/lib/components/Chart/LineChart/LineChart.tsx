@@ -9,7 +9,9 @@ import {
   buildSeriesOption,
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
+import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
+import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
@@ -22,6 +24,7 @@ import {
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
+import type { ScreenSize } from '../../../types/screenSize';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information
@@ -38,9 +41,18 @@ type TooltipParam = {
   color?: string;
 };
 
-const LEGEND_ITEM_HEIGHT = 40;
-const X_AXIS_LABEL_TO_LEGEND_GAP = 36;
+const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
+const X_AXIS_RESERVED_HEIGHT = 10;
 const TOP_CHART_PADDING = 36;
+// Height of plot area in pixels for different screen sizes.
+const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
+  xxlarge: 680,
+  xlarge: 542,
+  large: 528,
+  medium: 500,
+  small: 400,
+  xsmall: 300,
+};
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
@@ -72,7 +84,7 @@ interface LineChartProps {
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
   readonly translations: LineChartTranslations;
-  readonly isMediumOrSmallerScreen?: boolean;
+  readonly screenSize?: ScreenSize;
 }
 
 export function LineChart({
@@ -80,16 +92,19 @@ export function LineChart({
   colors,
   emptyStateSvgName,
   translations,
-  isMediumOrSmallerScreen = false,
+  screenSize = 'large',
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
-
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
+  const isMediumOrSmallerScreen =
+    screenSize === 'medium' ||
+    screenSize === 'small' ||
+    screenSize === 'xsmall';
 
   const xAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
@@ -125,6 +140,7 @@ export function LineChart({
   const visibleLegendData = shouldShowLimitedLegend
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
+
   const yAxisValues = useMemo(() => {
     return dataset.source
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
@@ -160,10 +176,13 @@ export function LineChart({
 
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
+
+  const pixelsPerRem = useResponsivePixelsPerRem();
+  const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
-    const estimatedLegendHeight = LEGEND_ITEM_HEIGHT * visibleLegendData.length;
+    const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, 'line', resolvedColors).map(
       (seriesOption) => ({
         ...seriesOption,
@@ -172,12 +191,17 @@ export function LineChart({
           : { focus: 'series' as const },
       }),
     ) as echarts.EChartsOption['series'];
+    const gridHeight =
+      CHART_PLOT_HEIGHT_PX[screenSize] -
+      TOP_CHART_PADDING -
+      X_AXIS_LABEL_TO_LEGEND_GAP;
 
     return {
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        bottom: estimatedLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
+        height: gridHeight,
+        bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: '0',
         right: '0',
         //'same' keeps axis labels inside the grid rect
@@ -191,7 +215,9 @@ export function LineChart({
         nameLocation: 'end',
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
-        axisLabel: { rotate: 45 },
+        axisLabel: {
+          rotate: 45,
+        },
         axisLine: {
           show: true,
           onZero: false,
@@ -218,7 +244,10 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        bottom: 0,
+        orient: 'horizontal',
+        textStyle: {
+          overflow: 'break',
+        },
       },
       series,
       tooltip: {
@@ -301,21 +330,31 @@ export function LineChart({
       },
     };
   }, [
+    visibleLegendData,
     dataset,
     resolvedColors,
-    yAxisBreak,
-    yAxisInterval,
-    yAxisMin,
+    screenSize,
     xAxisName,
-    visibleLegendData,
+    yAxisMin,
+    yAxisInterval,
+    yAxisBreak,
     isMediumOrSmallerScreen,
   ]);
 
-  const { divRef, chartRef } = useEChartOption(
+  const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     'svg',
-    X_AXIS_LABEL_TO_LEGEND_GAP,
   );
+
+  const calculatedLegendHeight =
+    estimatedLegendHeight ?? getFallbackLegendHeight(visibleLegendData);
+
+  const height =
+    chartPlotHeightRem +
+    (X_AXIS_RESERVED_HEIGHT +
+      X_AXIS_LABEL_TO_LEGEND_GAP +
+      calculatedLegendHeight) /
+      pixelsPerRem;
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
@@ -396,8 +435,6 @@ export function LineChart({
       zrender?.off('click', handleChartClick);
     };
   }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
-
-  const height = 36 + dataset.series.length * 0.8; // increase chart height based on number of series to prevent legend overlap
 
   return (
     <>
