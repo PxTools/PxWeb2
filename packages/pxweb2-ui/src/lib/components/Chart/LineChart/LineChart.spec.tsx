@@ -28,6 +28,10 @@ vi.mock('../Utils/useEChartOption', () => ({
   useEChartOption: vi.fn(),
 }));
 
+vi.mock('../Utils/chartLegendHelper', () => ({
+  getFallbackLegendHeight: vi.fn(() => 120),
+}));
+
 vi.mock('../Utils/chartOptionBuilder', async () => {
   const actual = await vi.importActual<
     typeof import('../Utils/chartOptionBuilder')
@@ -128,6 +132,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
+      estimatedLegendHeight: null,
     });
   });
 
@@ -153,7 +158,10 @@ describe('LineChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
-      bottom: 0,
+      orient: 'horizontal',
+      textStyle: {
+        overflow: 'break',
+      },
     });
 
     expect(option.yAxis).toMatchObject({
@@ -169,7 +177,8 @@ describe('LineChart', () => {
     });
     expect(option.grid).toEqual({
       top: 36,
-      bottom: 156,
+      height: 476,
+      bottom: 136,
       left: '0',
       right: '0',
       outerBoundsContain: 'all',
@@ -192,7 +201,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        isMediumOrSmallerScreen
+        screenSize="medium"
       />,
     );
 
@@ -247,7 +256,7 @@ describe('LineChart', () => {
     );
   });
 
-  it('renders chart container with height based on number of series', () => {
+  it('reserves space for the x-axis and legend below the plot', () => {
     const { container } = render(
       <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
     );
@@ -257,7 +266,7 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('38.4rem'); // 36 + 3 * 0.8 = 38.4
+    expect(chartDiv?.style.height).toBe('42.125rem');
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
@@ -308,6 +317,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
@@ -365,6 +375,7 @@ describe('LineChart', () => {
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
     });
 
     render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
@@ -411,7 +422,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
@@ -437,7 +448,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={false}
+          screenSize="large"
           translations={mockTranslations}
         />,
       );
@@ -451,7 +462,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
@@ -479,7 +490,7 @@ describe('LineChart', () => {
       render(
         <LineChart
           pxtable={mockPxTable}
-          isMediumOrSmallerScreen={true}
+          screenSize="small"
           translations={mockTranslations}
         />,
       );
