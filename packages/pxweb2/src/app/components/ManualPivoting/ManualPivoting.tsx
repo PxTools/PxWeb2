@@ -64,7 +64,6 @@ export function ManualPivot({
 }: ManualPivotProps) {
   const { t } = useTranslation();
   const keyboardInstructionsId = useId();
-  const translationRef = useRef(t);
   const [headerItems, setHeaderItems] = useState<Variable[]>(headerVariables);
   const [stubItems, setStubItems] = useState<Variable[]>(stubVariables);
   const [keyboardDraggedItemId, setKeyboardDraggedItemId] = useState<
@@ -90,8 +89,6 @@ export function ManualPivot({
   const [sourcePlaceholderMeta, setSourcePlaceholderMeta] =
     useState<SourcePlaceholderMeta>(null);
 
-  translationRef.current = t;
-
   /** Restores the local lists and drag state whenever the modal is opened. */
   useEffect(() => {
     if (isOpen) {
@@ -101,12 +98,6 @@ export function ManualPivot({
       stubItemsRef.current = stubVariables;
       setKeyboardDraggedItemId(null);
       keyboardDraggedItemIdRef.current = null;
-      // setLiveAnnouncement(
-      //   translationRef.current(
-      //     'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.dialog_opened',
-      //     'Manual table arrangement opened. Rows and columns can be rearranged.',
-      //   ),
-      // );
       keyboardDragSnapshotRef.current = null;
       pointerDragSnapshotRef.current = null;
       setSourcePlaceholderMeta(null);
