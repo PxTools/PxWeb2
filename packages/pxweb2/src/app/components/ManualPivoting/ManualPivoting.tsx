@@ -187,10 +187,6 @@ export function ManualPivot({
     });
   };
 
-  /** Capitalizes the first character of a variable label for display. */
-  const capitalizeLabel = (label: string): string =>
-    label.charAt(0).toUpperCase() + label.slice(1);
-
   /** Returns the nearest drop zone containing or close to a pointer position. */
   const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
     const hitPadding = 20;
@@ -446,15 +442,13 @@ export function ManualPivot({
     const groupItems = getItemsForGroup(group);
     const itemIndex = groupItems.findIndex((item) => item.id === itemId);
     const itemLabel = getItemById(itemId)?.label;
-    const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
-
-    if (capitalizedItemLabel && itemIndex !== -1) {
+    if (itemLabel && itemIndex !== -1) {
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_moved',
           '{{item}} moved to position {{position}} in {{group}}.',
           {
-            item: capitalizedItemLabel,
+            item: itemLabel,
             position: itemIndex + 1,
             group: getGroupLabel(group),
           },
@@ -478,12 +472,11 @@ export function ManualPivot({
 
     const itemLabel = getItemById(variableId)?.label;
     if (itemLabel) {
-      const capitalizedItemLabel = capitalizeLabel(itemLabel);
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_selected',
           '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.',
-          { item: capitalizedItemLabel },
+          { item: itemLabel },
         ),
       );
     }
@@ -580,7 +573,7 @@ export function ManualPivot({
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_dropped',
             '{{item}} dropped in {{group}}.',
-            { item: capitalizeLabel(itemLabel), group: groupLabel },
+            { item: itemLabel, group: groupLabel },
           ),
         );
       }
@@ -608,7 +601,7 @@ export function ManualPivot({
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.move_cancelled',
             '{{item}} move cancelled.',
-            { item: capitalizeLabel(itemLabel) },
+            { item: itemLabel },
           ),
         );
       }
@@ -983,7 +976,7 @@ export function ManualPivot({
                       }
                     >
                       <DataItem
-                        label={capitalizeLabel(variable.label)}
+                        label={variable.label}
                         isDragging={
                           isDraggedItem || keyboardDraggedItemId === variable.id
                         }
