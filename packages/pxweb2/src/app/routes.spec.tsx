@@ -71,8 +71,10 @@ describe('Router configuration', () => {
     baseApplicationPath: '/',
     showBreadCrumbOnStartPage: false,
     maxDataCells: 150000,
+    useDynamicContentInTitle: false,
     specialCharacters: ['.', '..', ':', '-', '...', '*'],
     variableFilterExclusionList: {},
+    features: { chartEnabled: true },
   };
 
   beforeEach(() => {

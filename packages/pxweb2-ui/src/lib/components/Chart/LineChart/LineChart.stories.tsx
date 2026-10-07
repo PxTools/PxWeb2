@@ -23,6 +23,12 @@ const getTranslations = (t: TFunction) => ({
   downloadSvg: t(
     'presentation_page.main_content.chart.line_chart.export.download_svg',
   ),
+  emptyStateTitle: t(
+    'presentation_page.main_content.chart.line_chart.empty_state.title',
+  ),
+  emptyStateDescription: t(
+    'presentation_page.main_content.chart.line_chart.empty_state.description',
+  ),
 });
 
 type LineChartWithTranslationsProps = Omit<
@@ -178,6 +184,29 @@ const manySeriesPxTable = createLineChartPxTable(
   },
 );
 
+const longLegendLabelsPxTable = createLineChartPxTable(
+  ['2020', '2021', '2022', '2023'],
+  [
+    {
+      code: 'LONG_A',
+      label: 'Long multi-word series label that should wrap naturally',
+    },
+    {
+      code: 'LONG_B',
+      label: 'Another series label with enough text to test equal columns',
+    },
+    {
+      code: 'LONG_C',
+      label: 'Averylongserieslabelwithoutspaceswhichmuststillremainvisible',
+    },
+    {
+      code: 'LONG_D',
+      label: 'Fourth label for balanced responsive legend distribution',
+    },
+  ],
+  (_year, _seriesCode, yearIndex) => 100 + yearIndex * 10,
+);
+
 const sparseDataPxTable = createLineChartPxTable(
   ['2020', '2021', '2022', '2023', '2024'],
   [
@@ -258,13 +287,20 @@ export const SparseData: Story = {
 export const ManySeriesOnLargeScreen: Story = {
   args: {
     pxtable: manySeriesPxTable,
-    isMediumOrSmallerScreen: false,
+    screenSize: 'large',
   },
 };
 
 export const ManySeriesOnSmallScreen: Story = {
   args: {
     pxtable: manySeriesPxTable,
-    isMediumOrSmallerScreen: true,
+    screenSize: 'small',
+  },
+};
+
+export const LongLegendLabels: Story = {
+  args: {
+    pxtable: longLegendLabelsPxTable,
+    screenSize: 'large',
   },
 };

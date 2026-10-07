@@ -12,6 +12,9 @@ declare global {
 }
 
 window.PxWeb2Config = {
+  useDynamicContentInTitle: false,
+  showBreadCrumbOnStartPage: true,
+  features: { chartEnabled: true },
   language: {
     supportedLanguages: [
       { shorthand: 'en', languageName: 'English' },
@@ -22,6 +25,7 @@ window.PxWeb2Config = {
     defaultLanguage: 'en',
     fallbackLanguage: 'en',
     showDefaultLanguageInPath: true,
+    positionInPath: 'after',
   },
   apiUrl: '',
   baseApplicationPath: '/',

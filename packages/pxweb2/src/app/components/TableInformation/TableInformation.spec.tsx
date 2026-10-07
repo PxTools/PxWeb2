@@ -239,8 +239,11 @@ describe('TableInformation', () => {
       isXXLargeDesktop: false,
       isTablet: false,
       isMobile: true,
+      screenSize: 'xsmall',
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      languageFilter: [],
+      setLanguageFilter: vi.fn(),
       title: '',
       setTitle: vi.fn(),
     };
@@ -273,8 +276,11 @@ describe('TableInformation', () => {
       isXXLargeDesktop: false,
       isTablet: false,
       isMobile: false,
+      screenSize: 'large',
       skipToMainFocused: false,
       setSkipToMainFocused: vi.fn(),
+      languageFilter: [],
+      setLanguageFilter: vi.fn(),
       title: '',
       setTitle: vi.fn(),
     };

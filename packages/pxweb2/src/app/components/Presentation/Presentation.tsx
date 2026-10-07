@@ -79,9 +79,9 @@ function PresentationView({
   getVerticalScrollElement,
 }: Readonly<PresentationViewProps>) {
   const { t } = useTranslation();
-  const { isTablet } = useApp();
   const { setChart } = useTableData();
   const staticTitle = useVariables().pxTableMetadata?.label ?? '';
+  const { screenSize } = useApp();
 
   const lineChartEmptyStateTitle = t(
     'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
@@ -118,8 +118,8 @@ function PresentationView({
           <LineChart
             pxtable={pxtable}
             staticTitle={staticTitle}
-            isMediumOrSmallerScreen={isTablet}
             onChartReady={setChart}
+            screenSize={screenSize}
             translations={{
               showMore: showMoreText,
               showLess: showLessText,
