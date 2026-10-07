@@ -178,7 +178,7 @@ export function LineChart({
     return getAdaptiveYAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
 
-  const pixelsPerRem = useResponsivePixelsPerRem(); 
+  const pixelsPerRem = useResponsivePixelsPerRem();
   //const pixelsPerRem = 16;
   const xAxisLabelConfig = createResponsiveXAxisLabelConfig(pixelsPerRem);
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
