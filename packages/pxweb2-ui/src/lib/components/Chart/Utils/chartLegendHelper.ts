@@ -316,10 +316,13 @@ export function applyResponsiveLegend(
 ): echarts.EChartsOption {
   const chartWidth = chart.getWidth();
   const legend = option.legend;
+  // ECharts can receive multiple legends. flatMap lets a horizontal legend
+  // expand into several column legends while leaving other legends as one item.
   if (Array.isArray(legend)) {
     return {
       ...option,
       legend: legend.flatMap((legendItem) =>
+        // Vertical legends and legends without item data are not split into columns.
         legendItem.orient === 'vertical' || !Array.isArray(legendItem.data)
           ? {
               ...legendItem,
@@ -333,9 +336,11 @@ export function applyResponsiveLegend(
       ),
     };
   }
+  // Missing, vertical, or data-less legends need no horizontal column layout.
   if (!legend || legend.orient === 'vertical' || !Array.isArray(legend.data)) {
     return option;
   }
+  // A single horizontal legend with data can be divided into responsive columns.
   return {
     ...option,
     legend: applyHorizontalLegendColumns(chart, legend),
