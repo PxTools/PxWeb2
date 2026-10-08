@@ -243,7 +243,6 @@ export function LineChart({
           rotate: 45,
           interval: 0,
           align: 'right',
-          padding: 5,
           lineHeight: xAxisLabelConfig.lineHeight,
           verticalAlign: 'top',
           overflow: 'break',
