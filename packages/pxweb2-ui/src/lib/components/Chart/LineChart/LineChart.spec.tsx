@@ -176,7 +176,7 @@ describe('LineChart', () => {
         '\n',
         ' ',
       ),
-    ).toBe('Det här är en lång y-axels text som borde radbrytas');
+    ).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
