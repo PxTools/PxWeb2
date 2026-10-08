@@ -10,7 +10,7 @@ import {
   LINE_SERIES_SYMBOLS,
 } from '../Utils/chartOptionBuilder';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
-import { useEChartOption } from '../Utils/useEChartOption';
+import { applyYAxisBreakMark, useEChartOption } from '../Utils/useEChartOption';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
@@ -44,6 +44,8 @@ type TooltipParam = {
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 const X_AXIS_RESERVED_HEIGHT = 10;
 const TOP_CHART_PADDING = 36;
+const LEGEND_BOTTOM_GAP_PX = 80;
+const EXPORT_EXTRA_X_AXIS_LEGEND_GAP_PX = 16;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -59,11 +61,10 @@ type ChartImageType = 'png' | 'svg';
 
 export type ChartInstance = echarts.EChartsType;
 
-export async function exportPngFromSvgChart(
+async function createExportChart(
   sourceChart: echarts.EChartsType,
-  fileName: string,
+  renderer: 'canvas' | 'svg',
 ) {
-  // Hidden container
   const container = document.createElement('div');
   container.style.position = 'fixed';
   container.style.left = '-10000px';
@@ -77,47 +78,93 @@ export async function exportPngFromSvgChart(
 
   document.body.appendChild(container);
 
+  let exportChart: echarts.EChartsType | undefined;
   try {
-    // Create temporary Canvas chart
-    const exportChart = echarts.init(container, null, {
-      renderer: 'canvas',
-    });
+    const chart = echarts.init(container, null, { renderer });
+    exportChart = chart;
 
-    // Clone source options
     const option = sourceChart.getOption();
 
     option.animation = false;
-    // Ensure rendering is complete
+    const legends = option.legend ?? [];
+    const legendOptions = Array.isArray(legends) ? legends : [legends];
+    option.legend = legendOptions.map((legend) => ({
+      ...legend,
+      bottom:
+        (typeof legend.bottom === 'number' ? legend.bottom : 0) +
+        LEGEND_BOTTOM_GAP_PX,
+    }));
+    if (option.grid) {
+      const grids = Array.isArray(option.grid) ? option.grid : [option.grid];
+      const gridShift =
+        LEGEND_BOTTOM_GAP_PX + EXPORT_EXTRA_X_AXIS_LEGEND_GAP_PX;
+      option.grid = grids.map((grid) => ({
+        ...grid,
+        ...(typeof grid.height === 'number'
+          ? { height: Math.max(0, grid.height - gridShift) }
+          : {}),
+        ...(typeof grid.bottom === 'number'
+          ? { bottom: grid.bottom + gridShift }
+          : {}),
+      }));
+    }
+
     await new Promise<void>((resolve) => {
       const handler = () => {
-        exportChart.off('finished', handler);
+        chart.off('finished', handler);
         resolve();
       };
 
-      exportChart.on('finished', handler);
-      exportChart.setOption(option, true);
+      chart.on('finished', handler);
+      chart.setOption(option, true);
     });
+    applyYAxisBreakMark(chart, option as echarts.EChartsOption);
 
+    return { chart, container };
+  } catch (error) {
+    exportChart?.dispose();
+    container.remove();
+    throw error;
+  }
+}
+
+async function exportChartImage(
+  sourceChart: echarts.EChartsType,
+  fileName: string,
+  type: ChartImageType,
+) {
+  const renderer = type === 'png' ? 'canvas' : 'svg';
+  const { chart: exportChart, container } = await createExportChart(
+    sourceChart,
+    renderer,
+  );
+
+  try {
     const dataUrl = exportChart.getDataURL({
-      type: 'png',
-      pixelRatio: 2,
+      type,
+      ...(type === 'png' ? { pixelRatio: 2 } : {}),
       backgroundColor: '#fff',
     });
-
     const link = document.createElement('a');
     link.href = dataUrl;
-    link.download = `${fileName}.png`;
+    link.download = `${fileName}.${type}`;
     link.click();
-
-    exportChart.dispose();
   } finally {
+    exportChart.dispose();
     container.remove();
   }
 }
 
+export async function exportPngFromSvgChart(
+  sourceChart: echarts.EChartsType,
+  fileName: string,
+) {
+  await exportChartImage(sourceChart, fileName, 'png');
+}
+
 export async function downloadChartImage(
   chart: echarts.EChartsType | null,
-  title: string,
+  tabId: string,
   type: ChartImageType,
 ) {
   if (!chart || chart.isDisposed()) {
@@ -126,9 +173,11 @@ export async function downloadChartImage(
 
   const titleOptions = chart.getOption().title as
     Array<{ text?: unknown }> | undefined;
-  const chartTitle = title.trim() || titleOptions?.[0]?.text?.toString() || '';
+  // const chartDownloadTitle = tabId.trim() || titleOptions?.[0]?.text?.toString() || '';
+  // console.log('titleOptions:', titleOptions?.[0]?.text?.toString());
+  // console.log('Chart title:', chartDownloadTitle);
 
-  const filename = chartTitle
+  const filename = (tabId.trim() || titleOptions?.[0]?.text?.toString() || '')
     .trim()
     .replace(/[^a-z0-9]+/gi, '-')
     .replace(/^-|-$/g, '');
@@ -137,20 +186,13 @@ export async function downloadChartImage(
     title: [{ show: true }, { show: true }],
   });
 
-  const link = document.createElement('a');
   try {
-    if (type === 'png') {
-      await exportPngFromSvgChart(chart, filename || 'chart');
-    } else {
-      link.href = chart.getDataURL({ type, backgroundColor: '#fff' });
-    }
+    await exportChartImage(chart, filename || 'chart', type);
   } finally {
     chart.setOption({
       title: [{ show: false }, { show: false }],
     });
   }
-  link.download = `${filename || 'chart'}.${type}`;
-  link.click();
 }
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
@@ -364,7 +406,7 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        bottom: 80,
+        // bottom: LEGEND_BOTTOM_GAP_PX,
         orient: 'horizontal',
         textStyle: {
           overflow: 'break',

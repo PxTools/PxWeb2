@@ -188,7 +188,7 @@ function getYAxisBreakRange(
 
 // Draws a compact "//" mark directly on the y-axis at the break, instead of relying on
 // ECharts' default zigzag band which stretches across the whole chart width.
-function applyYAxisBreakMark(
+export function applyYAxisBreakMark(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
 ) {
