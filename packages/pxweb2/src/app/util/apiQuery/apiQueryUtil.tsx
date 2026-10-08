@@ -176,7 +176,7 @@ function getGetParams(variablesSelection: VariablesSelection): string {
 function getPostBody(variablesSelection: VariablesSelection): string {
   // Include placement if present
   const { selection, placement } = variablesSelection;
-  const body: { selection: typeof selection; placement?: typeof placement } = {
+  const body: Pick<VariablesSelection, 'selection' | 'placement'> = {
     selection,
   };
   if (placement) {
