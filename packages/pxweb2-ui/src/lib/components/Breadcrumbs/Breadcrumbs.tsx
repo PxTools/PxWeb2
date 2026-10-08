@@ -25,7 +25,7 @@ export class BreadcrumbItem {
 export function Breadcrumbs({
   breadcrumbItems,
   variant = 'default',
-}: BreadcrumbsProps) {
+}: Readonly<BreadcrumbsProps>) {
   const ulRef = useRef<HTMLUListElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [showMore, setShowMore] = useState(false);
