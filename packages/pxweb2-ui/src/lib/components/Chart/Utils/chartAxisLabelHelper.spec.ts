@@ -73,7 +73,7 @@ describe('createResponsiveXAxisLabelConfig', () => {
   it('allows fewer wrapped lines when the root font size is larger', () => {
     const standardSize = createResponsiveXAxisLabelConfig(16);
     const largerSize = createResponsiveXAxisLabelConfig(20);
-    const label = 'A'.repeat(400);
+    const label = 'A'.repeat(180);
 
     expect(standardSize.formatter(label)).not.toBe('');
     expect(largerSize.formatter(label)).toBe('');
