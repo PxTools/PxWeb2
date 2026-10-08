@@ -172,8 +172,8 @@ describe('LineChart', () => {
       axisLine: { breakLine: false },
     });
     expect(
-      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll('\n', ''),
-    ).toBe('persons');
+      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll('\n', ' '),
+    ).toBe('Det här är en lång y-axels text som borde radbrytas');
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });

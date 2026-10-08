@@ -4,8 +4,9 @@ const MAX_X_AXIS_EXTENT = 300;
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
 // Scales the x-axis label font size relative to the root pixel size.
 const AXIS_LABEL_FONT_SIZE_RATIO = 0.875;
-// Scales label line height relative to its font size.
-const AXIS_LABEL_LINE_HEIGHT_RATIO = 1.2;
+// Matches the minimum line height and font-size ratio used by the legend.
+const AXIS_LABEL_MIN_LINE_HEIGHT = 20;
+const AXIS_LABEL_LINE_HEIGHT_RATIO = 1.4;
 // Estimated character width as a fraction of the label font size.
 const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 // Rotation angle used when estimating the labels' vertical extent.
@@ -95,7 +96,11 @@ function wrapText(text: string, maxCharacters: number): string[] {
 }
 export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
   const fontSize = pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
-  const lineHeight = fontSize * AXIS_LABEL_LINE_HEIGHT_RATIO;
+  // Same calculation for line heightas in legend labels for consistency
+  const lineHeight = Math.max(
+    AXIS_LABEL_MIN_LINE_HEIGHT,
+    Math.ceil(fontSize * AXIS_LABEL_LINE_HEIGHT_RATIO),
+  );
   const maxLineCount = Math.floor(
     (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),

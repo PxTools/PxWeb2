@@ -51,7 +51,7 @@ describe('createResponsiveXAxisLabelConfig', () => {
     const formattedLabel = config.formatter(label);
 
     expect(formattedLabel).toBe(label);
-    expect(config.lineHeight).toBeCloseTo(16.8);
+    expect(config.lineHeight).toBe(20);
   });
 
   it('wraps complete values only when their unwrapped extent exceeds the budget', () => {

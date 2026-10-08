@@ -59,7 +59,8 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
 };
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 const CHART_FONT_SIZE_REM = 0.875;
-const AXIS_NAME_MAX_WIDTH_PX = 100;
+const X_AXIS_NAME_MAX_WIDTH_PX = 100;
+const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -186,12 +187,12 @@ export function LineChart({
   const pixelsPerRem = useResponsivePixelsPerRem();
   const axisNameFontSizePx = pixelsPerRem * CHART_FONT_SIZE_REM;
   const wrappedXAxisName = useMemo(
-    () => wrapAxisName(xAxisName, AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
     [xAxisName, axisNameFontSizePx],
   );
   const wrappedYAxisName = useMemo(
     () =>
-      wrapAxisName(dataset.unit, AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+      wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
     [dataset.unit, axisNameFontSizePx],
   );
   const xAxisLabelConfig = useMemo(
@@ -235,6 +236,9 @@ export function LineChart({
         nameLocation: 'end',
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
+        nameTextStyle: {
+          lineHeight: xAxisLabelConfig.lineHeight,
+        },
         axisLabel: {
           rotate: 45,
           interval: 0,
@@ -254,6 +258,9 @@ export function LineChart({
       },
       yAxis: {
         name: wrappedYAxisName,
+        nameTextStyle: {
+          lineHeight: xAxisLabelConfig.lineHeight,
+        },
         scale: false,
         min: yAxisMin,
         max: getAdaptiveYAxisMax,
