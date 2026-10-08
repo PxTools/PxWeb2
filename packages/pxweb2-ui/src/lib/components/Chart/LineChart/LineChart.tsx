@@ -11,7 +11,10 @@ import {
 } from '../Utils/chartOptionBuilder';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
-import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
+import {
+  createResponsiveXAxisLabelConfig,
+  wrapAxisName,
+} from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
@@ -55,6 +58,8 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xsmall: 300,
 };
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
+const CHART_FONT_SIZE_REM = 0.875;
+const AXIS_NAME_MAX_WIDTH_PX = 100;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -179,8 +184,20 @@ export function LineChart({
   }, [yAxisBreak, yAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
-  //const pixelsPerRem = 16;
-  const xAxisLabelConfig = createResponsiveXAxisLabelConfig(pixelsPerRem);
+  const axisNameFontSizePx = pixelsPerRem * CHART_FONT_SIZE_REM;
+  const wrappedXAxisName = useMemo(
+    () => wrapAxisName(xAxisName, AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+    [xAxisName, axisNameFontSizePx],
+  );
+  const wrappedYAxisName = useMemo(
+    () =>
+      wrapAxisName(dataset.unit, AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+    [dataset.unit, axisNameFontSizePx],
+  );
+  const xAxisLabelConfig = useMemo(
+    () => createResponsiveXAxisLabelConfig(pixelsPerRem),
+    [pixelsPerRem],
+  );
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
@@ -214,7 +231,7 @@ export function LineChart({
       },
       xAxis: {
         type: 'category' as const,
-        name: xAxisName,
+        name: wrappedXAxisName,
         nameLocation: 'end',
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
@@ -236,7 +253,7 @@ export function LineChart({
         axisTick: { show: true, alignWithLabel: true },
       },
       yAxis: {
-        name: dataset.unit,
+        name: wrappedYAxisName,
         scale: false,
         min: yAxisMin,
         max: getAdaptiveYAxisMax,
@@ -345,7 +362,10 @@ export function LineChart({
     dataset,
     resolvedColors,
     screenSize,
-    xAxisName,
+    wrappedXAxisName,
+    wrappedYAxisName,
+    xAxisLabelConfig.lineHeight,
+    xAxisLabelConfig.formatter,
     yAxisMin,
     yAxisInterval,
     yAxisBreak,

@@ -165,13 +165,15 @@ describe('LineChart', () => {
     });
 
     expect(option.yAxis).toMatchObject({
-      name: 'persons',
       min: 0,
       interval: 5,
       breaks: [{ start: 0, end: 9.7, gap: '13%' }],
       breakArea: { show: false },
       axisLine: { breakLine: false },
     });
+    expect(
+      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll('\n', ''),
+    ).toBe('persons');
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
@@ -194,6 +196,29 @@ describe('LineChart', () => {
       expect.objectContaining({ emphasis: { focus: 'series' } }),
       expect.objectContaining({ emphasis: { focus: 'series' } }),
     ]);
+  });
+
+  it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
+    const longXAxisName = 'A very long dimension label that needs wrapping';
+    const longYAxisName = 'A very long unit label that needs wrapping';
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      unit: longYAxisName,
+    });
+    const pxtable = {
+      stub: [{ label: longXAxisName }],
+    } as PxTable;
+
+    render(<LineChart pxtable={pxtable} translations={mockTranslations} />);
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.xAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
+    expect(option.yAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
   });
 
   it('disables series emphasis on medium and smaller screens', () => {

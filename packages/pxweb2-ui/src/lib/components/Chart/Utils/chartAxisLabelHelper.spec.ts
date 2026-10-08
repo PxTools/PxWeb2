@@ -1,6 +1,48 @@
 import { describe, expect, it } from 'vitest';
 
-import { createResponsiveXAxisLabelConfig } from './chartAxisLabelHelper';
+import {
+  createResponsiveXAxisLabelConfig,
+  wrapAxisName,
+} from './chartAxisLabelHelper';
+
+describe('wrapAxisName', () => {
+  it('wraps at word boundaries when a line exceeds the maximum width', () => {
+    const name = 'Population by region';
+    const wrappedName = wrapAxisName(name, 120, 16);
+
+    expect(wrappedName).toContain('\n');
+    expect(wrappedName.replaceAll('\n', ' ')).toBe(name);
+  });
+
+  it('keeps a word intact when it is wider than the maximum width', () => {
+    const name = 'Population';
+    const wrappedName = wrapAxisName(name, 20, 16);
+
+    expect(wrappedName).toBe(name);
+  });
+
+  it('wraps before a word that would exceed the maximum width', () => {
+    const name = 'alpha beta gamma';
+    const wrappedName = wrapAxisName(name, 65, 10);
+
+    expect(wrappedName).toBe('alpha beta\ngamma');
+    expect(wrappedName.replaceAll('\n', ' ')).toBe(name);
+  });
+
+  it('wraps more tightly when the font size increases', () => {
+    const name = 'alpha beta gamma';
+    const smallerFont = wrapAxisName(name, 65, 10);
+    const largerFont = wrapAxisName(name, 65, 20);
+
+    expect(largerFont.split('\n').length).toBeGreaterThan(
+      smallerFont.split('\n').length,
+    );
+  });
+
+  it('returns empty text for an empty name', () => {
+    expect(wrapAxisName('  ', 50, 16)).toBe('');
+  });
+});
 
 describe('createResponsiveXAxisLabelConfig', () => {
   it('leaves labels unwrapped when their rotated extent fits the height budget', () => {

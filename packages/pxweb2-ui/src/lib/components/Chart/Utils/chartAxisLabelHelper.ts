@@ -1,5 +1,5 @@
 // Maximum vertical space, in pixels, allowed for rotated x-axis labels.
-const MAX_X_AXIS_EXTENT = 400;
+const MAX_X_AXIS_EXTENT = 300;
 // Space held back for the axis and surrounding chart layout.
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
 // Scales the x-axis label font size relative to the root pixel size.
@@ -10,6 +10,63 @@ const AXIS_LABEL_LINE_HEIGHT_RATIO = 1.2;
 const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 // Rotation angle used when estimating the labels' vertical extent.
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
+const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
+
+function measureAxisNameText(text: string, fontSizePx: number): number {
+  if (
+    typeof document !== 'undefined' &&
+    typeof CanvasRenderingContext2D !== 'undefined'
+  ) {
+    const context = document.createElement('canvas').getContext('2d');
+    if (context) {
+      context.font = `${fontSizePx}px ${AXIS_NAME_FONT_FAMILY}`;
+      return context.measureText(text).width;
+    }
+  }
+
+  return Array.from(text).length * fontSizePx * AVERAGE_CHARACTER_WIDTH_RATIO;
+}
+
+export function wrapAxisName(
+  name: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string {
+  const text = name.trim().replace(/\s+/g, ' ');
+  if (!text) {
+    return '';
+  }
+
+  if (
+    !Number.isFinite(maxWidthPx) ||
+    maxWidthPx <= 0 ||
+    !Number.isFinite(fontSizePx) ||
+    fontSizePx <= 0
+  ) {
+    return text;
+  }
+
+  const lines: string[] = [];
+  let line = '';
+
+  for (const word of text.split(' ')) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (!line || measureAxisNameText(candidate, fontSizePx) <= maxWidthPx) {
+      line = candidate;
+      continue;
+    }
+
+    lines.push(line);
+    line = word;
+  }
+
+  if (line) {
+    lines.push(line);
+  }
+
+  return lines.join('\n');
+}
+
 function splitLongWord(word: string, maxCharacters: number): string[] {
   const characters = Array.from(word);
   const chunks: string[] = [];
