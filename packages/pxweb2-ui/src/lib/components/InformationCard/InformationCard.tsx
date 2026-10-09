@@ -5,10 +5,10 @@ import styles from './InformationCard.module.scss';
 import { Heading, Icon, IconProps } from '@pxweb2/pxweb2-ui';
 
 export interface InformationCardProps {
-  icon: IconProps['iconName'];
-  headingText?: string;
-  headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
-  children: React.ReactNode;
+  readonly icon: IconProps['iconName'];
+  readonly headingText?: string;
+  readonly headingLevel?: '1' | '2' | '3' | '4' | '5' | '6';
+  readonly children: React.ReactNode;
 }
 
 export function InformationCard({

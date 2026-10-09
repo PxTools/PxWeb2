@@ -2,13 +2,13 @@ import cl from 'clsx';
 import classes from './BodyShort.module.scss';
 
 export interface BodyShortProps extends React.HTMLAttributes<HTMLParagraphElement> {
-  size?: 'medium' | 'small';
-  spacing?: boolean;
-  align?: 'start' | 'center' | 'end';
-  weight?: 'regular' | 'bold';
-  textcolor?: 'default' | 'subtle';
-  className?: string;
-  children?: React.ReactNode;
+  readonly size?: 'medium' | 'small';
+  readonly spacing?: boolean;
+  readonly align?: 'start' | 'center' | 'end';
+  readonly weight?: 'regular' | 'bold';
+  readonly textcolor?: 'default' | 'subtle';
+  readonly className?: string;
+  readonly children?: React.ReactNode;
 }
 
 export function BodyShort({
@@ -20,7 +20,7 @@ export function BodyShort({
   children,
   className = '',
   ...rest
-}: BodyShortProps) {
+}: Readonly<BodyShortProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
 

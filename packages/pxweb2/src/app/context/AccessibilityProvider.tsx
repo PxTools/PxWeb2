@@ -91,10 +91,7 @@ export const AccessibilityProvider = ({
 
   const removeFocusOverride = useCallback((name: string) => {
     setFocusOverrides((prev) =>
-      prev.filter(
-        (override) =>
-          override.self.getAttribute('data-focus-override-id') !== name,
-      ),
+      prev.filter((override) => override.self.dataset.focusOverrideId !== name),
     );
   }, []);
 
@@ -114,8 +111,8 @@ export const AccessibilityProvider = ({
       return (
         focusOverrides.find(
           (override) =>
-            override.self.getAttribute('data-focus-override-id') ===
-            element.getAttribute('data-focus-override-id'),
+            override.self.dataset.focusOverrideId ===
+            element.dataset.focusOverrideId,
         ) || null
       );
     },
@@ -129,11 +126,10 @@ export const AccessibilityProvider = ({
       previous?: HTMLElement,
       next?: HTMLElement,
     ) => {
-      element.setAttribute('data-focus-override-id', name);
+      element.dataset.focusOverrideId = name;
       setFocusOverrides((prev) => {
         const filteredOverrides = prev.filter(
-          (override) =>
-            override.self.getAttribute('data-focus-override-id') !== name,
+          (override) => override.self.dataset.focusOverrideId !== name,
         );
 
         return [
