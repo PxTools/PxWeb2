@@ -41,8 +41,11 @@
   .breadcrumbItem {
     align-items: flex-end;
     white-space: break-spaces;
-    word-break: break-word;
-    overflow-wrap: break-word;
+
+    // Keep word-break and overflow-wrap paired:
+    // together these replace deprecated word-break: break-word
+    word-break: normal;
+    overflow-wrap: anywhere;
 
     &.default {
       min-width: 0;
