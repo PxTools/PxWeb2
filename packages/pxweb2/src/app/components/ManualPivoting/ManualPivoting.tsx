@@ -891,20 +891,13 @@ export function ManualPivot({
             className={[
               classes.draggableItem,
               isDraggedItem && classes.draggableItemDragging,
+              isDraggedItem && classes.draggableItemPointerDragging,
             ]
               .filter(Boolean)
               .join(' ')}
             data-variable-id={variable.id}
             value={variable}
             style={{
-              position:
-                isDragActiveRef.current &&
-                keyboardDraggedItemId === null &&
-                activeDraggedItemIdRef.current === variable.id
-                  ? 'absolute'
-                  : 'relative',
-              left: 0,
-              right: 0,
               zIndex: itemZIndex,
             }}
             ref={(element: HTMLLIElement | null) => {

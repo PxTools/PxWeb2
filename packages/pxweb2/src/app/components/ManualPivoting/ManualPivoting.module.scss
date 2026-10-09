@@ -58,6 +58,16 @@
   outline: none;
 }
 
+.draggableItem {
+  position: relative;
+  left: 0;
+  right: 0;
+}
+
+.draggableItemPointerDragging {
+  position: absolute;
+}
+
 .draggableItemDragging {
   z-index: 1000 !important;
 }
