@@ -64,30 +64,34 @@ export function ManualPivot({
 }: ManualPivotProps) {
   const { t } = useTranslation();
   const keyboardInstructionsId = useId();
+
   const [headerItems, setHeaderItems] = useState<Variable[]>(headerVariables);
   const [stubItems, setStubItems] = useState<Variable[]>(stubVariables);
+  const headerItemsRef = useRef<Variable[]>(headerVariables);
+  const stubItemsRef = useRef<Variable[]>(stubVariables);
+
   const [keyboardDraggedItemId, setKeyboardDraggedItemId] = useState<
     string | null
   >(null);
   const keyboardDraggedItemIdRef = useRef<string | null>(null);
+  const keyboardDragSnapshotRef = useRef<KeyboardDragSnapshot | null>(null);
+
   const [liveAnnouncement, setLiveAnnouncement] = useState('');
-  const headerItemsRef = useRef<Variable[]>(headerVariables);
-  const stubItemsRef = useRef<Variable[]>(stubVariables);
+  const [dropPreview, setDropPreview] = useState<DropPreview>(null);
+  const [sourcePlaceholderMeta, setSourcePlaceholderMeta] =
+    useState<SourcePlaceholderMeta>(null);
+
   const headerZoneRef = useRef<HTMLDivElement | null>(null);
   const stubZoneRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef(new Map<string, HTMLLIElement>());
   const pendingFocusItemIdRef = useRef<string | null>(null);
-  const keyboardDragSnapshotRef = useRef<KeyboardDragSnapshot | null>(null);
-  const draggedItemIdRef = useRef<string | null>(null);
-  const dragSourceGroupRef = useRef<VariableGroup | null>(null);
+
+  const activeDraggedItemIdRef = useRef<string | null>(null);
+  const activeDragSourceGroupRef = useRef<VariableGroup | null>(null);
   const hoveredGroupRef = useRef<VariableGroup | null>(null);
-  const isDraggingRef = useRef(false);
-  const lastPointerYRef = useRef<number | null>(null);
+  const isDragActiveRef = useRef(false);
   const dropPreviewRef = useRef<DropPreview>(null);
   const pointerDragSnapshotRef = useRef<PointerDragSnapshot | null>(null);
-  const [dropPreview, setDropPreview] = useState<DropPreview>(null);
-  const [sourcePlaceholderMeta, setSourcePlaceholderMeta] =
-    useState<SourcePlaceholderMeta>(null);
 
   /** Restores the local lists and drag state whenever the modal is opened. */
   useEffect(() => {
@@ -358,8 +362,8 @@ export function ManualPivot({
     targetGroup: VariableGroup,
     targetIndex: number,
   ) => {
-    const draggedItemId = draggedItemIdRef.current;
-    const sourceGroup = dragSourceGroupRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
+    const sourceGroup = activeDragSourceGroupRef.current;
 
     if (!draggedItemId || !sourceGroup) {
       return;
@@ -391,7 +395,7 @@ export function ManualPivot({
 
     commitLists(nextGroups.header, nextGroups.stub);
     if (sourceGroup !== targetGroup) {
-      dragSourceGroupRef.current = targetGroup;
+      activeDragSourceGroupRef.current = targetGroup;
     }
   };
 
@@ -441,9 +445,9 @@ export function ManualPivot({
 
   /** Starts keyboard dragging for a variable and records its original lists. */
   const startKeyboardDrag = (group: VariableGroup, variableId: string) => {
-    isDraggingRef.current = true;
-    draggedItemIdRef.current = variableId;
-    dragSourceGroupRef.current = group;
+    isDragActiveRef.current = true;
+    activeDraggedItemIdRef.current = variableId;
+    activeDragSourceGroupRef.current = group;
     hoveredGroupRef.current = group;
     keyboardDragSnapshotRef.current = {
       headerItems: [...headerItemsRef.current],
@@ -465,8 +469,8 @@ export function ManualPivot({
 
   /** Moves the keyboard-dragged item up or down within its current group. */
   const moveKeyboardDraggedItemWithinGroup = (direction: -1 | 1): boolean => {
-    const draggedItemId = draggedItemIdRef.current;
-    const sourceGroup = dragSourceGroupRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
+    const sourceGroup = activeDragSourceGroupRef.current;
 
     if (!draggedItemId || !sourceGroup) {
       return false;
@@ -511,8 +515,8 @@ export function ManualPivot({
   const moveKeyboardDraggedItemAcrossGroups = (
     targetGroup: VariableGroup,
   ): boolean => {
-    const draggedItemId = draggedItemIdRef.current;
-    const sourceGroup = dragSourceGroupRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
+    const sourceGroup = activeDragSourceGroupRef.current;
 
     if (!draggedItemId || !sourceGroup || sourceGroup === targetGroup) {
       return false;
@@ -539,8 +543,8 @@ export function ManualPivot({
 
   /** Commits a keyboard drag and announces the destination group. */
   const dropKeyboardDrag = () => {
-    const draggedItemId = draggedItemIdRef.current;
-    const sourceGroup = dragSourceGroupRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
+    const sourceGroup = activeDragSourceGroupRef.current;
 
     if (draggedItemId) {
       pendingFocusItemIdRef.current = draggedItemId;
@@ -567,7 +571,7 @@ export function ManualPivot({
 
   /** Restores the lists captured before a keyboard drag began. */
   const cancelKeyboardDrag = () => {
-    const draggedItemId = draggedItemIdRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
     const snapshot = keyboardDragSnapshotRef.current;
 
     if (snapshot) {
@@ -595,11 +599,10 @@ export function ManualPivot({
 
   /** Clears shared state used by pointer and keyboard dragging. */
   const resetDragState = () => {
-    isDraggingRef.current = false;
-    draggedItemIdRef.current = null;
-    dragSourceGroupRef.current = null;
+    isDragActiveRef.current = false;
+    activeDraggedItemIdRef.current = null;
+    activeDragSourceGroupRef.current = null;
     hoveredGroupRef.current = null;
-    lastPointerYRef.current = null;
     pointerDragSnapshotRef.current = null;
     setSourcePlaceholderMeta(null);
     updateDropPreview(null);
@@ -690,16 +693,15 @@ export function ManualPivot({
   /** Updates the active pointer drag preview as the pointer moves. */
   const handleItemDrag = (event: DragEvent, info: PanInfo) => {
     const point = getClientPoint(event, info);
-    lastPointerYRef.current = point.y;
     const detectedGroup = getGroupAtPoint(point.x, point.y);
     if (detectedGroup) {
       hoveredGroupRef.current = detectedGroup;
     }
 
     const hoveredGroup =
-      detectedGroup ?? hoveredGroupRef.current ?? dragSourceGroupRef.current;
+      detectedGroup ?? hoveredGroupRef.current ?? activeDragSourceGroupRef.current;
 
-    const draggedItemId = draggedItemIdRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
       updateDropPreview(
         getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId),
@@ -712,16 +714,15 @@ export function ManualPivot({
   /** Resolves the final pointer drop position and moves the dragged item. */
   const handleItemDragEnd = (event: DragEvent, info: PanInfo) => {
     const point = getClientPoint(event, info);
-    lastPointerYRef.current = point.y;
     const detectedGroup = getGroupAtPoint(point.x, point.y);
     if (detectedGroup) {
       hoveredGroupRef.current = detectedGroup;
     }
 
     const hoveredGroup =
-      detectedGroup ?? hoveredGroupRef.current ?? dragSourceGroupRef.current;
+      detectedGroup ?? hoveredGroupRef.current ?? activeDragSourceGroupRef.current;
 
-    const draggedItemId = draggedItemIdRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
       updateDropPreview(
         getDropPreviewForGroup(hoveredGroup, point.y, draggedItemId),
@@ -740,9 +741,9 @@ export function ManualPivot({
 
   /** Captures source metadata and initializes a pointer drag. */
   const handleDragStart = (group: VariableGroup, variableId: string) => {
-    isDraggingRef.current = true;
-    draggedItemIdRef.current = variableId;
-    dragSourceGroupRef.current = group;
+    isDragActiveRef.current = true;
+    activeDraggedItemIdRef.current = variableId;
+    activeDragSourceGroupRef.current = group;
     hoveredGroupRef.current = group;
 
     const sourceItems =
@@ -783,15 +784,15 @@ export function ManualPivot({
   const handleGroupReorder = (group: VariableGroup, nextItems: Variable[]) => {
     // Pointer drag uses custom preview/placeholder rendering; applying
     // motion/react reorder updates at the same time causes visual thrash.
-    if (isDraggingRef.current && keyboardDraggedItemId === null) {
+    if (isDragActiveRef.current && keyboardDraggedItemId === null) {
       return;
     }
 
     let dedupedItems = dedupeById(nextItems);
-    const draggedItemId = draggedItemIdRef.current;
-    const sourceGroup = dragSourceGroupRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
+    const sourceGroup = activeDragSourceGroupRef.current;
 
-    if (isDraggingRef.current && draggedItemId && sourceGroup === group) {
+    if (isDragActiveRef.current && draggedItemId && sourceGroup === group) {
       const hasDraggedItem = dedupedItems.some(
         (item) => item.id === draggedItemId,
       );
@@ -834,15 +835,15 @@ export function ManualPivot({
     const preview = dropPreview?.group === group ? dropPreview : null;
     const previewIndex = preview?.index;
     const pointerDragSnapshot = pointerDragSnapshotRef.current;
-    const draggedItemId = draggedItemIdRef.current;
+    const draggedItemId = activeDraggedItemIdRef.current;
     const isPointerDragging =
-      isDraggingRef.current && keyboardDraggedItemId === null;
+      isDragActiveRef.current && keyboardDraggedItemId === null;
     const sourcePlaceholderIndex =
       pointerDragSnapshot?.sourceGroup === group
         ? pointerDragSnapshot.sourceIndex
         : undefined;
     const isActivePointerDragSource =
-      isPointerDragging && dragSourceGroupRef.current === group;
+      isPointerDragging && activeDragSourceGroupRef.current === group;
     const isHoveringEmptyGroup =
       isPointerDragging && items.length === 0 && preview?.group === group;
     const draggedItemIndex = isPointerDragging
@@ -859,7 +860,7 @@ export function ManualPivot({
       if (previewIndex !== undefined && index < previewIndex) {
         itemZIndex = 3;
       }
-      if (isDraggingRef.current && draggedItemIdRef.current === variable.id) {
+      if (isDragActiveRef.current && activeDraggedItemIdRef.current === variable.id) {
         itemZIndex = 100;
       }
 
@@ -890,9 +891,9 @@ export function ManualPivot({
             value={variable}
             style={{
               position:
-                isDraggingRef.current &&
+                isDragActiveRef.current &&
                 keyboardDraggedItemId === null &&
-                draggedItemIdRef.current === variable.id
+                activeDraggedItemIdRef.current === variable.id
                   ? 'absolute'
                   : 'relative',
               left: 0,
