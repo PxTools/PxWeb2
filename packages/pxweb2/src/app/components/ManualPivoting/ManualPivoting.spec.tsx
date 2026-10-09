@@ -11,7 +11,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-vi.mock('framer-motion', async () => {
+vi.mock('motion/react', async () => {
   const React = await import('react');
 
   const Group = ({

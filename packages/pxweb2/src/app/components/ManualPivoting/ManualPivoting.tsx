@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Reorder, type PanInfo } from 'framer-motion';
+import { Reorder, type PanInfo } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -803,7 +803,7 @@ export function ManualPivot({
   /** Applies a reorder while keeping variables unique across both groups. */
   const handleGroupReorder = (group: VariableGroup, nextItems: Variable[]) => {
     // Pointer drag uses custom preview/placeholder rendering; applying
-    // framer-motion reorder updates at the same time causes visual thrash.
+    // motion/react reorder updates at the same time causes visual thrash.
     if (isDraggingRef.current && keyboardDraggedItemId === null) {
       return;
     }
