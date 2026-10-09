@@ -173,11 +173,12 @@ export async function downloadChartImage(
 
   const titleOptions = chart.getOption().title as
     Array<{ text?: unknown }> | undefined;
-  // const chartDownloadTitle = tabId.trim() || titleOptions?.[0]?.text?.toString() || '';
-  // console.log('titleOptions:', titleOptions?.[0]?.text?.toString());
-  // console.log('Chart title:', chartDownloadTitle);
 
-  const filename = (tabId.trim() || titleOptions?.[0]?.text?.toString() || '')
+  const filename = (
+    tabId.trim() ||
+    titleOptions?.[0]?.text?.toString() ||
+    'PxWebDownload'
+  )
     .trim()
     .replace(/[^a-z0-9]+/gi, '-')
     .replace(/^-|-$/g, '');
