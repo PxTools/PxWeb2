@@ -432,7 +432,7 @@ export function ManualPivot({
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_moved',
-          '{{item}} moved to position {{position}} in {{group}}.',
+
           {
             item: itemLabel,
             position: itemIndex + 1,
