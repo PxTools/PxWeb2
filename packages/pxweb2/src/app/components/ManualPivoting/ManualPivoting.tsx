@@ -17,9 +17,9 @@ import {
   BodyLong,
 } from '@pxweb2/pxweb2-ui';
 import classes from './ManualPivoting.module.scss';
-import DataItem from './DataItem';
-import DropTarget from './DropTarget';
-import EmtyList from './EmtyList';
+import DataItem from './DataItem/DataItem';
+import DropTarget from './DropTarget/DropTarget';
+import EmtyList from './EmtyList/EmtyList';
 
 type VariableGroup = 'header' | 'stub';
 type DragEvent = MouseEvent | TouchEvent | PointerEvent;
