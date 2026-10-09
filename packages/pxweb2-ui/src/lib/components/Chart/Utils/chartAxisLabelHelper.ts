@@ -124,55 +124,76 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
     (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
   );
+  const formatter = (value: unknown): string => {
+    const text = String(value ?? '').trim();
+    if (!text) {
+      return '';
+    }
+    const estimatedTextWidth =
+      Array.from(text).length * fontSize * AVERAGE_CHARACTER_WIDTH_RATIO;
+    const unwrappedExtent =
+      estimatedTextWidth * Math.sin(LABEL_ROTATION_RADIANS) +
+      lineHeight * Math.cos(LABEL_ROTATION_RADIANS) +
+      AXIS_LABEL_LAYOUT_RESERVE;
+    if (unwrappedExtent <= MAX_X_AXIS_EXTENT) {
+      return text;
+    }
+    let bestTruncatedLabel = '';
+    let bestVisibleCharacterCount = -1;
+    for (let lineCount = 2; lineCount <= maxLineCount; lineCount += 1) {
+      const availableLineWidth =
+        (MAX_X_AXIS_EXTENT -
+          AXIS_LABEL_LAYOUT_RESERVE -
+          lineCount * lineHeight * Math.cos(LABEL_ROTATION_RADIANS)) /
+        Math.sin(LABEL_ROTATION_RADIANS);
+      const lineCharacterLimit = Math.max(
+        1,
+        Math.floor(
+          availableLineWidth / (fontSize * AVERAGE_CHARACTER_WIDTH_RATIO),
+        ),
+      );
+      const lines = wrapText(text, lineCharacterLimit);
+      if (lines.length <= lineCount) {
+        return lines.join('\n');
+      }
+
+      const truncatedLabel = truncateWrappedText(
+        lines,
+        lineCount,
+        lineCharacterLimit,
+      );
+      const visibleCharacterCount =
+        Array.from(truncatedLabel.replaceAll('\n', '')).length -
+        Math.min(3, lineCharacterLimit);
+      if (visibleCharacterCount > bestVisibleCharacterCount) {
+        bestTruncatedLabel = truncatedLabel;
+        bestVisibleCharacterCount = visibleCharacterCount;
+      }
+    }
+    return bestTruncatedLabel;
+  };
+
   return {
     lineHeight,
-    formatter: (value: unknown): string => {
-      const text = String(value ?? '').trim();
-      if (!text) {
-        return '';
-      }
-      const estimatedTextWidth =
-        Array.from(text).length * fontSize * AVERAGE_CHARACTER_WIDTH_RATIO;
-      const unwrappedExtent =
-        estimatedTextWidth * Math.sin(LABEL_ROTATION_RADIANS) +
-        lineHeight * Math.cos(LABEL_ROTATION_RADIANS) +
-        AXIS_LABEL_LAYOUT_RESERVE;
-      if (unwrappedExtent <= MAX_X_AXIS_EXTENT) {
-        return text;
-      }
-      let bestTruncatedLabel = '';
-      let bestVisibleCharacterCount = -1;
-      for (let lineCount = 2; lineCount <= maxLineCount; lineCount += 1) {
-        const availableLineWidth =
-          (MAX_X_AXIS_EXTENT -
-            AXIS_LABEL_LAYOUT_RESERVE -
-            lineCount * lineHeight * Math.cos(LABEL_ROTATION_RADIANS)) /
-          Math.sin(LABEL_ROTATION_RADIANS);
-        const lineCharacterLimit = Math.max(
-          1,
-          Math.floor(
-            availableLineWidth / (fontSize * AVERAGE_CHARACTER_WIDTH_RATIO),
+    formatter,
+    estimateHeight: (values: readonly unknown[]): number => {
+      return values.reduce<number>((maximumHeight, value) => {
+        const lines = formatter(value).split('\n');
+        const widestLine = Math.max(
+          0,
+          ...lines.map(
+            (line) =>
+              Array.from(line).length *
+              fontSize *
+              AVERAGE_CHARACTER_WIDTH_RATIO,
           ),
         );
-        const lines = wrapText(text, lineCharacterLimit);
-        if (lines.length <= lineCount) {
-          return lines.join('\n');
-        }
+        const height =
+          widestLine * Math.sin(LABEL_ROTATION_RADIANS) +
+          lines.length * lineHeight * Math.cos(LABEL_ROTATION_RADIANS);
 
-        const truncatedLabel = truncateWrappedText(
-          lines,
-          lineCount,
-          lineCharacterLimit,
-        );
-        const visibleCharacterCount =
-          Array.from(truncatedLabel.replaceAll('\n', '')).length -
-          Math.min(3, lineCharacterLimit);
-        if (visibleCharacterCount > bestVisibleCharacterCount) {
-          bestTruncatedLabel = truncatedLabel;
-          bestVisibleCharacterCount = visibleCharacterCount;
-        }
-      }
-      return bestTruncatedLabel;
+        return Math.max(maximumHeight, height);
+      }, 0);
     },
   };
 }

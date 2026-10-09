@@ -87,4 +87,18 @@ describe('createResponsiveXAxisLabelConfig', () => {
     expect(standardSize.formatter(label)).not.toBe('');
     expect(largerSize.formatter(label)).toContain('...');
   });
+
+  it('estimates the tallest formatted label and scales with root font size', () => {
+    const standardSize = createResponsiveXAxisLabelConfig(16);
+    const largerSize = createResponsiveXAxisLabelConfig(20);
+    const labels = ['2024', 'A'.repeat(150)];
+
+    expect(standardSize.estimateHeight(labels)).toBeGreaterThan(
+      standardSize.estimateHeight(['2024']),
+    );
+    expect(largerSize.estimateHeight(labels)).toBeGreaterThan(
+      standardSize.estimateHeight(labels),
+    );
+    expect(standardSize.estimateHeight([])).toBe(0);
+  });
 });

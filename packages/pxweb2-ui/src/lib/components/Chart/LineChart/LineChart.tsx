@@ -46,7 +46,6 @@ type TooltipParam = {
 };
 
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
-const X_AXIS_RESERVED_HEIGHT = 10;
 const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
@@ -199,6 +198,9 @@ export function LineChart({
     () => createResponsiveXAxisLabelConfig(pixelsPerRem),
     [pixelsPerRem],
   );
+  const xAxisLabelsHeight = xAxisLabelConfig.estimateHeight(
+    dataset.source.map((row) => row.name),
+  );
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
@@ -215,7 +217,8 @@ export function LineChart({
     const gridHeight =
       CHART_PLOT_HEIGHT_PX[screenSize] -
       TOP_CHART_PADDING -
-      X_AXIS_LABEL_TO_LEGEND_GAP;
+      X_AXIS_LABEL_TO_LEGEND_GAP +
+      xAxisLabelsHeight;
 
     return {
       ...buildDatasetOption(dataset),
@@ -372,6 +375,7 @@ export function LineChart({
     wrappedYAxisName,
     xAxisLabelConfig.lineHeight,
     xAxisLabelConfig.formatter,
+    xAxisLabelsHeight,
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
@@ -388,9 +392,7 @@ export function LineChart({
 
   const height =
     chartPlotHeightRem +
-    (X_AXIS_RESERVED_HEIGHT +
-      X_AXIS_LABEL_TO_LEGEND_GAP +
-      calculatedLegendHeight) /
+    (xAxisLabelsHeight + X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) /
       pixelsPerRem;
 
   useEffect(() => {

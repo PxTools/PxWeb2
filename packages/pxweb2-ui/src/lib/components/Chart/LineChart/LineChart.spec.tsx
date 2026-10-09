@@ -16,6 +16,7 @@ import {
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
+import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -180,9 +181,12 @@ describe('LineChart', () => {
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
     expect(option.grid).toEqual({
       top: 36,
-      height: 476,
+      height: 476 + labelHeight,
       bottom: 136,
       left: '0',
       right: '0',
@@ -294,7 +298,12 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('42.125rem');
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
+    expect(chartDiv?.style.height).toBe(
+      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+    );
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
