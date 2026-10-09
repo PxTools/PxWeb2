@@ -636,8 +636,7 @@ export function VariableBoxContent({
   };
 
   // To override element styling added by Virtuoso when scrolling down
-
-  const TopItemListEmptyFragment = () => <></>;
+  const TopItemListEmptyFragment = () => null;
 
   //Set inital height to 44
   const [calcedHeight, setCalcedHeight] = useState(44);
