@@ -223,7 +223,7 @@
               "item_dropped": "{{item}} sluppet i {{group}}.",
               "move_cancelled": "Flyttingen av {{item}} ble avbrutt."
             }
-            },
+          },
           "change_order": {
             "title": "Endre rekkefølge",
             "description": "Beskrivelsestekst..."
@@ -317,7 +317,7 @@
           }
         }
       },
-      "chart":{
+      "chart": {
         "line_chart": {
           "warnings": {
             "multiple_units": {

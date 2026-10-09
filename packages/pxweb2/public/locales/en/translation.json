@@ -223,7 +223,7 @@
               "item_dropped": "{{item}} dropped in {{group}}.",
               "move_cancelled": "{{item}} move cancelled."
             }
-            },
+          },
           "change_order": {
             "title": "Change order",
             "description": "Description text..."
@@ -317,7 +317,7 @@
           }
         }
       },
-      "chart":{
+      "chart": {
         "line_chart": {
           "warnings": {
             "multiple_units": {

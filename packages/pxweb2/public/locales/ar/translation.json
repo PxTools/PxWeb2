@@ -225,7 +225,7 @@
               "item_dropped": "تم إفلات {{item}} في {{group}}.",
               "move_cancelled": "تم إلغاء نقل {{item}}."
             }
-            },
+          },
           "change_order": {
             "title": "تغيير الترتيب",
             "description": "نص الوصف..."
@@ -311,7 +311,7 @@
           }
         }
       },
-      "chart":{
+      "chart": {
         "line_chart": {
           "warnings": {
             "multiple_units": {
