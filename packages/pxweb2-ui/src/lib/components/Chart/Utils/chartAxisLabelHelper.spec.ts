@@ -74,7 +74,9 @@ describe('createResponsiveXAxisLabelConfig', () => {
     expect(formattedLabel).not.toBe('');
     expect(formattedLabel.endsWith('...')).toBe(true);
     expect(formattedLabel.split('\n').length).toBeLessThanOrEqual(maxLineCount);
-    expect(formattedLabel.replaceAll('\n', '').length).toBeLessThan(label.length);
+    expect(formattedLabel.replaceAll('\n', '').length).toBeLessThan(
+      label.length,
+    );
   });
 
   it('allows fewer wrapped lines when the root font size is larger', () => {
