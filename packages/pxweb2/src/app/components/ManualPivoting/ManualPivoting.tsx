@@ -475,7 +475,6 @@ export function ManualPivot({
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_selected',
-          '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.',
           { item: itemLabel },
         ),
       );
@@ -572,7 +571,6 @@ export function ManualPivot({
         setLiveAnnouncement(
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_dropped',
-            '{{item}} dropped in {{group}}.',
             { item: itemLabel, group: groupLabel },
           ),
         );
@@ -600,7 +598,6 @@ export function ManualPivot({
         setLiveAnnouncement(
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.move_cancelled',
-            '{{item}} move cancelled.',
             { item: itemLabel },
           ),
         );
@@ -1025,7 +1022,6 @@ export function ManualPivot({
       <p id={keyboardInstructionsId} className={classes.visuallyHidden}>
         {t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.keyboard_instructions',
-          'Press Space or Enter to pick up an item. Use arrow keys to move it, then press Enter to drop. Press Escape to cancel.',
         )}
       </p>
       <div className={classes.visuallyHidden} aria-live="polite">
