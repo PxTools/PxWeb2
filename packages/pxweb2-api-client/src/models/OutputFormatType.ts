@@ -10,6 +10,4 @@ export enum OutputFormatType {
   HTML = 'html',
   JSON_PX = 'json-px',
   PARQUET = 'parquet',
-  PNG = 'png',
-  SVG = 'svg',
 }

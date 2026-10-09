@@ -3,19 +3,21 @@ import { OutputFormatType } from '@pxweb2/pxweb2-api-client';
 
 export interface FileFormat {
   value: string;
-  outputFormat: OutputFormatType;
+  outputFormat: FileOutputFormatType;
   iconName: IconProps['iconName'];
 }
+
+export type FileOutputFormatType = OutputFormatType | 'png' | 'svg';
 
 export const fileFormats: FileFormat[] = [
   {
     value: 'png',
-    outputFormat: OutputFormatType.PNG,
+    outputFormat: 'png',
     iconName: 'FileImage',
   },
   {
     value: 'svg',
-    outputFormat: OutputFormatType.SVG,
+    outputFormat: 'svg',
     iconName: 'FileImage',
   },
   {

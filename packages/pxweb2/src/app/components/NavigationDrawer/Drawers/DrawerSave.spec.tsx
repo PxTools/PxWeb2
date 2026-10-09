@@ -234,9 +234,11 @@ describe('DrawerSave', () => {
       const csvBtn = within(list).getByRole('button', { name: 'CSV' });
 
       fireEvent.click(excelBtn);
+      fireEvent.click(csvBtn);
 
       expect(excelBtn).toHaveAttribute('aria-busy', 'true');
       expect(csvBtn).not.toHaveAttribute('aria-busy');
+      expect(mockExportToFile).toHaveBeenCalledTimes(1);
 
       deferred.resolve();
       await waitFor(() => {

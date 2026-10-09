@@ -31,7 +31,10 @@ import {
   TimeFilter,
 } from '../../../util/export/exportUtil';
 import { ApiQuery } from '../../ApiQuery/ApiQuery';
-import { fileFormats } from '../../../constants/outputFormats';
+import {
+  fileFormats,
+  type FileOutputFormatType,
+} from '../../../constants/outputFormats';
 export { fileFormats } from '../../../constants/outputFormats';
 
 // File formats moved to shared constants in app/constants/outputFormats
@@ -180,9 +183,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { data, chart } = useTableData();
   const heading = data?.heading;
   const stub = data?.stub;
-  const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
-    null,
-  );
+  const [loadingFormat, setLoadingFormat] =
+    useState<FileOutputFormatType | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   const [saveQueryUrl, setsaveQueryUrl] = useState('');
@@ -317,7 +319,11 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
    * The function handles success and error cases,
    * updating the loading state accordingly.
    */
-  async function saveToFile(outputFormat: OutputFormatType): Promise<void> {
+  async function saveToFile(outputFormat: FileOutputFormatType): Promise<void> {
+    if (loadingFormat !== null) {
+      return;
+    }
+
     const variablesSelection = getVariableSelection();
     setLoadingFormat(outputFormat);
 
