@@ -365,37 +365,21 @@ export function ManualPivot({
       return;
     }
 
-    const sourceItems =
-      sourceGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
-    const targetItems =
-      targetGroup === 'header' ? headerItemsRef.current : stubItemsRef.current;
+    const nextGroups: Record<VariableGroup, Variable[]> = {
+      header: [...headerItemsRef.current],
+      stub: [...stubItemsRef.current],
+    };
+    const sourceItems = nextGroups[sourceGroup];
     const movingItem = sourceItems.find((item) => item.id === draggedItemId);
 
     if (!movingItem) {
       return;
     }
 
-    if (sourceGroup === targetGroup) {
-      const nextItems = sourceItems.filter((item) => item.id !== draggedItemId);
-      const clampedInsertIndex = Math.min(
-        Math.max(0, targetIndex),
-        nextItems.length,
-      );
-      nextItems.splice(clampedInsertIndex, 0, movingItem);
-
-      if (sourceGroup === 'header') {
-        commitLists(nextItems, stubItemsRef.current);
-      } else {
-        commitLists(headerItemsRef.current, nextItems);
-      }
-
-      return;
-    }
-
-    const nextSourceItems = sourceItems.filter(
+    nextGroups[sourceGroup] = sourceItems.filter(
       (item) => item.id !== draggedItemId,
     );
-    const nextTargetItems = targetItems.filter(
+    const nextTargetItems = nextGroups[targetGroup].filter(
       (item) => item.id !== draggedItemId,
     );
     const clampedInsertIndex = Math.min(
@@ -403,14 +387,12 @@ export function ManualPivot({
       nextTargetItems.length,
     );
     nextTargetItems.splice(clampedInsertIndex, 0, movingItem);
+    nextGroups[targetGroup] = nextTargetItems;
 
-    if (sourceGroup === 'header') {
-      commitLists(nextSourceItems, nextTargetItems);
-    } else {
-      commitLists(nextTargetItems, nextSourceItems);
+    commitLists(nextGroups.header, nextGroups.stub);
+    if (sourceGroup !== targetGroup) {
+      dragSourceGroupRef.current = targetGroup;
     }
-
-    dragSourceGroupRef.current = targetGroup;
   };
 
   /** Reads the current items belonging to a variable group. */
@@ -863,14 +845,95 @@ export function ManualPivot({
       isPointerDragging && dragSourceGroupRef.current === group;
     const isHoveringEmptyGroup =
       isPointerDragging && items.length === 0 && preview?.group === group;
-    const nonDraggedItemCount = items.reduce(
-      (count, item) =>
-        isPointerDragging && draggedItemId && item.id === draggedItemId
-          ? count
-          : count + 1,
-      0,
-    );
-    let visibleItemIndex = 0;
+    const draggedItemIndex = isPointerDragging
+      ? items.findIndex((item) => item.id === draggedItemId)
+      : -1;
+    const nonDraggedItemCount =
+      items.length - (draggedItemIndex === -1 ? 0 : 1);
+
+    const renderItem = (variable: Variable, index: number) => {
+      const isDraggedItem = isPointerDragging && draggedItemId === variable.id;
+      const currentVisibleIndex =
+        index - (draggedItemIndex !== -1 && index > draggedItemIndex ? 1 : 0);
+      let itemZIndex = 1;
+      if (previewIndex !== undefined && index < previewIndex) {
+        itemZIndex = 3;
+      }
+      if (
+        isDraggingRef.current &&
+        draggedItemIdRef.current === variable.id
+      ) {
+        itemZIndex = 100;
+      }
+
+      return (
+        <Fragment key={variable.id}>
+          {sourcePlaceholderIndex === index ? (
+            <li
+              aria-hidden="true"
+              className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
+            />
+          ) : null}
+          {items.length > 0 &&
+          previewIndex === currentVisibleIndex &&
+          !isDraggedItem ? (
+            <li aria-hidden="true" className={classes.dropTargetRow}>
+              <DropTarget />
+            </li>
+          ) : null}
+          <Reorder.Item
+            as="li"
+            className={[
+              classes.draggableItem,
+              isDraggedItem && classes.draggableItemDragging,
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            data-variable-id={variable.id}
+            value={variable}
+            style={{
+              position:
+                isDraggingRef.current &&
+                keyboardDraggedItemId === null &&
+                draggedItemIdRef.current === variable.id
+                  ? 'absolute'
+                  : 'relative',
+              left: 0,
+              right: 0,
+              zIndex: itemZIndex,
+            }}
+            ref={(element: HTMLLIElement | null) => {
+              if (element) {
+                itemRefs.current.set(variable.id, element);
+              } else {
+                itemRefs.current.delete(variable.id);
+              }
+            }}
+            tabIndex={0}
+            aria-grabbed={keyboardDraggedItemId === variable.id}
+            aria-describedby={keyboardInstructionsId}
+            drag
+            dragMomentum={false}
+            dragElastic={0}
+            whileDrag={{ scale: 1.02 }}
+            onDragStart={() => handleDragStart(group, variable.id)}
+            onDrag={handleItemDrag}
+            onDragEnd={handleItemDragEnd}
+            onKeyDown={(event) =>
+              handleItemKeyDown(event, group, variable.id)
+            }
+          >
+            <DataItem
+              label={variable.label}
+              isDragging={
+                isDraggedItem || keyboardDraggedItemId === variable.id
+              }
+              isKeyboardDragging={keyboardDraggedItemId === variable.id}
+            />
+          </Reorder.Item>
+        </Fragment>
+      );
+    };
 
     return (
       <section className={classes.groupColumn}>
@@ -896,96 +959,7 @@ export function ManualPivot({
                 />
               </li>
             ) : null}
-            {items.map((variable, index) =>
-              (() => {
-                const isDraggedItem =
-                  isPointerDragging && draggedItemId === variable.id;
-                const currentVisibleIndex = visibleItemIndex;
-                if (!isDraggedItem) {
-                  visibleItemIndex += 1;
-                }
-                let itemZIndex = 1;
-                if (previewIndex !== undefined && index < previewIndex) {
-                  itemZIndex = 3;
-                }
-                if (
-                  isDraggingRef.current &&
-                  draggedItemIdRef.current === variable.id
-                ) {
-                  itemZIndex = 100;
-                }
-
-                return (
-                  <Fragment key={variable.id}>
-                    {sourcePlaceholderIndex === index ? (
-                      <li
-                        aria-hidden="true"
-                        className={`${classes.dropPlaceholder} ${classes.sourcePlaceholder}`}
-                      />
-                    ) : null}
-                    {items.length > 0 &&
-                    previewIndex === currentVisibleIndex &&
-                    !isDraggedItem ? (
-                      <li aria-hidden="true" className={classes.dropTargetRow}>
-                        <DropTarget />
-                      </li>
-                    ) : null}
-                    <Reorder.Item
-                      as="li"
-                      className={[
-                        classes.draggableItem,
-                        isDraggedItem && classes.draggableItemDragging,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
-                      data-variable-id={variable.id}
-                      value={variable}
-                      style={{
-                        position:
-                          isDraggingRef.current &&
-                          keyboardDraggedItemId === null &&
-                          draggedItemIdRef.current === variable.id
-                            ? 'absolute'
-                            : 'relative',
-                        left: 0,
-                        right: 0,
-                        zIndex: itemZIndex,
-                      }}
-                      ref={(element: HTMLLIElement | null) => {
-                        if (element) {
-                          itemRefs.current.set(variable.id, element);
-                        } else {
-                          itemRefs.current.delete(variable.id);
-                        }
-                      }}
-                      tabIndex={0}
-                      aria-grabbed={keyboardDraggedItemId === variable.id}
-                      aria-describedby={keyboardInstructionsId}
-                      drag
-                      dragMomentum={false}
-                      dragElastic={0}
-                      whileDrag={{ scale: 1.02 }}
-                      onDragStart={() => handleDragStart(group, variable.id)}
-                      onDrag={handleItemDrag}
-                      onDragEnd={handleItemDragEnd}
-                      onKeyDown={(event) =>
-                        handleItemKeyDown(event, group, variable.id)
-                      }
-                    >
-                      <DataItem
-                        label={variable.label}
-                        isDragging={
-                          isDraggedItem || keyboardDraggedItemId === variable.id
-                        }
-                        isKeyboardDragging={
-                          keyboardDraggedItemId === variable.id
-                        }
-                      />
-                    </Reorder.Item>
-                  </Fragment>
-                );
-              })(),
-            )}
+            {items.map(renderItem)}
             {sourcePlaceholderIndex === items.length ? (
               <li
                 aria-hidden="true"
