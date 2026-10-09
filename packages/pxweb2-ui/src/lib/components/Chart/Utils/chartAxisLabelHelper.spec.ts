@@ -54,6 +54,15 @@ describe('createResponsiveXAxisLabelConfig', () => {
     expect(config.lineHeight).toBe(20);
   });
 
+  it('formats primitive labels without coercing objects to strings', () => {
+    const config = createResponsiveXAxisLabelConfig(16);
+    const toString = vi.fn(() => 'object label');
+
+    expect(config.formatter(2024)).toBe('2024');
+    expect(config.formatter({ toString })).toBe('');
+    expect(toString).not.toHaveBeenCalled();
+  });
+
   it('wraps complete values only when their unwrapped extent exceeds the budget', () => {
     const config = createResponsiveXAxisLabelConfig(16);
     const label = 'A'.repeat(150);

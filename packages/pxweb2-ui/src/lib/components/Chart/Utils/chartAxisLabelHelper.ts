@@ -125,7 +125,10 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
   );
   const formatter = (value: unknown): string => {
-    const text = String(value ?? '').trim();
+    const text =
+      typeof value === 'string' || typeof value === 'number'
+        ? `${value}`.trim()
+        : '';
     if (!text) {
       return '';
     }
