@@ -235,7 +235,9 @@
             "px": "Px-fil (.px)",
             "jsonstat2": "JSON-stat2 (.json)",
             "html": "HTML (.html)",
-            "parquet": "Parquet (.parquet)"
+            "parquet": "Parquet (.parquet)",
+            "png": "Diagram (.png)",
+            "svg": "Diagram (.svg)"
           }
         },
         "savequery": {

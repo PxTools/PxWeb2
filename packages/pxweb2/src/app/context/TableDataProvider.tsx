@@ -14,6 +14,7 @@ import {
 import {
   PxTable,
   PxTableMetadata,
+  ChartInstance,
   getPxTableData,
   setPxTableData,
 } from '@pxweb2/pxweb2-ui';
@@ -57,6 +58,8 @@ export interface TableDataContextType {
   buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
   setIsFadingTable: (value: boolean) => void;
+  chart: ChartInstance | null;
+  setChart: (chart: ChartInstance | null) => void;
 }
 
 interface TableDataProviderProps {
@@ -96,6 +99,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   isFadingTable: false,
   setIsFadingTable: () => {
     // No-op
+  },
+  chart: null,
+  setChart: () => {
+    // No-op: useTableData hook prevents this from being called
   },
 });
 
@@ -138,6 +145,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const [isFadingTable, setIsFadingTable] = useState(false);
+  const [chart, setChart] = useState<ChartInstance | null>(null);
   const variables = useVariables();
 
   useEffect(() => {
@@ -1425,6 +1433,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       isInitialized,
       isFadingTable,
       setIsFadingTable,
+      chart,
+      setChart,
     }),
     [
       data,
@@ -1439,6 +1449,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       isInitialized,
       isFadingTable,
       setIsFadingTable,
+      chart,
     ],
   );
 

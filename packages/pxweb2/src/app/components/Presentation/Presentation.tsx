@@ -79,6 +79,8 @@ function PresentationView({
   getVerticalScrollElement,
 }: Readonly<PresentationViewProps>) {
   const { t } = useTranslation();
+  const { setChart } = useTableData();
+  const staticTitle = useVariables().pxTableMetadata?.label ?? '';
   const { screenSize } = useApp();
 
   const lineChartEmptyStateTitle = t(
@@ -115,6 +117,8 @@ function PresentationView({
         >
           <LineChart
             pxtable={pxtable}
+            staticTitle={staticTitle}
+            onChartReady={setChart}
             screenSize={screenSize}
             translations={{
               showMore: showMoreText,

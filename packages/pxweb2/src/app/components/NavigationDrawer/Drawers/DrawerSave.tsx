@@ -31,7 +31,10 @@ import {
   TimeFilter,
 } from '../../../util/export/exportUtil';
 import { ApiQuery } from '../../ApiQuery/ApiQuery';
-import { fileFormats } from '../../../constants/outputFormats';
+import {
+  fileFormats,
+  type FileOutputFormatType,
+} from '../../../constants/outputFormats';
 export { fileFormats } from '../../../constants/outputFormats';
 
 // File formats moved to shared constants in app/constants/outputFormats
@@ -177,11 +180,11 @@ export type DrawerSaveProps = {
 export function DrawerSave({ tableId }: DrawerSaveProps) {
   const { t, i18n } = useTranslation();
   const variables = useVariables();
-  const heading = useTableData().data?.heading;
-  const stub = useTableData().data?.stub;
-  const [loadingFormat, setLoadingFormat] = useState<OutputFormatType | null>(
-    null,
-  );
+  const { data, chart } = useTableData();
+  const heading = data?.heading;
+  const stub = data?.stub;
+  const [loadingFormat, setLoadingFormat] =
+    useState<FileOutputFormatType | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   const [saveQueryUrl, setsaveQueryUrl] = useState('');
@@ -316,12 +319,22 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
    * The function handles success and error cases,
    * updating the loading state accordingly.
    */
-  async function saveToFile(outputFormat: OutputFormatType): Promise<void> {
+  async function saveToFile(outputFormat: FileOutputFormatType): Promise<void> {
+    if (loadingFormat !== null) {
+      return;
+    }
+
     const variablesSelection = getVariableSelection();
     setLoadingFormat(outputFormat);
 
     // Export the file using the export utility
-    await exportToFile(tableId, i18n.language, variablesSelection, outputFormat)
+    await exportToFile(
+      tableId,
+      i18n.language,
+      variablesSelection,
+      outputFormat,
+      chart,
+    )
       .then(
         () => {
           // Notify user of successful export
@@ -456,7 +469,10 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
           className={classes.saveAsActionList}
           aria-labelledby="drawer-save-to-file"
         >
-          {fileFormats.map((format) => (
+          {(chart
+            ? fileFormats
+            : fileFormats.filter((f) => f.value !== 'png' && f.value !== 'svg')
+          ).map((format) => (
             <li key={`saveToFile${format.value}`}>
               <ActionItem
                 label={translate(

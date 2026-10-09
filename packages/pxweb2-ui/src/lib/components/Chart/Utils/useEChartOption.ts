@@ -131,10 +131,12 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
     ? option.title.map((titleItem) => ({
         ...titleItem,
         textStyle: { ...titleItem.textStyle, ...textStyle },
+        subtextStyle: { ...titleItem.subtextStyle, ...textStyle },
       }))
     : {
         ...option.title,
         textStyle: { ...option.title?.textStyle, ...textStyle },
+        subtextStyle: { ...option.title?.subtextStyle, ...textStyle },
       };
 
   const tooltip = Array.isArray(option.tooltip)
@@ -186,7 +188,7 @@ function getYAxisBreakRange(
 
 // Draws a compact "//" mark directly on the y-axis at the break, instead of relying on
 // ECharts' default zigzag band which stretches across the whole chart width.
-function applyYAxisBreakMark(
+export function applyYAxisBreakMark(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
 ) {
