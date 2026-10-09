@@ -605,11 +605,13 @@ export function VariableBoxContent({
   };
 
   //How many items should be sticky
-  const stickyTopValueCount = hasSevenOrMoreValues
-    ? 2
-    : hasTwoOrMoreValues
-      ? 1
-      : 0;
+  let stickyTopValueCount = 0;
+  if (hasTwoOrMoreValues) {
+    stickyTopValueCount = 1;
+  }
+  if (hasSevenOrMoreValues) {
+    stickyTopValueCount = 2;
+  }
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
