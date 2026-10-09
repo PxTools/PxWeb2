@@ -74,7 +74,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
         axisLabel: { ...axis.axisLabel, ...textStyle },
       }))
     : {
@@ -86,7 +86,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: {
+          ...textStyle,
+          align: 'left',
+          ...option.xAxis?.nameTextStyle,
+        },
         axisLabel: {
           ...option.xAxis?.axisLabel,
           ...textStyle,
@@ -100,7 +104,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
           lineStyle: { ...axis.axisLine?.lineStyle, ...axisColor },
         },
         axisLabel: { ...axis.axisLabel, ...textStyle },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
       }))
     : {
         ...option.yAxis,
@@ -111,7 +115,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: {
+          ...textStyle,
+          align: 'left',
+          ...option.yAxis?.nameTextStyle,
+        },
         axisLabel: {
           ...option.yAxis?.axisLabel,
           ...textStyle,

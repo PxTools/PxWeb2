@@ -11,6 +11,10 @@ import {
 } from '../Utils/chartOptionBuilder';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
+import {
+  createResponsiveXAxisLabelConfig,
+  wrapAxisName,
+} from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
@@ -42,7 +46,6 @@ type TooltipParam = {
 };
 
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
-const X_AXIS_RESERVED_HEIGHT = 10;
 const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
@@ -54,6 +57,9 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xsmall: 300,
 };
 const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
+const CHART_FONT_SIZE_REM = 0.875;
+const X_AXIS_NAME_MAX_WIDTH_PX = 100;
+const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
@@ -178,6 +184,23 @@ export function LineChart({
   }, [yAxisBreak, yAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
+  const axisNameFontSizePx = pixelsPerRem * CHART_FONT_SIZE_REM;
+  const wrappedXAxisName = useMemo(
+    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+    [xAxisName, axisNameFontSizePx],
+  );
+  const wrappedYAxisName = useMemo(
+    () =>
+      wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
+    [dataset.unit, axisNameFontSizePx],
+  );
+  const xAxisLabelConfig = useMemo(
+    () => createResponsiveXAxisLabelConfig(pixelsPerRem),
+    [pixelsPerRem],
+  );
+  const xAxisLabelsHeight = xAxisLabelConfig.estimateHeight(
+    dataset.source.map((row) => row.name),
+  );
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
   const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
 
@@ -194,7 +217,8 @@ export function LineChart({
     const gridHeight =
       CHART_PLOT_HEIGHT_PX[screenSize] -
       TOP_CHART_PADDING -
-      X_AXIS_LABEL_TO_LEGEND_GAP;
+      X_AXIS_LABEL_TO_LEGEND_GAP +
+      xAxisLabelsHeight;
 
     return {
       ...buildDatasetOption(dataset),
@@ -211,12 +235,22 @@ export function LineChart({
       },
       xAxis: {
         type: 'category' as const,
-        name: xAxisName,
+        name: wrappedXAxisName,
         nameLocation: 'end',
         // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
         nameMoveOverlap: true,
+        nameTextStyle: {
+          lineHeight: xAxisLabelConfig.lineHeight,
+        },
         axisLabel: {
           rotate: 45,
+          interval: 0,
+          align: 'right',
+          lineHeight: xAxisLabelConfig.lineHeight,
+          verticalAlign: 'top',
+          overflow: 'break',
+          hideOverlap: true,
+          formatter: xAxisLabelConfig.formatter,
         },
         axisLine: {
           show: true,
@@ -225,7 +259,10 @@ export function LineChart({
         axisTick: { show: true, alignWithLabel: true },
       },
       yAxis: {
-        name: dataset.unit,
+        name: wrappedYAxisName,
+        nameTextStyle: {
+          lineHeight: xAxisLabelConfig.lineHeight,
+        },
         scale: false,
         min: yAxisMin,
         max: getAdaptiveYAxisMax,
@@ -334,7 +371,11 @@ export function LineChart({
     dataset,
     resolvedColors,
     screenSize,
-    xAxisName,
+    wrappedXAxisName,
+    wrappedYAxisName,
+    xAxisLabelConfig.lineHeight,
+    xAxisLabelConfig.formatter,
+    xAxisLabelsHeight,
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
@@ -351,9 +392,7 @@ export function LineChart({
 
   const height =
     chartPlotHeightRem +
-    (X_AXIS_RESERVED_HEIGHT +
-      X_AXIS_LABEL_TO_LEGEND_GAP +
-      calculatedLegendHeight) /
+    (xAxisLabelsHeight + X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) /
       pixelsPerRem;
 
   useEffect(() => {
