@@ -699,7 +699,9 @@ export function ManualPivot({
     }
 
     const hoveredGroup =
-      detectedGroup ?? hoveredGroupRef.current ?? activeDragSourceGroupRef.current;
+      detectedGroup ??
+      hoveredGroupRef.current ??
+      activeDragSourceGroupRef.current;
 
     const draggedItemId = activeDraggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
@@ -720,7 +722,9 @@ export function ManualPivot({
     }
 
     const hoveredGroup =
-      detectedGroup ?? hoveredGroupRef.current ?? activeDragSourceGroupRef.current;
+      detectedGroup ??
+      hoveredGroupRef.current ??
+      activeDragSourceGroupRef.current;
 
     const draggedItemId = activeDraggedItemIdRef.current;
     if (hoveredGroup && draggedItemId) {
@@ -860,7 +864,10 @@ export function ManualPivot({
       if (previewIndex !== undefined && index < previewIndex) {
         itemZIndex = 3;
       }
-      if (isDragActiveRef.current && activeDraggedItemIdRef.current === variable.id) {
+      if (
+        isDragActiveRef.current &&
+        activeDraggedItemIdRef.current === variable.id
+      ) {
         itemZIndex = 100;
       }
 
