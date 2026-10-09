@@ -63,11 +63,18 @@ describe('createResponsiveXAxisLabelConfig', () => {
     expect(formattedLabel.replaceAll('\n', '')).toBe(label);
   });
 
-  it('omits a complete label only when its wrapped height exceeds the budget', () => {
+  it('truncates labels that exceed the wrapped height budget', () => {
     const config = createResponsiveXAxisLabelConfig(16);
     const label = 'A'.repeat(2000);
+    const formattedLabel = config.formatter(label);
+    const maxLineCount = Math.floor(
+      (265 - 32) / (config.lineHeight * Math.cos(Math.PI / 4)),
+    );
 
-    expect(config.formatter(label)).toBe('');
+    expect(formattedLabel).not.toBe('');
+    expect(formattedLabel.endsWith('...')).toBe(true);
+    expect(formattedLabel.split('\n').length).toBeLessThanOrEqual(maxLineCount);
+    expect(formattedLabel.replaceAll('\n', '').length).toBeLessThan(label.length);
   });
 
   it('allows fewer wrapped lines when the root font size is larger', () => {
@@ -76,6 +83,6 @@ describe('createResponsiveXAxisLabelConfig', () => {
     const label = 'A'.repeat(180);
 
     expect(standardSize.formatter(label)).not.toBe('');
-    expect(largerSize.formatter(label)).toBe('');
+    expect(largerSize.formatter(label)).toContain('...');
   });
 });

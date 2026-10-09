@@ -1,5 +1,5 @@
 // Maximum vertical space, in pixels, allowed for rotated x-axis labels.
-const MAX_X_AXIS_EXTENT = 300;
+const MAX_X_AXIS_EXTENT = 265;
 // Space held back for the axis and surrounding chart layout.
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
 // Scales the x-axis label font size relative to the root pixel size.
@@ -94,6 +94,25 @@ function wrapText(text: string, maxCharacters: number): string[] {
   }
   return lines;
 }
+
+function truncateWrappedText(
+  lines: string[],
+  maxLines: number,
+  maxCharacters: number,
+): string {
+  const visibleLines = lines.slice(0, maxLines);
+  const marker = '.'.repeat(Math.min(3, maxCharacters));
+  const lastLineIndex = visibleLines.length - 1;
+  const lastLineCharacters = Array.from(visibleLines[lastLineIndex] ?? '');
+  visibleLines[lastLineIndex] =
+    lastLineCharacters
+      .slice(0, Math.max(0, maxCharacters - marker.length))
+      .join('')
+      .trimEnd() + marker;
+
+  return visibleLines.join('\n');
+}
+
 export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
   const fontSize = pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
   // Same calculation for line heightas in legend labels for consistency
@@ -121,6 +140,8 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
       if (unwrappedExtent <= MAX_X_AXIS_EXTENT) {
         return text;
       }
+      let bestTruncatedLabel = '';
+      let bestVisibleCharacterCount = -1;
       for (let lineCount = 2; lineCount <= maxLineCount; lineCount += 1) {
         const availableLineWidth =
           (MAX_X_AXIS_EXTENT -
@@ -137,8 +158,21 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
         if (lines.length <= lineCount) {
           return lines.join('\n');
         }
+
+        const truncatedLabel = truncateWrappedText(
+          lines,
+          lineCount,
+          lineCharacterLimit,
+        );
+        const visibleCharacterCount =
+          Array.from(truncatedLabel.replaceAll('\n', '')).length -
+          Math.min(3, lineCharacterLimit);
+        if (visibleCharacterCount > bestVisibleCharacterCount) {
+          bestTruncatedLabel = truncatedLabel;
+          bestVisibleCharacterCount = visibleCharacterCount;
+        }
       }
-      return '';
+      return bestTruncatedLabel;
     },
   };
 }
