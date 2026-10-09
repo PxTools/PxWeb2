@@ -407,7 +407,6 @@ export function LineChart({
       },
       legend: {
         data: visibleLegendData,
-        // bottom: LEGEND_BOTTOM_GAP_PX,
         orient: 'horizontal',
         textStyle: {
           overflow: 'break',
