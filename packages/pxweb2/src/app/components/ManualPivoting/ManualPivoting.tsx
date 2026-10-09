@@ -859,10 +859,7 @@ export function ManualPivot({
       if (previewIndex !== undefined && index < previewIndex) {
         itemZIndex = 3;
       }
-      if (
-        isDraggingRef.current &&
-        draggedItemIdRef.current === variable.id
-      ) {
+      if (isDraggingRef.current && draggedItemIdRef.current === variable.id) {
         itemZIndex = 100;
       }
 
@@ -919,9 +916,7 @@ export function ManualPivot({
             onDragStart={() => handleDragStart(group, variable.id)}
             onDrag={handleItemDrag}
             onDragEnd={handleItemDragEnd}
-            onKeyDown={(event) =>
-              handleItemKeyDown(event, group, variable.id)
-            }
+            onKeyDown={(event) => handleItemKeyDown(event, group, variable.id)}
           >
             <DataItem
               label={variable.label}
