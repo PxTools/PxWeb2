@@ -758,8 +758,6 @@ export function VariableBoxContent({
           </div>
         </div>
       </div>
-
-      {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
     </div>
   );
 }
