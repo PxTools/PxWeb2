@@ -955,7 +955,7 @@ export function ManualPivot({
                 />
               </li>
             ) : null}
-            {items.map(renderItem)}
+            {items.map((item, index) => renderItem(item, index))}
             {sourcePlaceholderIndex === items.length ? (
               <li
                 aria-hidden="true"
