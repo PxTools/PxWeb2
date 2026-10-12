@@ -307,8 +307,8 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
   /**
    * Saves the current table data to a file in the specified format.
    *
-   * @param {OutputFormatType} outputFormat - The format in which to save the file.
-   * Supported formats include 'excel', 'csv', 'px', 'jsonstat2', 'html', and 'parquet'.
+   * @param {FileOutputFormatType} outputFormat - The format in which to save the file.
+   * Supported formats include 'excel', 'csv', 'px', 'jsonstat2', 'html','parquet','svg' and 'png'.
    * @returns {Promise<void>} - A promise that resolves when the file is saved.
    * Throws an error if the export fails.
    * @throws {ApiError} - If there is an error during the export process.
