@@ -521,6 +521,9 @@ export function LineChart({
       calculatedLegendHeight) /
       pixelsPerRem;
 
+  // Run callback function to set reference  current chart Let the parent access the chart instance, then clear it when this effect reruns or unmounts.
+  // Presentation.tsx send callback function to set the chart reference.
+  // DrawerSave.tsx use chart reference to save the chart as an image.
   useEffect(() => {
     onChartReady?.(chartRef.current);
 
