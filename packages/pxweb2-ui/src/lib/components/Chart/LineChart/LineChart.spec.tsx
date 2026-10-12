@@ -491,44 +491,6 @@ describe('LineChart', () => {
     expect(html).toContain('<rect');
   });
 
-  it('formats tooltip rows with symbol svg, labels, values and fallback color', () => {
-    render(
-      <LineChart
-        pxtable={mockPxTable}
-        translations={mockTranslations}
-        staticTitle="Statisk tittel"
-      />,
-    );
-
-    const option = vi.mocked(useEChartOption).mock.calls[0][0];
-    const formatter = getTooltipFormatter(option);
-
-    const html = formatter?.([
-      {
-        axisValueLabel: '2024',
-        seriesIndex: 0,
-        seriesName: 'Men',
-        data: { men: 10, women: 12 },
-      },
-      {
-        axisValueLabel: '2024',
-        seriesIndex: 1,
-        seriesName: 'Women',
-        color: '#ff0000',
-        data: { men: 10, women: 12 },
-      },
-    ]);
-    expect(html).toContain(
-      '<div style="font-family:PxWeb-font, sans-serif"><div style="margin-bottom:4px;">2024</div>',
-    );
-    expect(html).toContain('<div style="margin-bottom:4px;">2024</div>');
-    expect(html).toContain('Men: <strong>10</strong>');
-    expect(html).toContain('Women: <strong>12</strong>');
-    expect(html).toContain('fill="#666666"');
-    expect(html).toContain('fill="#ff0000"');
-    expect(html).toContain('<circle');
-    expect(html).toContain('<rect');
-  });
   it('uses formatted values in the tooltip', () => {
     const chart = {
       on: vi.fn(),
