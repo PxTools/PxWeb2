@@ -22,6 +22,7 @@ import DropTarget from './DropTarget/DropTarget';
 import EmtyList from './EmtyList/EmtyList';
 
 type VariableGroup = 'header' | 'stub';
+const MINIMUM_ITEM_HEIGHT = 40;
 type DragEvent = MouseEvent | TouchEvent | PointerEvent;
 type DropPreview = {
   group: VariableGroup;
@@ -314,10 +315,8 @@ export function ManualPivot({
     ).filter((element) => element.dataset.variableId !== draggedItemId);
     const rawIndex = getInsertIndexForElements(itemElements, pointerY);
     const index = getStableInsertIndex(group, rawIndex, itemElements, pointerY);
-    const defaultItemHeight = 40;
-
     if (itemElements.length === 0) {
-      return { group, index: 0, height: defaultItemHeight };
+      return { group, index: 0, height: MINIMUM_ITEM_HEIGHT };
     }
 
     const clampedIndex = Math.min(Math.max(0, index), itemElements.length);
@@ -330,7 +329,7 @@ export function ManualPivot({
     }
 
     const referenceHeight = Math.max(
-      defaultItemHeight,
+      MINIMUM_ITEM_HEIGHT,
       Math.round(referenceElement.getBoundingClientRect().height),
     );
 
@@ -432,7 +431,6 @@ export function ManualPivot({
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_moved',
-
           {
             item: itemLabel,
             position: itemIndex + 1,
@@ -757,9 +755,10 @@ export function ManualPivot({
       (item) => item.id === variableId,
     )?.label;
     const sourceHeight = Math.max(
-      40,
+      MINIMUM_ITEM_HEIGHT,
       Math.round(
-        itemRefs.current.get(variableId)?.getBoundingClientRect().height ?? 40,
+        itemRefs.current.get(variableId)?.getBoundingClientRect().height ??
+          MINIMUM_ITEM_HEIGHT,
       ),
     );
 
