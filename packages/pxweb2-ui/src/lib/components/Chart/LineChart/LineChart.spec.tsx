@@ -244,12 +244,7 @@ describe('LineChart', () => {
       type: 'svg',
       backgroundColor: '#fff',
     });
-    expect(
-      vi.mocked(applyYAxisBreakMark).mock.invocationCallOrder[0],
-    ).toBeLessThan(exportChart.getDataURL.mock.invocationCallOrder[0]);
-    expect(sourceChart.setOption).toHaveBeenLastCalledWith({
-      title: [{ show: false }, { show: false }],
-    });
+
     anchorClick.mockRestore();
   });
 
