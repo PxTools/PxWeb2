@@ -3,12 +3,11 @@ import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
+import { LineChart, LegendToggleButton } from './LineChart';
 import {
   downloadChartImage,
   exportPngFromSvgChart,
-  LineChart,
-  LegendToggleButton,
-} from './LineChart';
+} from '../Utils/chartDownload';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import { applyYAxisBreakMark, useEChartOption } from '../Utils/useEChartOption';
 import {
