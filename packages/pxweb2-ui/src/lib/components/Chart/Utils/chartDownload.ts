@@ -20,17 +20,7 @@ export async function downloadChartImage(
     .replace(/[^a-z0-9]+/gi, '-')
     .replace(/^-|-$/g, '');
 
-  chart.setOption({
-    title: [{ show: true }, { show: true }],
-  });
-
-  try {
-    await exportChartImage(chart, filename || 'chart', type);
-  } finally {
-    chart.setOption({
-      title: [{ show: false }, { show: false }],
-    });
-  }
+  await exportChartImage(chart, filename || 'chart', type);
 }
 async function exportChartImage(
   sourceChart: echarts.EChartsType,
@@ -81,6 +71,14 @@ async function createExportChart(
     exportChart = chart;
 
     const option = sourceChart.getOption();
+
+    const titles = [];
+    if (Array.isArray(option.title)) {
+      titles.push(...option.title);
+    } else if (option.title) {
+      titles.push(option.title);
+    }
+    option.title = titles.map((title) => ({ ...title, show: true }));
 
     option.animation = false;
     const legends = option.legend ?? [];
