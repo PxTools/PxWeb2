@@ -45,8 +45,18 @@ type TooltipParam = {
   color?: string;
 };
 
+// Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
+// Pixel padding above the plot area.
 const TOP_CHART_PADDING = 36;
+// Font used for tooltip content rendered by ECharts.
+const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
+// Base font size in rem, converted to pixels for axis-name wrapping.
+const CHART_FONT_SIZE_REM = 0.875;
+// Maximum pixel width before the x-axis name is wrapped onto another line.
+const X_AXIS_NAME_MAX_WIDTH_PX = 100;
+// Maximum pixel width before the y-axis name is wrapped onto another line.
+const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -56,10 +66,6 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   small: 400,
   xsmall: 300,
 };
-const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
-const CHART_FONT_SIZE_REM = 0.875;
-const X_AXIS_NAME_MAX_WIDTH_PX = 100;
-const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {

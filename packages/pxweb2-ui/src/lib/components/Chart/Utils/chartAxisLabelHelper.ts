@@ -6,13 +6,21 @@ const AXIS_LABEL_LAYOUT_RESERVE = 32;
 const AXIS_LABEL_FONT_SIZE_RATIO = 0.875;
 // Matches the minimum line height and font-size ratio used by the legend.
 const AXIS_LABEL_MIN_LINE_HEIGHT = 20;
+// Multiplies the label font size to derive its line height.
 const AXIS_LABEL_LINE_HEIGHT_RATIO = 1.4;
 // Estimated character width as a fraction of the label font size.
 const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 // Rotation angle used when estimating the labels' vertical extent.
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
+// Font family used to measure axis-name text with canvas.
 const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
 
+/**
+ * Measures axis-name text width in pixels, falling back to an average-character estimate when canvas is unavailable.
+ * @param text The axis-name text to measure.
+ * @param fontSizePx The font size, in pixels, used for measurement.
+ * @returns The estimated or measured text width, in pixels.
+ */
 function measureAxisNameText(text: string, fontSizePx: number): number {
   if (
     typeof document !== 'undefined' &&
@@ -28,6 +36,14 @@ function measureAxisNameText(text: string, fontSizePx: number): number {
   return Array.from(text).length * fontSizePx * AVERAGE_CHARACTER_WIDTH_RATIO;
 }
 
+/**
+ * Normalizes an axis name and wraps it between words to fit the maximum width.
+ * If the width or font size is invalid, returns the normalized name without wrapping.
+ * @param name The axis name to normalize and wrap.
+ * @param maxWidthPx The maximum line width, in pixels.
+ * @param fontSizePx The font size, in pixels, used to measure the text.
+ * @returns The normalized axis name, with wrapped lines separated by newline characters.
+ */
 export function wrapAxisName(
   name: string,
   maxWidthPx: number,
@@ -68,6 +84,12 @@ export function wrapAxisName(
   return lines.join('\n');
 }
 
+/**
+ * Splits a word into chunks containing at most the specified number of Unicode characters.
+ * @param word The word to split.
+ * @param maxCharacters The maximum number of characters allowed in each chunk.
+ * @returns The word split into an array of chunks.
+ */
 function splitLongWord(word: string, maxCharacters: number): string[] {
   const characters = Array.from(word);
   const chunks: string[] = [];
@@ -76,6 +98,13 @@ function splitLongWord(word: string, maxCharacters: number): string[] {
   }
   return chunks;
 }
+
+/**
+ * Wraps text into lines of at most the specified character count, splitting words that exceed the limit.
+ * @param text The text to wrap; runs of whitespace are treated as word separators.
+ * @param maxCharacters The maximum number of characters allowed per line.
+ * @returns The wrapped text as an array of lines.
+ */
 function wrapText(text: string, maxCharacters: number): string[] {
   const lines: string[] = [];
   for (const word of text.trim().split(/\s+/)) {
@@ -95,6 +124,13 @@ function wrapText(text: string, maxCharacters: number): string[] {
   return lines;
 }
 
+/**
+ * Limits wrapped text to a maximum number of lines and marks the final line as truncated.
+ * @param lines The wrapped text lines to limit.
+ * @param maxLines The maximum number of lines to include.
+ * @param maxCharacters The maximum number of characters in the final line, including the truncation marker.
+ * @returns The visible lines joined with newline characters, with up to three periods marking truncation.
+ */
 function truncateWrappedText(
   lines: string[],
   maxLines: number,
@@ -113,6 +149,12 @@ function truncateWrappedText(
   return visibleLines.join('\n');
 }
 
+/**
+ * Creates font, formatting, and height-estimation settings for rotated x-axis labels.
+ * The formatter wraps or truncates labels to keep them within the configured vertical extent.
+ * @param pixelsPerRem The root font size in pixels, used to scale label font and line height.
+ * @returns The label line height, a label formatter, and a function that estimates the required label height.
+ */
 export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
   const fontSize = pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
   // Same calculation for line heightas in legend labels for consistency
