@@ -149,6 +149,7 @@ describe('useEChartOption', () => {
             color: '#162327',
           },
         },
+
         tooltip: {
           textStyle: {
             fontFamily: 'PxWeb-font, sans-serif',
@@ -182,6 +183,11 @@ describe('useEChartOption', () => {
             overflow: 'break',
             width: 368,
             align: 'center',
+          },
+          subtextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
           },
         },
         yAxis: {
@@ -225,10 +231,20 @@ describe('useEChartOption', () => {
               fontSize: '0.875rem',
               color: '#162327',
             },
+            subtextStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
           },
           {
             text: 'Title 2',
             textStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
+            subtextStyle: {
               fontFamily: 'PxWeb-font, sans-serif',
               fontSize: '0.875rem',
               color: '#162327',

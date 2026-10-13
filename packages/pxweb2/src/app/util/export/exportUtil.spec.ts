@@ -7,12 +7,17 @@ import {
   getOutputFormatParams,
   getTimestamp,
 } from './exportUtil';
+import { downloadChartImage } from '@pxweb2/pxweb2-ui';
 import {
   OutputFormatType,
   OutputFormatParamType,
   TablesService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+
+vi.mock('@pxweb2/pxweb2-ui', () => ({
+  downloadChartImage: vi.fn().mockResolvedValue(undefined),
+}));
 
 vi.mock('@pxweb2/pxweb2-api-client', () => ({
   OutputFormatType: {
@@ -89,6 +94,17 @@ describe('exportToFile', () => {
     URL.createObjectURL = createObjectURLOrig;
     URL.revokeObjectURL = revokeObjectURLOrig;
   });
+
+  it.each(['png', 'svg'] as const)(
+    'exports %s as a chart image without requesting table data',
+    async (format) => {
+      await exportToFile(tabId, lang, variablesSelection, format);
+
+      expect(downloadChartImage).toHaveBeenCalledWith(null, tabId, format);
+      expect(TablesService.getTableDataByPost).not.toHaveBeenCalled();
+      expect(clickMock).not.toHaveBeenCalled();
+    },
+  );
 
   it('should export as excel', async () => {
     vi.mocked(TablesService.getTableDataByPost).mockResolvedValueOnce(
