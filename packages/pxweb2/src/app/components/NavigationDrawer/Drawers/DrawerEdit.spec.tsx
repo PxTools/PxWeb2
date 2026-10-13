@@ -17,10 +17,41 @@ interface MockActionItemProps {
 
 const mockPivot = vi.fn();
 
+function mockBuildTableTitle() {
+  return {
+    contentText: 'Population',
+    firstTitlePart: 'First Part',
+    lastTitlePart: 'Last Part',
+  };
+}
+
+function mockTranslate(
+  key: string,
+  _defaultValue?: string,
+  options?: Record<string, string>,
+) {
+  return key ===
+    'presentation_page.side_menu.edit.customize.auto_pivot.screen_reader_announcement'
+    ? `Table organised after ${options?.table_heading}`
+    : key ===
+        'presentation_page.side_menu.edit.customize.pivot.screen_reader_announcement'
+      ? `Table rotated after ${options?.first_variables} and ${options?.last_variable}`
+      : key === 'presentation_page.common.table_title_by'
+        ? 'by'
+        : key === 'presentation_page.common.table_title_and'
+          ? 'and'
+          : key;
+}
+
+const mockTableData = {
+  stub: [{ name: 'variable1' }],
+  heading: [{ name: 'variable2' }],
+};
+
 // Mock dependencies
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: mockTranslate,
   }),
 }));
 
@@ -28,15 +59,8 @@ vi.mock('../../../context/useTableData', () => ({
   default: () => ({
     pivot: mockPivot,
     setIsFadingTable: vi.fn(),
-    data: {
-      // Minimal shape; DrawerEdit only passes these through
-      stub: [{ name: 'variable1' }],
-      heading: [{ name: 'variable2' }],
-    },
-    buildTableTitle: () => ({
-      firstTitlePart: 'First Part',
-      lastTitlePart: 'Last Part',
-    }),
+    data: mockTableData,
+    buildTableTitle: mockBuildTableTitle,
   }),
 }));
 
@@ -72,6 +96,13 @@ vi.mock('../../../context/useApp', () => ({
   default: () => ({ isMobile: false }),
 }));
 
+vi.mock('../../../context/useAccessibility', () => ({
+  default: () => ({
+    addModal: vi.fn(),
+    removeModal: vi.fn(),
+  }),
+}));
+
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -81,9 +112,9 @@ describe('DrawerEdit', () => {
     render(<DrawerEdit />);
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    // Two action buttons: auto pivot & clockwise pivot (unified PivotButton)
+    // Three action buttons: auto pivot, clockwise pivot, and manual rearrange
     const buttons = screen.getAllByTestId('action-item');
-    expect(buttons).toHaveLength(2);
+    expect(buttons).toHaveLength(3);
     // Check labels via translation keys
     expect(
       screen.getByText(
@@ -93,6 +124,11 @@ describe('DrawerEdit', () => {
     expect(
       screen.getByText(
         'presentation_page.side_menu.edit.customize.pivot.title',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'presentation_page.side_menu.edit.customize.manual_pivoting.title',
       ),
     ).toBeInTheDocument();
   });
@@ -112,6 +148,9 @@ describe('DrawerEdit', () => {
       () => {
         expect(mockPivot).toHaveBeenCalledWith(PivotType.Clockwise);
         expect(mockPivot).toHaveBeenCalledTimes(1);
+        expect(screen.getAllByRole('status')[1]).toHaveTextContent(
+          'Table rotated after First Part and Last Part',
+        );
       },
       { timeout: 2000 },
     );
@@ -128,6 +167,9 @@ describe('DrawerEdit', () => {
       () => {
         expect(mockPivot).toHaveBeenCalledWith(PivotType.Auto);
         expect(mockPivot).toHaveBeenCalledTimes(1);
+        expect(screen.getAllByRole('status')[0]).toHaveTextContent(
+          'Table organised after Population by First Part and Last Part',
+        );
       },
       { timeout: 2000 },
     );

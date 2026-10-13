@@ -1,5 +1,69 @@
 # Changelog
 
+## [2.12.0](https://github.com/PxTools/PxWeb2/compare/v2.11.0...v2.12.0) (2026-10-07)
+
+
+### :sparkles: Features
+
+* Chart legend adjustments  ([fc2134f](https://github.com/PxTools/PxWeb2/commit/fc2134f47eefb12b6615e90e57e4f5e4313f068f))
+* chart tooltip improvements ([#1466](https://github.com/PxTools/PxWeb2/issues/1466)) ([8ff60a3](https://github.com/PxTools/PxWeb2/commit/8ff60a3415301d9e1cb33c42323d2d74435cf744))
+* Show break in y-axis ([#1490](https://github.com/PxTools/PxWeb2/issues/1490)) ([6c46c20](https://github.com/PxTools/PxWeb2/commit/6c46c20d5ed8547c009ec255532c64ca884e762e))
+
+
+### :bug: Bug Fixes
+
+* Fix TypeScript 7 compatibility issues ([#1507](https://github.com/PxTools/PxWeb2/issues/1507)) ([0dd13d9](https://github.com/PxTools/PxWeb2/commit/0dd13d98a078980e9e56664b9b92430b94250997))
+* linegraph y-axis allways started on 0, even if there were negative values to plot ([3173aa0](https://github.com/PxTools/PxWeb2/commit/3173aa0472eab729820d1f17fa7a3e32cad42d65))
+* Range error on large indexes when spread to Math.min and Math.max ([61a9be2](https://github.com/PxTools/PxWeb2/commit/61a9be2c2bf0cfe8376227205430327986f40025))
+* Typecheck tests and update stale fixtures for TypeScript 7 ([#1509](https://github.com/PxTools/PxWeb2/issues/1509)) ([9aa054d](https://github.com/PxTools/PxWeb2/commit/9aa054dd4e459a787bd7b60710bc5849add901f9))
+
+
+### :books: Documentation
+
+* update maintainers guide with package update instructions ([#1543](https://github.com/PxTools/PxWeb2/issues/1543)) ([94fa4ae](https://github.com/PxTools/PxWeb2/commit/94fa4aef00f334d631279ab0f840dc16474447a4))
+
+
+### :test_tube: Tests
+
+* Migrate monorepo to Vitest 5 ([#1534](https://github.com/PxTools/PxWeb2/issues/1534)) ([d9eb5ec](https://github.com/PxTools/PxWeb2/commit/d9eb5ec0bd0aed9cd89d496a68f386160419aa9a))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump eslint from 10.10.0 to 10.11.0 ([#1522](https://github.com/PxTools/PxWeb2/issues/1522)) ([7072963](https://github.com/PxTools/PxWeb2/commit/7072963ad48bbb9313efcd71952953b5a744cb1a))
+* **deps-dev:** bump eslint from 10.9.1 to 10.10.0 ([#1503](https://github.com/PxTools/PxWeb2/issues/1503)) ([719a8e4](https://github.com/PxTools/PxWeb2/commit/719a8e494aceecedc5a8ad2b8d82ccc467dfc225))
+* **deps-dev:** bump html-validate from 11.11.0 to 11.13.0 ([#1501](https://github.com/PxTools/PxWeb2/issues/1501)) ([6bcca7f](https://github.com/PxTools/PxWeb2/commit/6bcca7fd476fb98dbe3f43c418fa7e3184fdf2db))
+* **deps-dev:** bump playwright from 1.62.1 to 1.63.0 ([#1499](https://github.com/PxTools/PxWeb2/issues/1499)) ([d84ac56](https://github.com/PxTools/PxWeb2/commit/d84ac568a2e282212a6bde81db984a1cdedf7b96))
+* **deps-dev:** bump wrangler from 4.127.1 to 4.129.0 ([#1502](https://github.com/PxTools/PxWeb2/issues/1502)) ([d78e963](https://github.com/PxTools/PxWeb2/commit/d78e963521e8183a46d2bcf298cfda6a8bba2a9a))
+* **deps-dev:** bump wrangler from 4.136.2 to 4.141.0 ([#1549](https://github.com/PxTools/PxWeb2/issues/1549)) ([cafa805](https://github.com/PxTools/PxWeb2/commit/cafa8058dab4d2e9c8ab7cf821b578c3661a3ccf))
+* **deps:** bump chromaui/action from 18.7.1 to 18.7.2 ([#1500](https://github.com/PxTools/PxWeb2/issues/1500)) ([59daf27](https://github.com/PxTools/PxWeb2/commit/59daf274b2c2774298d3b756b078a8f6bc861e1b))
+* **deps:** bump chromaui/action from 18.7.2 to 18.9.5 ([#1542](https://github.com/PxTools/PxWeb2/issues/1542)) ([384260b](https://github.com/PxTools/PxWeb2/commit/384260bc80c3c5c9c43c88272e71b8e0a003039b))
+* **deps:** bump cloudflare/wrangler-action from 4.0.0 to 4.1.3 ([#1554](https://github.com/PxTools/PxWeb2/issues/1554)) ([352371b](https://github.com/PxTools/PxWeb2/commit/352371b753ad392d941a7c9b0a94c1e02d3af738))
+* **deps:** bump docker/build-push-action from 7.3.0 to 7.4.0 ([#1523](https://github.com/PxTools/PxWeb2/issues/1523)) ([165469e](https://github.com/PxTools/PxWeb2/commit/165469ea4dc764655e7172d66530969f3f5a03dc))
+* **deps:** bump docker/setup-buildx-action from 4.3.0 to 4.4.1 ([#1525](https://github.com/PxTools/PxWeb2/issues/1525)) ([92fb7af](https://github.com/PxTools/PxWeb2/commit/92fb7af8bbe542cc2a96bea307ce37e61949dc92))
+* **deps:** bump docker/setup-qemu-action from 4.2.0 to 4.3.0 ([#1497](https://github.com/PxTools/PxWeb2/issues/1497)) ([82d082e](https://github.com/PxTools/PxWeb2/commit/82d082ea8ada472852ea9e28a28a9e6d3fa9b79a))
+* **deps:** bump docker/setup-qemu-action from 4.3.0 to 4.4.0 ([#1527](https://github.com/PxTools/PxWeb2/issues/1527)) ([1c3d8ef](https://github.com/PxTools/PxWeb2/commit/1c3d8efd6cb685b325a44c868ea894a2dafaa589))
+* **deps:** bump github/codeql-action/upload-sarif ([#1530](https://github.com/PxTools/PxWeb2/issues/1530)) ([5683db4](https://github.com/PxTools/PxWeb2/commit/5683db4380e68e97efe931bc20f2dd0c0794dca4))
+* **deps:** bump github/codeql-action/upload-sarif ([#1552](https://github.com/PxTools/PxWeb2/issues/1552)) ([c95065f](https://github.com/PxTools/PxWeb2/commit/c95065f597f8da9221c3704b50b7b00c2c41caf8))
+* **deps:** bump nginxinc/nginx-unprivileged ([#1485](https://github.com/PxTools/PxWeb2/issues/1485)) ([32c05dc](https://github.com/PxTools/PxWeb2/commit/32c05dc7eea085b2664ef7f905782a66fb43b44f))
+* **deps:** bump sass from 1.104.1 to 1.105.0 ([#1550](https://github.com/PxTools/PxWeb2/issues/1550)) ([926c9f3](https://github.com/PxTools/PxWeb2/commit/926c9f35dffaeb8e17118daa1d335c2aaca624fd))
+* **deps:** bump SonarSource/sonarqube-scan-action from 8.2.1 to 8.2.2 ([#1553](https://github.com/PxTools/PxWeb2/issues/1553)) ([f9cf133](https://github.com/PxTools/PxWeb2/commit/f9cf1331edf6320d984ec4773b1d78fcaef0d716))
+* **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([#1555](https://github.com/PxTools/PxWeb2/issues/1555)) ([e863f65](https://github.com/PxTools/PxWeb2/commit/e863f6589a916f65fdcaf348fb99fd6453f21b8f))
+* **deps:** bump undici and wrangler ([#1536](https://github.com/PxTools/PxWeb2/issues/1536)) ([144b208](https://github.com/PxTools/PxWeb2/commit/144b208621abd64bd23d2dda37a6a4c9b372622e))
+* Pre-Push typechecking ([#1510](https://github.com/PxTools/PxWeb2/issues/1510)) ([6299728](https://github.com/PxTools/PxWeb2/commit/629972804bdd38670b0e84d4a1753fe8ff45517d))
+* update Vite config to use import.meta.dirname instead of __dirname ([#1545](https://github.com/PxTools/PxWeb2/issues/1545)) ([7f423f7](https://github.com/PxTools/PxWeb2/commit/7f423f7e5067a9071ee58c62265a5cb913c8e351))
+
+
+### :broom: Chores
+
+* Fix eslint 10 compatability ([#1480](https://github.com/PxTools/PxWeb2/issues/1480)) ([f18cccf](https://github.com/PxTools/PxWeb2/commit/f18cccfa6595fbca880f77ec17a17cc0d7bf7b20))
+* update dependencies across packages  ([37b71ab](https://github.com/PxTools/PxWeb2/commit/37b71ab0949714b370eaba1b2ba39daf18586e4c))
+* update dependencies across packages ([#1505](https://github.com/PxTools/PxWeb2/issues/1505))  ([8fb8c8a](https://github.com/PxTools/PxWeb2/commit/8fb8c8a6be35163e7824a931b76c3f15d11b6e4d))
+* Update nginx image to 1.31.6-alpine-slim ([#1556](https://github.com/PxTools/PxWeb2/issues/1556)) ([2958350](https://github.com/PxTools/PxWeb2/commit/2958350460f5d8632c4e5392847e43356ae84a4d))
+* Update non major dependencies ([#1544](https://github.com/PxTools/PxWeb2/issues/1544)) ([b822e5d](https://github.com/PxTools/PxWeb2/commit/b822e5d7889d8225880b8f908ff42db043865c4c))
+* Update to TypeScript 7 and add workspace typechecking tooling ([#1506](https://github.com/PxTools/PxWeb2/issues/1506)) ([093aba1](https://github.com/PxTools/PxWeb2/commit/093aba105c25ebb77610c4285a1056f63785f774))
+* Upgrade eslint from v9 to v10 ([#1481](https://github.com/PxTools/PxWeb2/issues/1481)) ([1905bb9](https://github.com/PxTools/PxWeb2/commit/1905bb94c9b302468de8963d49c8a73fe23d70c1))
+
 ## [2.11.0](https://github.com/PxTools/PxWeb2/compare/v2.10.0...v2.11.0) (2026-09-10)
 
 
