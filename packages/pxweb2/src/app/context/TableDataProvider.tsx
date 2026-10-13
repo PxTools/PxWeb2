@@ -316,7 +316,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         } else if (dataViewMode === DataViewModeType.DesktopTable) {
           pivotTable(pxTable, stubDesktop, headingDesktop);
         } else if (dataViewMode === DataViewModeType.Chart) {
-          pivotTable(pxTable, stubChart, headingChart);
+          const { stubOrderChart, headingOrderChart } =
+            initializeStubAndHeadingChart(pxTable);
+          pivotTable(pxTable, stubOrderChart, headingOrderChart);
         }
 
         // Variable has been added
@@ -334,7 +336,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
           remainingVariables.forEach((variable) => {
             if (!newStubDesktop.includes(variable.id)) {
-              pxTable.stub.push(variable);
+              if (dataViewMode !== DataViewModeType.Chart) {
+                pxTable.stub.push(variable);
+              }
               newStubDesktop.push(variable.id);
             }
             if (!newStubMobile.includes(variable.id)) {
@@ -346,7 +350,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
           });
           setStubDesktop(newStubDesktop);
           setStubMobile(newStubMobile);
-          setHeadingChart(newHeadingChart);
+          if (dataViewMode !== DataViewModeType.Chart) {
+            setHeadingChart(newHeadingChart);
+          }
         }
       }
     },
