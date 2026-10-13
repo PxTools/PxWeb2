@@ -265,21 +265,27 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
 
   it('recalculates chart stub/heading when selected value counts change', async () => {
     const initialTable = createPxTable();
-    initialTable.metadata.variables.find((variable) => variable.id === 'chartStub')!.values = [
-      { code: '1', label: 'One' },
-    ];
-    initialTable.metadata.variables.find((variable) => variable.id === 'chartHeading')!.values = [
+    initialTable.metadata.variables.find(
+      (variable) => variable.id === 'chartStub',
+    )!.values = [{ code: '1', label: 'One' }];
+    initialTable.metadata.variables.find(
+      (variable) => variable.id === 'chartHeading',
+    )!.values = [
       { code: 'A', label: 'A' },
       { code: 'B', label: 'B' },
     ];
 
     const updatedTable = createPxTable();
-    updatedTable.metadata.variables.find((variable) => variable.id === 'chartStub')!.values = [
+    updatedTable.metadata.variables.find(
+      (variable) => variable.id === 'chartStub',
+    )!.values = [
       { code: '1', label: 'One' },
       { code: '2', label: 'Two' },
       { code: '3', label: 'Three' },
     ];
-    updatedTable.metadata.variables.find((variable) => variable.id === 'chartHeading')!.values = [
+    updatedTable.metadata.variables.find(
+      (variable) => variable.id === 'chartHeading',
+    )!.values = [
       { code: 'A', label: 'A' },
       { code: 'B', label: 'B' },
     ];
