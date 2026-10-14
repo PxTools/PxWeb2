@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 import cl from 'clsx';
 
 import styles from './LineChart.module.scss';
@@ -67,6 +67,8 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xsmall: 300,
 };
 
+export type ChartInstance = echarts.EChartsType;
+
 function getTooltipSymbolSvg(symbol: string, color: string): string {
   switch (symbol) {
     case 'rect':
@@ -93,17 +95,21 @@ interface LineChartTranslations {
 
 interface LineChartProps {
   readonly pxtable: PxTable;
+  readonly staticTitle: string;
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
   readonly translations: LineChartTranslations;
+  readonly onChartReady?: (chart: ChartInstance | null) => void;
   readonly screenSize?: ScreenSize;
 }
 
 export function LineChart({
   pxtable,
+  staticTitle,
   colors,
   emptyStateSvgName,
   translations,
+  onChartReady,
   screenSize = 'large',
 }: LineChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
@@ -142,6 +148,8 @@ export function LineChart({
   const hasLegendOverflow = dataset.series.length > 5;
   const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
   const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
+  const chartTitle = dataset.title;
+  const chartSourcePart1 = dataset.origin;
   const memoizedAllLegendData = useMemo(
     () => dataset.series.map((series) => series.name),
     [dataset.series],
@@ -239,6 +247,22 @@ export function LineChart({
         // 'all' keeps the axis names inside the grid rect
         outerBoundsContain: 'all',
       },
+      title: [
+        {
+          text: chartTitle,
+          left: 'left',
+          show: false,
+          top: 'top',
+        },
+        {
+          text: chartSourcePart1,
+          subtext: staticTitle,
+          left: 'left',
+          show: false,
+          bottom: '0',
+        },
+      ],
+
       xAxis: {
         type: 'category' as const,
         name: wrappedXAxisName,
@@ -332,7 +356,6 @@ export function LineChart({
           const hoveredParams = axisParams.filter(
             (param) => param.seriesIndex === selectedSeriesIndex,
           );
-
           // Turn each selected tooltip item into one line of HTML.
           const rows = hoveredParams
             .map((param) => {
@@ -376,6 +399,9 @@ export function LineChart({
     visibleLegendData,
     dataset,
     resolvedColors,
+    chartTitle,
+    chartSourcePart1,
+    staticTitle,
     screenSize,
     wrappedXAxisName,
     wrappedYAxisName,
@@ -400,6 +426,17 @@ export function LineChart({
     chartPlotHeightRem +
     (xAxisLabelsHeight + X_AXIS_LABEL_TO_LEGEND_GAP + calculatedLegendHeight) /
       pixelsPerRem;
+
+  // Run callback function to set reference  current chart Let the parent access the chart instance, then clear it when this effect reruns or unmounts.
+  // Presentation.tsx send callback function to set the chart reference.
+  // DrawerSave.tsx use chart reference to save the chart as an image.
+  useEffect(() => {
+    onChartReady?.(chartRef.current);
+
+    return () => {
+      onChartReady?.(null);
+    };
+  }, [chartRef, option, onChartReady]);
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
