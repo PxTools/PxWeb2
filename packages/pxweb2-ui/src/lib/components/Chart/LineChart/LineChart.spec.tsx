@@ -257,7 +257,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={colors}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -328,7 +328,13 @@ describe('LineChart', () => {
       stub: [{ label: longXAxisName }],
     } as PxTable;
 
-    render(<LineChart pxtable={pxtable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={pxtable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
@@ -344,7 +350,7 @@ describe('LineChart', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
         screenSize="medium"
       />,
@@ -371,7 +377,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -396,7 +402,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={[]}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -413,7 +419,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -434,7 +440,7 @@ describe('LineChart', () => {
     const { container } = render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -451,7 +457,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -476,7 +482,7 @@ describe('LineChart', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -540,7 +546,7 @@ describe('LineChart', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -588,7 +594,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -615,7 +621,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="large"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -630,7 +636,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -659,7 +665,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -731,7 +737,7 @@ it('renders empty state when multiple units are selected', () => {
     <LineChart
       pxtable={mockPxTable}
       translations={mockTranslations}
-      staticTitle="Statisk tittel"
+      staticTitle="Static title"
     />,
   );
   expect(getByText('Cannot display chart')).toBeTruthy();
