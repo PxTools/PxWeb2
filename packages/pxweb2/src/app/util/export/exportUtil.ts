@@ -6,6 +6,8 @@ import {
   TablesService,
   VariablesSelection,
 } from '@pxweb2/pxweb2-api-client';
+import { downloadChartImage, type ChartInstance } from '@pxweb2/pxweb2-ui';
+import type { FileOutputFormatType } from '../../constants/outputFormats';
 
 export type TimeFilter = 'from' | 'top' | 'selected';
 
@@ -24,32 +26,38 @@ export async function exportToFile(
   tabId: string,
   lang: string,
   variablesSelection: VariablesSelection,
-  outputFormat: OutputFormatType,
+  outputFormat: FileOutputFormatType,
+  chart: ChartInstance | null = null,
 ): Promise<void> {
   const outputFormatParams: Array<OutputFormatParamType> =
     getOutputFormatParams(outputFormat);
   const fileExtension: string = getFileExtension(outputFormat);
+  if (outputFormat === 'png' || outputFormat === 'svg') {
+    await downloadChartImage(
+      chart,
+      tabId,
+      outputFormat === 'png' ? 'png' : 'svg',
+    );
+    return;
+  }
 
-  await TablesService.getTableDataByPost(
+  const response = await TablesService.getTableDataByPost(
     tabId,
     lang,
     outputFormat,
     outputFormatParams,
     variablesSelection,
-  ).then((response) => {
-    let blob: Blob;
-    if (outputFormat === OutputFormatType.JSON_STAT2) {
-      blob = new Blob([JSON.stringify(response)]);
-    } else {
-      blob = new Blob([response]);
-    }
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    const timestamp = getTimestamp();
-    link.download = `${tabId}_${timestamp}.${fileExtension}`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  });
+  );
+  const blob =
+    outputFormat === OutputFormatType.JSON_STAT2
+      ? new Blob([JSON.stringify(response)])
+      : new Blob([response]);
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  const timestamp = getTimestamp();
+  link.download = `${tabId}_${timestamp}.${fileExtension}`;
+  link.click();
+  URL.revokeObjectURL(link.href);
 }
 
 /**
@@ -60,7 +68,7 @@ export async function exportToFile(
  * Supported formats include XLSX, CSV, PX, JSON_STAT2, HTML, and PARQUET.
  * @returns {string} - The file extension corresponding to the given file format.
  */
-export function getFileExtension(outputFormat: OutputFormatType): string {
+export function getFileExtension(outputFormat: FileOutputFormatType): string {
   switch (outputFormat) {
     case OutputFormatType.XLSX:
       return 'xlsx';
@@ -74,6 +82,10 @@ export function getFileExtension(outputFormat: OutputFormatType): string {
       return 'html';
     case OutputFormatType.PARQUET:
       return 'parquet';
+    case 'png':
+      return 'png';
+    case 'svg':
+      return 'svg';
     default:
       return 'csv'; // Default to CSV if no match found
   }
@@ -88,7 +100,7 @@ export function getFileExtension(outputFormat: OutputFormatType): string {
  * @returns {Array<OutputFormatParamType>} - An array of output format parameters applicable to the given format.
  */
 export function getOutputFormatParams(
-  outputFormat: OutputFormatType,
+  outputFormat: FileOutputFormatType,
 ): Array<OutputFormatParamType> {
   let outputFormatParams: Array<OutputFormatParamType> = [];
   switch (outputFormat) {
