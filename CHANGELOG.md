@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.13.0](https://github.com/PxTools/PxWeb2/compare/v2.12.0...v2.13.0) (2026-10-15)
+
+
+### :sparkles: Features
+
+* Chart long valuetexts ([b71d5ae](https://github.com/PxTools/PxWeb2/commit/b71d5ae2d32bebca2363ff18a5f135610277b067))
+* Download chart ([e4ad6d4](https://github.com/PxTools/PxWeb2/commit/e4ad6d4336d07278b1350cc949932aa67cc855d4))
+* Manual pivoting ([f1c1a67](https://github.com/PxTools/PxWeb2/commit/f1c1a675510fce578f8faf88506b091b7074fab0))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps:** bump sharp and wrangler ([#1568](https://github.com/PxTools/PxWeb2/issues/1568)) ([ccaa77f](https://github.com/PxTools/PxWeb2/commit/ccaa77f35240dc8b9e76001ac8446bd4b43d05dc))
+* **deps:** bump shell-quote and concurrently ([#1567](https://github.com/PxTools/PxWeb2/issues/1567)) ([dc5a3a6](https://github.com/PxTools/PxWeb2/commit/dc5a3a697acafa2a45810a44ca294ff11e2b448e))
+
 ## [2.12.0](https://github.com/PxTools/PxWeb2/compare/v2.11.0...v2.12.0) (2026-10-07)
 
 
