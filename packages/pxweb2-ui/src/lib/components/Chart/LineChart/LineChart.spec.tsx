@@ -20,6 +20,7 @@ import {
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
+import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -256,7 +257,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={colors}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -278,18 +279,26 @@ describe('LineChart', () => {
     });
 
     expect(option.yAxis).toMatchObject({
-      name: 'persons',
       min: 0,
       breaks: [{ start: 0, end: 9.7, gap: '48' }],
       breakArea: { show: false },
       axisLine: { breakLine: false },
     });
+    expect(
+      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll(
+        '\n',
+        ' ',
+      ),
+    ).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
     expect(option.grid).toEqual({
       top: 36,
-      height: 476,
+      height: 476 + labelHeight,
       bottom: 136,
       left: '0',
       right: '0',
@@ -308,11 +317,40 @@ describe('LineChart', () => {
     ]);
   });
 
+  it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
+    const longXAxisName = 'A very long dimension label that needs wrapping';
+    const longYAxisName = 'A very long unit label that needs wrapping';
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      unit: longYAxisName,
+    });
+    const pxtable = {
+      stub: [{ label: longXAxisName }],
+    } as PxTable;
+
+    render(
+      <LineChart
+        pxtable={pxtable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.xAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
+    expect(option.yAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
+  });
+
   it('disables series emphasis on medium and smaller screens', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
         screenSize="medium"
       />,
@@ -339,7 +377,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -364,7 +402,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={[]}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -381,7 +419,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -390,14 +428,19 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('42.125rem');
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
+    expect(chartDiv?.style.height).toBe(
+      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+    );
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
     const { container } = render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -414,7 +457,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         translations={mockTranslations}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
       />,
     );
 
@@ -439,7 +482,7 @@ describe('LineChart', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -503,7 +546,7 @@ describe('LineChart', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
-        staticTitle="Statisk tittel"
+        staticTitle="Static title"
         translations={mockTranslations}
       />,
     );
@@ -551,7 +594,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -578,7 +621,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="large"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -593,7 +636,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -622,7 +665,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
-          staticTitle="Statisk tittel"
+          staticTitle="Static title"
         />,
       );
 
@@ -694,7 +737,7 @@ it('renders empty state when multiple units are selected', () => {
     <LineChart
       pxtable={mockPxTable}
       translations={mockTranslations}
-      staticTitle="Statisk tittel"
+      staticTitle="Static title"
     />,
   );
   expect(getByText('Cannot display chart')).toBeTruthy();

@@ -128,6 +128,38 @@ describe('useEChartOption', () => {
     );
   });
 
+  it('preserves axis name text styles supplied by the chart option', () => {
+    const chartMock = createChartMock();
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+
+    const option: EChartsOption = {
+      xAxis: [{ nameTextStyle: { color: '#00ff00' } }],
+      yAxis: { nameTextStyle: { color: '#ff0000' } },
+    };
+
+    render(<HookHost option={option} />);
+
+    expect(chartMock.setOption).toHaveBeenCalledWith(
+      expect.objectContaining({
+        xAxis: [
+          expect.objectContaining({
+            nameTextStyle: expect.objectContaining({
+              color: '#00ff00',
+              align: 'left',
+            }),
+          }),
+        ],
+        yAxis: expect.objectContaining({
+          nameTextStyle: expect.objectContaining({
+            color: '#ff0000',
+            align: 'left',
+          }),
+        }),
+      }),
+      { replaceMerge: ['legend'] },
+    );
+  });
+
   it('applies wrapped title style when option has a single title object', () => {
     const chartMock = createChartMock(400);
     vi.mocked(echarts.init).mockReturnValue(chartMock);
