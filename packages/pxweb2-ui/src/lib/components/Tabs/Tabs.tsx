@@ -15,11 +15,11 @@ import cl from 'clsx';
 import classes from './Tabs.module.scss';
 
 export interface TabsProps {
-  variant?: 'fixed' | 'scrollable';
-  layoutGroupId?: string;
-  ariaLabel?: string;
-  ariaLabelledBy?: string;
-  children: ReactNode;
+  readonly variant?: 'fixed' | 'scrollable';
+  readonly layoutGroupId?: string;
+  readonly ariaLabel?: string;
+  readonly ariaLabelledBy?: string;
+  readonly children: ReactNode;
 }
 
 export function Tabs({
