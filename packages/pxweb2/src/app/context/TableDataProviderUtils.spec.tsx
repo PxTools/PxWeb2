@@ -7,6 +7,7 @@ import {
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
   filterStubAndHeadingArrays,
+  isNewTableOrLanguage,
   autoPivotTable,
   getTableTitleParts,
 } from './TableDataProviderUtils';
@@ -524,6 +525,37 @@ describe('TableDataProviderUtils', () => {
       expect(result.headingMobile).toEqual(['a', 'b', 'c']);
       expect(result.stubChart).toEqual(['a', 'b', 'c']);
       expect(result.headingChart).toEqual(['a', 'b', 'c']);
+    });
+  });
+
+  describe('isNewTableOrLanguage', () => {
+    it('returns true when there is no accumulated table', () => {
+      const pxTable = createBasePxTable();
+
+      expect(isNewTableOrLanguage(undefined, pxTable, 'en')).toBe(true);
+    });
+
+    it('returns true when the table ID changes', () => {
+      const accumulatedData = createBasePxTable();
+      const pxTable = createBasePxTable({
+        metadata: { id: 'anotherTable' } as PxTable['metadata'],
+      });
+
+      expect(isNewTableOrLanguage(accumulatedData, pxTable, 'en')).toBe(true);
+    });
+
+    it('returns true when the language changes', () => {
+      const accumulatedData = createBasePxTable();
+      const pxTable = createBasePxTable();
+
+      expect(isNewTableOrLanguage(accumulatedData, pxTable, 'no')).toBe(true);
+    });
+
+    it('compares languages case-insensitively and returns false when unchanged', () => {
+      const accumulatedData = createBasePxTable();
+      const pxTable = createBasePxTable();
+
+      expect(isNewTableOrLanguage(accumulatedData, pxTable, 'EN')).toBe(false);
     });
   });
 

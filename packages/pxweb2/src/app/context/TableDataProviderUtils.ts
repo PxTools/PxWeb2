@@ -320,6 +320,18 @@ export function filterStubAndHeadingArrays(
   };
 }
 
+export function isNewTableOrLanguage(
+  accumulatedData: PxTable | undefined,
+  pxTable: PxTable,
+  lang: string,
+): boolean {
+  return (
+    accumulatedData === undefined ||
+    accumulatedData.metadata.id !== pxTable.metadata.id ||
+    accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
+  );
+}
+
 export function autoPivotTable(
   variables: Variable[],
   stub: string[],
