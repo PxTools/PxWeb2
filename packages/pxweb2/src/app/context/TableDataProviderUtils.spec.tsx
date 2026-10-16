@@ -7,6 +7,7 @@ import {
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
   filterStubAndHeadingArrays,
+  getOrdersForMode,
   reconcileVariableOrders,
   isNewTableOrLanguage,
   autoPivotTable,
@@ -562,6 +563,32 @@ describe('TableDataProviderUtils', () => {
       });
       expect(currentOrders.stubDesktop).toEqual(['removed']);
       expect(currentOrders.headingChart).toEqual(['removed']);
+    });
+  });
+
+  describe('getOrdersForMode', () => {
+    it('returns the stub and heading orders for the requested mode', () => {
+      const orders = {
+        stubDesktop: ['desktop-stub'],
+        headingDesktop: ['desktop-heading'],
+        stubMobile: ['mobile-stub'],
+        headingMobile: ['mobile-heading'],
+        stubChart: ['chart-stub'],
+        headingChart: ['chart-heading'],
+      };
+
+      expect(getOrdersForMode(orders, DataViewModeType.DesktopTable)).toEqual({
+        stub: ['desktop-stub'],
+        heading: ['desktop-heading'],
+      });
+      expect(getOrdersForMode(orders, DataViewModeType.MobileTable)).toEqual({
+        stub: ['mobile-stub'],
+        heading: ['mobile-heading'],
+      });
+      expect(getOrdersForMode(orders, DataViewModeType.Chart)).toEqual({
+        stub: ['chart-stub'],
+        heading: ['chart-heading'],
+      });
     });
   });
 

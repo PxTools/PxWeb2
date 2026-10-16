@@ -27,6 +27,7 @@ import {
   pivotTableCW,
   TableTitlePartsType,
   getTableTitleParts,
+  getOrdersForMode,
   initStubAndHeadingDesktop,
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
@@ -280,12 +281,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const { stubOrderChart, headingOrderChart } =
         initializeStubAndHeadingChart(pxTable);
 
-      if (dataViewMode === DataViewModeType.MobileTable) {
-        pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
-      } else if (dataViewMode === DataViewModeType.DesktopTable) {
-        pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
-      } else if (dataViewMode === DataViewModeType.Chart) {
-        pivotTable(pxTable, stubOrderChart, headingOrderChart);
+      const activeOrders = getOrdersForMode(
+        {
+          stubDesktop: stubOrderDesktop,
+          headingDesktop: headingOrderDesktop,
+          stubMobile: stubOrderMobile,
+          headingMobile: headingOrderMobile,
+          stubChart: stubOrderChart,
+          headingChart: headingOrderChart,
+        },
+        dataViewMode,
+      );
+
+      if (activeOrders) {
+        pivotTable(pxTable, activeOrders.stub, activeOrders.heading);
       }
     },
     [
@@ -335,12 +344,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       setStubChart(orders.stubChart);
       setHeadingChart(orders.headingChart);
 
-      if (dataViewMode === DataViewModeType.MobileTable) {
-        pivotTable(pxTable, orders.stubMobile, orders.headingMobile);
-      } else if (dataViewMode === DataViewModeType.DesktopTable) {
-        pivotTable(pxTable, orders.stubDesktop, orders.headingDesktop);
-      } else if (dataViewMode === DataViewModeType.Chart) {
-        pivotTable(pxTable, orders.stubChart, orders.headingChart);
+      const activeOrders = getOrdersForMode(orders, dataViewMode);
+      if (activeOrders) {
+        pivotTable(pxTable, activeOrders.stub, activeOrders.heading);
       }
     },
     [

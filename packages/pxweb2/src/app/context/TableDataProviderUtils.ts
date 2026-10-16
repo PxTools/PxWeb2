@@ -330,6 +330,22 @@ interface StubAndHeadingOrders {
   headingChart: string[];
 }
 
+export function getOrdersForMode(
+  orders: StubAndHeadingOrders,
+  dataViewMode: DataViewModeType,
+): { stub: string[]; heading: string[] } | undefined {
+  switch (dataViewMode) {
+    case DataViewModeType.MobileTable:
+      return { stub: orders.stubMobile, heading: orders.headingMobile };
+    case DataViewModeType.DesktopTable:
+      return { stub: orders.stubDesktop, heading: orders.headingDesktop };
+    case DataViewModeType.Chart:
+      return { stub: orders.stubChart, heading: orders.headingChart };
+    default:
+      return undefined;
+  }
+}
+
 /**
  * Reconciles the saved stub and heading orders with the variables in the current table.
  * Removed variable IDs are filtered out, newly added variables are added to the relevant
