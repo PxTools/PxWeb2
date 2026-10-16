@@ -263,6 +263,39 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Initializes the stub and heading orders for a new table in each view, then pivots
+   * the table to match the requested view mode.
+   *
+   * @param pxTable - The table whose view orders should be initialized and applied.
+   * @param dataViewMode - The view mode whose stub and heading order should be applied.
+   */
+  const initializeOrdersForNewTable = React.useCallback(
+    (pxTable: PxTable, dataViewMode: DataViewModeType) => {
+      const { stubOrderDesktop, headingOrderDesktop } =
+        initializeStubAndHeadingDesktop(pxTable);
+
+      const { stubOrderMobile, headingOrderMobile } =
+        initializeStubAndHeadingMobile(pxTable);
+
+      const { stubOrderChart, headingOrderChart } =
+        initializeStubAndHeadingChart(pxTable);
+
+      if (dataViewMode === DataViewModeType.MobileTable) {
+        pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
+      } else if (dataViewMode === DataViewModeType.DesktopTable) {
+        pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
+      } else if (dataViewMode === DataViewModeType.Chart) {
+        pivotTable(pxTable, stubOrderChart, headingOrderChart);
+      }
+    },
+    [
+      initializeStubAndHeadingDesktop,
+      initializeStubAndHeadingMobile,
+      initializeStubAndHeadingChart,
+    ],
+  );
+
+  /**
    * Remember order of variables in stub and heading when table setup is changed.
    *
    * @param pxTable - PxTable containing the data and metadata for display in table.
@@ -272,99 +305,83 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   const initializeStubAndHeading = React.useCallback(
     (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string) => {
       if (isNewTableOrLanguage(accumulatedData, pxTable, lang)) {
-        // First time we get data OR we have a new table OR language is changed.
-        const { stubOrderDesktop, headingOrderDesktop } =
-          initializeStubAndHeadingDesktop(pxTable);
+        initializeOrdersForNewTable(pxTable, dataViewMode);
+        return;
+      }
 
-        const { stubOrderMobile, headingOrderMobile } =
-          initializeStubAndHeadingMobile(pxTable);
+      // The number of variables has changed.
 
+      // Variable has been removed
+      // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
+      const variableIds = pxTable.metadata.variables.map(
+        (variable) => variable.id,
+      );
+      if (variableIds.length < stubDesktop.length + headingDesktop.length) {
+        const filtered = filterStubAndHeadingArrays(
+          variableIds,
+          stubDesktop,
+          headingDesktop,
+          stubMobile,
+          headingMobile,
+          stubChart,
+          headingChart,
+        );
+
+        setStubDesktop(filtered.stubDesktop);
+        setHeadingDesktop(filtered.headingDesktop);
+        setStubMobile(filtered.stubMobile);
+        setHeadingMobile(filtered.headingMobile);
+        setStubChart(filtered.stubChart);
+        setHeadingChart(filtered.headingChart);
+      }
+
+      if (dataViewMode === DataViewModeType.MobileTable) {
+        pivotTable(pxTable, stubMobile, headingMobile);
+      } else if (dataViewMode === DataViewModeType.DesktopTable) {
+        pivotTable(pxTable, stubDesktop, headingDesktop);
+      } else if (dataViewMode === DataViewModeType.Chart) {
         const { stubOrderChart, headingOrderChart } =
           initializeStubAndHeadingChart(pxTable);
+        pivotTable(pxTable, stubOrderChart, headingOrderChart);
+      }
 
-        if (dataViewMode === DataViewModeType.MobileTable) {
-          pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
-        } else if (dataViewMode === DataViewModeType.DesktopTable) {
-          pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
-        } else if (dataViewMode === DataViewModeType.Chart) {
-          pivotTable(pxTable, stubOrderChart, headingOrderChart);
-        }
-      } else {
-        // The number of variables has changed.
+      // Variable has been added
+      // Find all new variables and add them to the stub - Desktop
+      const remainingVariables = pxTable.metadata.variables.filter(
+        (variable) =>
+          !stubDesktop.includes(variable.id) &&
+          !headingDesktop.includes(variable.id),
+      );
 
-        // Variable has been removed
-        // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
-        const variableIds = pxTable.metadata.variables.map(
-          (variable) => variable.id,
-        );
-        if (variableIds.length < stubDesktop.length + headingDesktop.length) {
-          const filtered = filterStubAndHeadingArrays(
-            variableIds,
-            stubDesktop,
-            headingDesktop,
-            stubMobile,
-            headingMobile,
-            stubChart,
-            headingChart,
-          );
+      if (remainingVariables.length > 0) {
+        const newStubDesktop = structuredClone(stubDesktop);
+        const newStubMobile = structuredClone(stubMobile);
+        const newHeadingChart = structuredClone(headingChart);
 
-          setStubDesktop(filtered.stubDesktop);
-          setHeadingDesktop(filtered.headingDesktop);
-          setStubMobile(filtered.stubMobile);
-          setHeadingMobile(filtered.headingMobile);
-          setStubChart(filtered.stubChart);
-          setHeadingChart(filtered.headingChart);
-        }
-
-        if (dataViewMode === DataViewModeType.MobileTable) {
-          pivotTable(pxTable, stubMobile, headingMobile);
-        } else if (dataViewMode === DataViewModeType.DesktopTable) {
-          pivotTable(pxTable, stubDesktop, headingDesktop);
-        } else if (dataViewMode === DataViewModeType.Chart) {
-          const { stubOrderChart, headingOrderChart } =
-            initializeStubAndHeadingChart(pxTable);
-          pivotTable(pxTable, stubOrderChart, headingOrderChart);
-        }
-
-        // Variable has been added
-        // Find all new variables and add them to the stub - Desktop
-        const remainingVariables = pxTable.metadata.variables.filter(
-          (variable) =>
-            !stubDesktop.includes(variable.id) &&
-            !headingDesktop.includes(variable.id),
-        );
-
-        if (remainingVariables.length > 0) {
-          const newStubDesktop = structuredClone(stubDesktop);
-          const newStubMobile = structuredClone(stubMobile);
-          const newHeadingChart = structuredClone(headingChart);
-
-          remainingVariables.forEach((variable) => {
-            if (!newStubDesktop.includes(variable.id)) {
-              if (dataViewMode !== DataViewModeType.Chart) {
-                pxTable.stub.push(variable);
-              }
-              newStubDesktop.push(variable.id);
+        remainingVariables.forEach((variable) => {
+          if (!newStubDesktop.includes(variable.id)) {
+            if (dataViewMode !== DataViewModeType.Chart) {
+              pxTable.stub.push(variable);
             }
-            if (!newStubMobile.includes(variable.id)) {
-              newStubMobile.push(variable.id);
-            }
-            if (!newHeadingChart.includes(variable.id)) {
-              newHeadingChart.push(variable.id);
-            }
-          });
-          setStubDesktop(newStubDesktop);
-          setStubMobile(newStubMobile);
-          if (dataViewMode !== DataViewModeType.Chart) {
-            setHeadingChart(newHeadingChart);
+            newStubDesktop.push(variable.id);
           }
+          if (!newStubMobile.includes(variable.id)) {
+            newStubMobile.push(variable.id);
+          }
+          if (!newHeadingChart.includes(variable.id)) {
+            newHeadingChart.push(variable.id);
+          }
+        });
+        setStubDesktop(newStubDesktop);
+        setStubMobile(newStubMobile);
+        if (dataViewMode !== DataViewModeType.Chart) {
+          setHeadingChart(newHeadingChart);
         }
       }
     },
     [
       accumulatedData,
-      initializeStubAndHeadingDesktop,
-      initializeStubAndHeadingMobile,
+      initializeOrdersForNewTable,
       initializeStubAndHeadingChart,
       stubDesktop,
       headingDesktop,
