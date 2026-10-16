@@ -7,6 +7,7 @@ import {
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
   filterStubAndHeadingArrays,
+  reconcileVariableOrders,
   isNewTableOrLanguage,
   autoPivotTable,
   getTableTitleParts,
@@ -14,6 +15,7 @@ import {
 import { getConfig } from '../util/config/getConfig';
 import type { Config } from '../util/config/configType';
 import { DataCell, PxTable, VartypeEnum, Variable } from '@pxweb2/pxweb2-ui';
+import { DataViewModeType } from './DataViewModeType';
 
 // Mock dependencies
 vi.mock('../util/language/translateOutsideReact', () => ({
@@ -525,6 +527,41 @@ describe('TableDataProviderUtils', () => {
       expect(result.headingMobile).toEqual(['a', 'b', 'c']);
       expect(result.stubChart).toEqual(['a', 'b', 'c']);
       expect(result.headingChart).toEqual(['a', 'b', 'c']);
+    });
+  });
+
+  describe('reconcileVariableOrders', () => {
+    it('removes stale IDs and adds new variables to the default view orders', () => {
+      const pxTable = createBasePxTable();
+      pxTable.metadata.variables = [
+        createVariable('kept', VartypeEnum.REGULAR_VARIABLE, 2),
+        createVariable('added', VartypeEnum.REGULAR_VARIABLE, 2),
+      ];
+      const currentOrders = {
+        stubDesktop: ['removed'],
+        headingDesktop: ['kept'],
+        stubMobile: ['kept'],
+        headingMobile: [],
+        stubChart: ['kept'],
+        headingChart: ['removed'],
+      };
+
+      const result = reconcileVariableOrders(
+        pxTable,
+        DataViewModeType.DesktopTable,
+        currentOrders,
+      );
+
+      expect(result).toEqual({
+        stubDesktop: ['added'],
+        headingDesktop: ['kept'],
+        stubMobile: ['kept', 'added'],
+        headingMobile: [],
+        stubChart: ['kept'],
+        headingChart: ['added'],
+      });
+      expect(currentOrders.stubDesktop).toEqual(['removed']);
+      expect(currentOrders.headingChart).toEqual(['removed']);
     });
   });
 

@@ -22,7 +22,7 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 import {
   addFormattingToPxTable,
-  filterStubAndHeadingArrays,
+  reconcileVariableOrders,
   autoPivotTable,
   pivotTableCW,
   TableTitlePartsType,
@@ -309,74 +309,38 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         return;
       }
 
-      // The number of variables has changed.
-
-      // Variable has been removed
-      // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
-      const variableIds = pxTable.metadata.variables.map(
-        (variable) => variable.id,
-      );
-      if (variableIds.length < stubDesktop.length + headingDesktop.length) {
-        const filtered = filterStubAndHeadingArrays(
-          variableIds,
+      // Variable changes can make the chart axis or series order stale; refresh it only in chart mode.
+      const chartOrders =
+        dataViewMode === DataViewModeType.Chart
+          ? initializeStubAndHeadingChart(pxTable)
+          : undefined;
+      const orders = reconcileVariableOrders(
+        pxTable,
+        dataViewMode,
+        {
           stubDesktop,
           headingDesktop,
           stubMobile,
           headingMobile,
           stubChart,
           headingChart,
-        );
-
-        setStubDesktop(filtered.stubDesktop);
-        setHeadingDesktop(filtered.headingDesktop);
-        setStubMobile(filtered.stubMobile);
-        setHeadingMobile(filtered.headingMobile);
-        setStubChart(filtered.stubChart);
-        setHeadingChart(filtered.headingChart);
-      }
-
-      if (dataViewMode === DataViewModeType.MobileTable) {
-        pivotTable(pxTable, stubMobile, headingMobile);
-      } else if (dataViewMode === DataViewModeType.DesktopTable) {
-        pivotTable(pxTable, stubDesktop, headingDesktop);
-      } else if (dataViewMode === DataViewModeType.Chart) {
-        const { stubOrderChart, headingOrderChart } =
-          initializeStubAndHeadingChart(pxTable);
-        pivotTable(pxTable, stubOrderChart, headingOrderChart);
-      }
-
-      // Variable has been added
-      // Find all new variables and add them to the stub - Desktop
-      const remainingVariables = pxTable.metadata.variables.filter(
-        (variable) =>
-          !stubDesktop.includes(variable.id) &&
-          !headingDesktop.includes(variable.id),
+        },
+        chartOrders,
       );
 
-      if (remainingVariables.length > 0) {
-        const newStubDesktop = structuredClone(stubDesktop);
-        const newStubMobile = structuredClone(stubMobile);
-        const newHeadingChart = structuredClone(headingChart);
+      setStubDesktop(orders.stubDesktop);
+      setHeadingDesktop(orders.headingDesktop);
+      setStubMobile(orders.stubMobile);
+      setHeadingMobile(orders.headingMobile);
+      setStubChart(orders.stubChart);
+      setHeadingChart(orders.headingChart);
 
-        remainingVariables.forEach((variable) => {
-          if (!newStubDesktop.includes(variable.id)) {
-            if (dataViewMode !== DataViewModeType.Chart) {
-              pxTable.stub.push(variable);
-            }
-            newStubDesktop.push(variable.id);
-          }
-          if (!newStubMobile.includes(variable.id)) {
-            newStubMobile.push(variable.id);
-          }
-          if (!newHeadingChart.includes(variable.id)) {
-            newHeadingChart.push(variable.id);
-          }
-        });
-        setStubDesktop(newStubDesktop);
-        setStubMobile(newStubMobile);
-        if (dataViewMode !== DataViewModeType.Chart) {
-          setHeadingChart(newHeadingChart);
-        }
+      if (dataViewMode === DataViewModeType.MobileTable) {
+        pivotTable(pxTable, orders.stubMobile, orders.headingMobile);
+      } else if (dataViewMode === DataViewModeType.DesktopTable) {
+        pivotTable(pxTable, orders.stubDesktop, orders.headingDesktop);
+      } else if (dataViewMode === DataViewModeType.Chart) {
+        pivotTable(pxTable, orders.stubChart, orders.headingChart);
       }
     },
     [
