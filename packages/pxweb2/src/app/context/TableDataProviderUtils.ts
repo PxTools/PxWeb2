@@ -325,8 +325,11 @@ export function isNewTableOrLanguage(
   pxTable: PxTable,
   lang: string,
 ): boolean {
+  if (accumulatedData === undefined) {
+    return true;
+  }
+
   return (
-    accumulatedData === undefined ||
     accumulatedData.metadata.id !== pxTable.metadata.id ||
     accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
   );
