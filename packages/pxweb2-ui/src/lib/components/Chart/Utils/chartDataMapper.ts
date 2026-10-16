@@ -147,8 +147,15 @@ function resolveSelectedValues(
   return variable.values;
 }
 
+/**
+ * Converts a PxTable into the dataset structure used to render an ECharts chart.
+ * @param pxtable The table containing the metadata, dimensions, and cube values to map.
+ * @returns The chart dataset, including series, category rows, and formatted values.
+ */
 export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
+  // Each combination of stub variables becomes one category on the chart's x-axis.
   const rowCombinations = buildCombinations(pxtable.stub);
+  // Each combination of heading variables becomes a separate chart series.
   const seriesCombinations = buildCombinations(pxtable.heading);
 
   const title = pxtable.metadata.label;
@@ -162,8 +169,10 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
       combination.items.map((item) => item.code).join('|') || `series-${index}`,
     name: getLabel(combination.items, 'Value'),
   }));
+  // ECharts expects the category label first, followed by one dimension per series.
   const dimensions = ['name', ...series.map((seriesItem) => seriesItem.key)];
 
+  // Keep raw values for plotting and formatted values for display, such as in tooltips.
   const formattedValues: ChartFormattedValue[] = [];
   const source = rowCombinations.map((rowCombination) => {
     const rowMap = toCodeMap(rowCombination.items);
@@ -174,15 +183,18 @@ export function mapPxTableToChartDataset(pxtable: PxTable): EChartsDataset {
 
     seriesCombinations.forEach((seriesCombination, seriesIndex) => {
       const seriesKey = series[seriesIndex].key;
+      // Combine the category and series selections to identify one cube cell.
       const allCodes = {
         ...rowMap,
         ...toCodeMap(seriesCombination.items),
       };
 
+      // Cube coordinates must follow the variable order stored with the data.
       const dimensions = pxtable.data.variableOrder.map(
         (variableId) => allCodes[variableId],
       );
 
+      // A missing code means this combination has no matching cube cell.
       if (dimensions.some((dimension) => !dimension)) {
         row[seriesKey] = null;
         formattedRow[seriesKey] = null;
