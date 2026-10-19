@@ -241,10 +241,7 @@ export function getTimestamp(): string {
  * @param {ViewMode} viewMode - The current view mode to preserve in the URL.
  * @returns {string} - The complete URL for the saved query.
  */
-export function createSavedQueryURL(
-  id: string,
-  viewMode: ViewMode,
-): string {
+export function createSavedQueryURL(id: string, viewMode: ViewMode): string {
   const baseUrl = window.location.origin;
   const path = window.location.pathname;
   const queryParams = new URLSearchParams({

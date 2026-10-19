@@ -430,7 +430,7 @@ export function ManualPivot({
     const groupItems = getItemsForGroup(group);
     const itemIndex = groupItems.findIndex((item) => item.id === itemId);
     const itemLabel = getItemById(itemId)?.label;
-     const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
+    const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
     if (capitalizedItemLabel && itemIndex !== -1) {
       setLiveAnnouncement(
         t(
