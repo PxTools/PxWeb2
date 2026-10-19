@@ -115,33 +115,33 @@ function PresentationView({
       </Activity>
       {chartEnabled && (
         <>
-        <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-          <div
-            className={cl(classes.chartContainer, {
-              [classes.fadeChart]: isFadingTable,
-            })}
-          >
-            <LineChart
-              pxtable={pxtable}
-              staticTitle={staticTitle}
-              onChartReady={setChart}
-              screenSize={screenSize}
-              translations={{
-                showMore: showMoreText,
-                showLess: showLessText,
-                emptyStateTitle: lineChartEmptyStateTitle,
-                emptyStateDescription: lineChartEmptyStateDescription,
-              }}
-            />
-          </div>
-        </Activity>
-        <Activity mode={viewMode === 'barchart' ? 'visible' : 'hidden'}>
-          <div
-            className={cl(classes.chartContainer, {
-              [classes.fadeChart]: isFadingTable,
-            })}
-          >
-            <BarChart
+          <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+            <div
+              className={cl(classes.chartContainer, {
+                [classes.fadeChart]: isFadingTable,
+              })}
+            >
+              <LineChart
+                pxtable={pxtable}
+                staticTitle={staticTitle}
+                onChartReady={setChart}
+                screenSize={screenSize}
+                translations={{
+                  showMore: showMoreText,
+                  showLess: showLessText,
+                  emptyStateTitle: lineChartEmptyStateTitle,
+                  emptyStateDescription: lineChartEmptyStateDescription,
+                }}
+              />
+            </div>
+          </Activity>
+          <Activity mode={viewMode === 'barchart' ? 'visible' : 'hidden'}>
+            <div
+              className={cl(classes.chartContainer, {
+                [classes.fadeChart]: isFadingTable,
+              })}
+            >
+              <BarChart
               // pxtable={pxtable}
               // staticTitle={staticTitle}
               // onChartReady={setChart}
@@ -152,9 +152,9 @@ function PresentationView({
               //   emptyStateTitle: lineChartEmptyStateTitle,
               //   emptyStateDescription: lineChartEmptyStateDescription,
               // }}
-            />
-          </div>
-        </Activity>
+              />
+            </div>
+          </Activity>
         </>
       )}
     </>
