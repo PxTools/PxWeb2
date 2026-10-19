@@ -55,6 +55,19 @@ export function DrawerView() {
               toggleState={selectedViewMode === 'linechart'}
             />
           </li>
+          <li>
+            <ActionItem
+              largeIconName="BarChart"
+              size="large"
+              label={t('presentation_page.side_menu.view.barchart.title')}
+              ariaLabel={t('presentation_page.side_menu.view.barchart.title')}
+              onClick={() => {
+                pivotToChart();
+                setViewMode('barchart');
+              }}
+              toggleState={selectedViewMode === 'barchart'}
+            />
+          </li>
         </ul>
       )}
       {!chartEnabled && (
