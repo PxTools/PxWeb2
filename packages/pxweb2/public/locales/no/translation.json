@@ -186,6 +186,9 @@
         },
         "linechart": {
           "title": "Linjediagram"
+        },
+        "barchart": {
+          "title": "Søylediagram"
         }
       },
       "edit": {

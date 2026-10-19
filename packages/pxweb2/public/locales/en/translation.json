@@ -186,6 +186,9 @@
         },
         "linechart": {
           "title": "Line chart"
+        },
+        "barchart": {
+          "title": "Bar chart"
         }
       },
       "edit": {

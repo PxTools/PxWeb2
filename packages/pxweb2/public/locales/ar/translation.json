@@ -186,8 +186,11 @@
         "table": {
           "title": "طاولة"
         },
-        "graph": {
-          "title": "رسم بياني"
+        "linechart": {
+          "title": "رسم بياني خطي"
+        },
+        "barchart": {
+          "title": "رسم بياني عمودي"
         }
       },
       "edit": {
