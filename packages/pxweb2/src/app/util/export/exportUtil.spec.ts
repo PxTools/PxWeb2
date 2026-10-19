@@ -286,7 +286,7 @@ describe('createSavedQueryURL', () => {
   });
 
   it('should encode the id if it contains special characters', () => {
-    const url = createSavedQueryURL('id with spaces & symbols', 'linechart');
+    const url = createSavedQueryURL('id with spaces & symbols', 'table');
     expect(url).toBe(
       'https://example.com/myapp/page?sq=id+with+spaces+%26+symbols',
     );
