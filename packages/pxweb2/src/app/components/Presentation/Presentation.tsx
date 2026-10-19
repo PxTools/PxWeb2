@@ -26,6 +26,7 @@ import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
 import {
+  ViewMode,
   getViewMode,
   getDataViewMode,
 } from '../../pages/TableViewer/Utils/tableViewerHelper';
@@ -61,7 +62,7 @@ const MemoizedTable = React.memo(
 
 type PresentationViewProps = {
   readonly pxtable: PxTable;
-  readonly viewMode: 'table' | 'linechart';
+  readonly viewMode: ViewMode;
   readonly isMobile: boolean;
   readonly chartEnabled: boolean;
   readonly isFadingTable: boolean;
