@@ -142,16 +142,16 @@ function PresentationView({
               })}
             >
               <BarChart
-              // pxtable={pxtable}
-              // staticTitle={staticTitle}
-              // onChartReady={setChart}
-              // screenSize={screenSize}
-              // translations={{
-              //   showMore: showMoreText,
-              //   showLess: showLessText,
-              //   emptyStateTitle: lineChartEmptyStateTitle,
-              //   emptyStateDescription: lineChartEmptyStateDescription,
-              // }}
+                pxtable={pxtable}
+                staticTitle={staticTitle}
+                onChartReady={setChart}
+                screenSize={screenSize}
+                translations={{
+                  showMore: showMoreText,
+                  showLess: showLessText,
+                  emptyStateTitle: lineChartEmptyStateTitle,
+                  emptyStateDescription: lineChartEmptyStateDescription,
+                }}
               />
             </div>
           </Activity>
