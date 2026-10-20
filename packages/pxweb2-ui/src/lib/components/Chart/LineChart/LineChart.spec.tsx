@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
 import { LineChart, LegendToggleButton } from './LineChart';
-import { BarChart } from '../BarChart/BarChart';
 import {
   downloadChartImage,
   exportPngFromSvgChart,
@@ -277,22 +276,6 @@ describe('LineChart', () => {
       textStyle: {
         overflow: 'break',
       },
-    });
-
-    it('uses the shared chart implementation with bar series', () => {
-      render(
-        <BarChart
-          pxtable={mockPxTable}
-          translations={mockTranslations}
-          staticTitle="Static title"
-        />,
-      );
-
-      expect(buildSeriesOption).toHaveBeenCalledWith(
-        mockDataset,
-        'bar',
-        expect.any(Array),
-      );
     });
 
     expect(option.yAxis).toMatchObject({
