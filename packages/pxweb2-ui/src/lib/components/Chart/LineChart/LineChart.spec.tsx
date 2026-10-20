@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
 import { LineChart, LegendToggleButton } from './LineChart';
+import { CartesianChart } from '../CartesianChart';
 import {
   downloadChartImage,
   exportPngFromSvgChart,
@@ -17,6 +18,7 @@ import {
 import {
   getChartCssVariables,
   getAdaptiveYAxisInterval,
+  getAdaptiveYAxisMin,
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
@@ -315,6 +317,48 @@ describe('LineChart', () => {
       expect.objectContaining({ emphasis: { focus: 'series' } }),
       expect.objectContaining({ emphasis: { focus: 'series' } }),
     ]);
+  });
+
+  it('starts the bar chart y-axis at zero when all values are positive', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [{ name: '2024', men: 10, women: 12 }],
+    });
+
+    render(
+      <CartesianChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+        seriesType="bar"
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.yAxis).toMatchObject({ min: 0 });
+    expect(option.yAxis).not.toHaveProperty('breaks');
+  });
+
+  it('uses the adaptive y-axis minimum for bar charts with negative values', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [{ name: '2024', men: -10, women: 12 }],
+    });
+
+    render(
+      <CartesianChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+        seriesType="bar"
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.yAxis).toMatchObject({ min: getAdaptiveYAxisMin });
+    expect(option.yAxis).not.toHaveProperty('breaks');
   });
 
   it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
