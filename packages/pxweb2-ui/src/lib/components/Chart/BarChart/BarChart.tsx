@@ -1,28 +1,10 @@
-interface BarChartProps {
-  //   readonly pxtable: PxTable;
-  //   readonly staticTitle: string;
-  //   readonly colors?: string[];
-  //   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
-  //   readonly translations: LineChartTranslations;
-  //   readonly onChartReady?: (chart: ChartInstance | null) => void;
-  //   readonly screenSize?: ScreenSize;
-}
+import { CartesianChart } from '../CartesianChart';
+import type { ChartProps } from '../CartesianChart';
 
-export function BarChart(
-  {
-    //   pxtable,
-    //   staticTitle,
-    //   colors,
-    //   emptyStateSvgName,
-    //   translations,
-    //   onChartReady,
-    //   screenSize = 'large',
-  }: BarChartProps,
-) {
-  return (
-    <div>
-      {/* Render the bar chart here */}
-      Bar Chart
-    </div>
-  );
+export type { ChartInstance } from '../CartesianChart';
+export { LegendToggleButton } from '../CartesianChart';
+export type { ChartProps as BarChartProps } from '../CartesianChart';
+
+export function BarChart(props: ChartProps) {
+  return <CartesianChart {...props} seriesType="bar" />;
 }
