@@ -6,5 +6,5 @@ export { LegendToggleButton } from '../CartesianChart';
 export type { ChartProps as LineChartProps } from '../CartesianChart';
 
 export function LineChart(props: ChartProps) {
-  return <CartesianChart {...props} seriesType="line" />;
+  return <CartesianChart {...props} seriesType="line" breakValueAxis />;
 }

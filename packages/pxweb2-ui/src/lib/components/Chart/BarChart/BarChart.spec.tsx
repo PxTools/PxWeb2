@@ -27,10 +27,13 @@ describe('BarChart', () => {
       />,
     );
 
-    expect(vi.mocked(CartesianChart).mock.calls[0]?.[0]).toMatchObject({
+    const cartesianChartProps = vi.mocked(CartesianChart).mock.calls[0]?.[0];
+
+    expect(cartesianChartProps).toMatchObject({
       pxtable,
       seriesType: 'bar',
       staticTitle: 'Static title',
     });
+    expect(cartesianChartProps).not.toHaveProperty('breakValueAxis');
   });
 });

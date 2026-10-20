@@ -22,8 +22,8 @@ import {
   getAdaptiveYAxisMax,
   getAdaptiveYAxisInterval,
   getChartCssVariables,
-  getYAxisBreak,
   checkMultipleUnits,
+  getYAxisBreak,
 } from './Utils/chartHelper';
 import EmptyState from '../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../EmptyState/EmptyState';
@@ -105,6 +105,7 @@ export interface ChartProps {
 
 interface CartesianChartProps extends ChartProps {
   readonly seriesType: 'line' | 'bar';
+  readonly breakValueAxis?: boolean;
 }
 
 export function CartesianChart({
@@ -116,6 +117,7 @@ export function CartesianChart({
   onChartReady,
   screenSize = 'large',
   seriesType,
+  breakValueAxis = false,
 }: CartesianChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
   // Stores the position of the chart series the user is currently hovering.
@@ -188,12 +190,12 @@ export function CartesianChart({
     return { min, max };
   }, [yAxisValues]);
   const yAxisBreak = useMemo(() => {
-    if (!yAxisDataExtent) {
+    if (!breakValueAxis || !yAxisDataExtent) {
       return undefined;
     }
 
     return getYAxisBreak(yAxisDataExtent);
-  }, [yAxisDataExtent]);
+  }, [breakValueAxis, yAxisDataExtent]);
   const yAxisInterval = useMemo(() => {
     if (!yAxisBreak || !yAxisDataExtent) {
       return undefined;
@@ -221,7 +223,16 @@ export function CartesianChart({
     dataset.source.map((row) => row.name),
   );
   const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
-  const yAxisMin = yAxisBreak ? 0 : getAdaptiveYAxisMin;
+  // Bar charts with no negative values start at zero; a line-chart axis break
+  // also requires a zero minimum. Otherwise, use the adaptive minimum so
+  // negative values remain visible.
+  const yAxisMin =
+    (seriesType === 'bar' &&
+      yAxisDataExtent !== undefined &&
+      yAxisDataExtent.min >= 0) ||
+    yAxisBreak
+      ? 0
+      : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
