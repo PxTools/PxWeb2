@@ -34,6 +34,9 @@ describe('BarChart', () => {
       seriesType: 'bar',
       staticTitle: 'Static title',
     });
+    expect(cartesianChartProps.getTooltipSymbolSvg('#ff0000', 0)).toBe(
+      '<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="2" fill="#ff0000" /></svg>',
+    );
     expect(cartesianChartProps).not.toHaveProperty('breakValueAxis');
   });
 });
