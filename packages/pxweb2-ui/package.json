@@ -34,7 +34,7 @@
     "eslint-plugin-storybook": "10.6.0",
     "prop-types": "^15.8.1",
     "shiki": "^4.4.3",
-    "storybook": "10.6.0",
+    "storybook": "10.6.2",
     "vitest": "^5.0.1"
   }
 }
