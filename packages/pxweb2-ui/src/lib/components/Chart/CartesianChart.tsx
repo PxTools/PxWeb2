@@ -7,7 +7,6 @@ import { Button } from '../Button/Button';
 import {
   buildDatasetOption,
   buildSeriesOption,
-  LINE_SERIES_SYMBOLS,
 } from './Utils/chartOptionBuilder';
 import { getFallbackLegendHeight } from './Utils/chartLegendHelper';
 import { useEChartOption } from './Utils/useEChartOption';
@@ -69,23 +68,6 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
 
 export type ChartInstance = echarts.EChartsType;
 
-function getTooltipSymbolSvg(symbol: string, color: string): string {
-  switch (symbol) {
-    case 'rect':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" fill="${color}" /></svg>`;
-    case 'triangle':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><polygon points="5,1 9,9 1,9" fill="${color}" /></svg>`;
-    case 'diamond':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><polygon points="5,1 9,5 5,9 1,5" fill="${color}" /></svg>`;
-    case 'pin':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1a2.2 2.2 0 0 0-2.2 2.2c0 1.8 2.2 5.6 2.2 5.6s2.2-3.8 2.2-5.6A2.2 2.2 0 0 0 5 1z" fill="${color}" /></svg>`;
-    case 'arrow':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 5h5V3l3 2-3 2V5H1z" fill="${color}" /></svg>`;
-    default:
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="${color}" /></svg>`;
-  }
-}
-
 export interface ChartTranslations {
   readonly showMore: string;
   readonly showLess: string;
@@ -106,6 +88,7 @@ export interface ChartProps {
 interface CartesianChartProps extends ChartProps {
   readonly seriesType: 'line' | 'bar';
   readonly breakValueAxis?: boolean;
+  readonly getTooltipSymbolSvg: (color: string, seriesIndex: number) => string;
 }
 
 export function CartesianChart({
@@ -118,6 +101,7 @@ export function CartesianChart({
   screenSize = 'large',
   seriesType,
   breakValueAxis = false,
+  getTooltipSymbolSvg,
 }: CartesianChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
   // Stores the position of the chart series the user is currently hovering.
@@ -173,6 +157,8 @@ export function CartesianChart({
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
       .filter((value): value is number => typeof value === 'number');
   }, [dataset]);
+
+  // Calculate the data extent for the Y-axis (min and max) based on the available values.
   const yAxisDataExtent = useMemo(() => {
     if (yAxisValues.length === 0) {
       return undefined;
@@ -189,6 +175,7 @@ export function CartesianChart({
 
     return { min, max };
   }, [yAxisValues]);
+
   const yAxisBreak = useMemo(() => {
     if (!breakValueAxis || !yAxisDataExtent) {
       return undefined;
@@ -196,6 +183,7 @@ export function CartesianChart({
 
     return getYAxisBreak(yAxisDataExtent);
   }, [breakValueAxis, yAxisDataExtent]);
+
   const yAxisInterval = useMemo(() => {
     if (!yAxisBreak || !yAxisDataExtent) {
       return undefined;
@@ -395,13 +383,9 @@ export function CartesianChart({
 
               // Repeat the available symbols when there are more series than
               // symbols, and use a fallback color if ECharts provides none.
-              const symbol =
-                LINE_SERIES_SYMBOLS[
-                  param.seriesIndex % LINE_SERIES_SYMBOLS.length
-                ];
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.1em;flex:none">${getTooltipSymbolSvg(symbol, color)}</span><span style="min-width:0;overflow-wrap:anywhere;line-height:1.4em">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
+              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.1em;flex:none">${getTooltipSymbolSvg(color, param.seriesIndex)}</span><span style="min-width:0;overflow-wrap:anywhere;line-height:1.4em">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
             })
             .join('');
 
@@ -429,6 +413,7 @@ export function CartesianChart({
     yAxisInterval,
     yAxisBreak,
     isMediumOrSmallerScreen,
+    getTooltipSymbolSvg,
   ]);
 
   const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(

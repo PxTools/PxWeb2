@@ -331,6 +331,7 @@ describe('LineChart', () => {
         translations={mockTranslations}
         staticTitle="Static title"
         seriesType="bar"
+        getTooltipSymbolSvg={() => ''}
       />,
     );
 
@@ -352,6 +353,7 @@ describe('LineChart', () => {
         translations={mockTranslations}
         staticTitle="Static title"
         seriesType="bar"
+        getTooltipSymbolSvg={() => ''}
       />,
     );
 
