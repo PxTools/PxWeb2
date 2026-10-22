@@ -309,8 +309,7 @@ describe('LineChart', () => {
     });
     expect(option.tooltip).toMatchObject({
       trigger: 'axis',
-      extraCssText:
-        'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+      className: expect.any(String),
     });
     expect(option.series).toEqual([
       expect.objectContaining({ emphasis: { focus: 'series' } }),
@@ -565,11 +564,10 @@ describe('LineChart', () => {
       },
     ]);
 
-    expect(html).toContain(
-      '<div style="font-family:PxWeb-font, sans-serif"><div style="margin-bottom:4px;">2024</div>',
-    );
+    expect(html).toContain('2024');
     expect(html).toContain('Women: <strong>12</strong>');
     expect(html).not.toContain('Men: <strong>10</strong>');
+    expect(html).not.toContain('style=');
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<rect');
   });

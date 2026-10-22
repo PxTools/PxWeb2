@@ -48,8 +48,6 @@ type TooltipParam = {
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 // Pixel padding above the plot area.
 const TOP_CHART_PADDING = 36;
-// Font used for tooltip content rendered by ECharts.
-const CHART_FONT_FAMILY = 'PxWeb-font, sans-serif';
 // Base font size in rem, converted to pixels for axis-name wrapping.
 const CHART_FONT_SIZE_REM = 0.875;
 // Maximum pixel width before the x-axis name is wrapped onto another line.
@@ -326,8 +324,7 @@ export function CartesianChart({
         triggerOn: 'mousemove|click|mousewheel',
         confine: true,
         appendToBody: true,
-        extraCssText:
-          'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+        className: styles.tooltip,
         formatter: (params: unknown) => {
           // ECharts can provide one tooltip item or an array of items.
           // Convert both cases to an array so the code below handles them
@@ -385,13 +382,13 @@ export function CartesianChart({
               // symbols, and use a fallback color if ECharts provides none.
               const color = param.color ?? '#666666';
 
-              return `<div style="display:flex;align-items:flex-start;gap:6px;white-space:normal;overflow-wrap:anywhere"><span style="display:inline-flex;align-items:center;height:1.1em;flex:none">${getTooltipSymbolSvg(color, param.seriesIndex)}</span><span style="min-width:0;overflow-wrap:anywhere;line-height:1.4em">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
+              return `<div class="${styles.tooltipRow}"><span class="${styles.tooltipMarker}">${getTooltipSymbolSvg(color, param.seriesIndex)}</span><span class="${styles.tooltipSeries}">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
             })
             .join('');
 
           // Add the x-axis title above the generated value rows and return the
           // complete HTML string that ECharts will render as the tooltip.
-          return `<div style="font-family:${CHART_FONT_FAMILY}"><div style="margin-bottom:4px;">${title}</div>${rows}</div>`;
+          return `<div class="${styles.tooltipContent}"><div class="${styles.tooltipTitle}">${title}</div>${rows}</div>`;
         },
       },
     };
