@@ -10,16 +10,20 @@
   box-sizing: border-box;
   max-width: 370px;
   overflow-wrap: anywhere;
-  white-space: normal;
   font-family: 'PxWeb-font', sans-serif;
 }
 
 .tooltipContent {
+  max-width: 100%;
   overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .tooltipTitle {
   margin-bottom: 4px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .tooltipRow {
