@@ -619,7 +619,9 @@ describe('LineChart', () => {
       },
     ]);
 
-    expect(html).toContain('<path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="#ff0000"');
+    expect(html).toContain(
+      '<path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="#ff0000"',
+    );
   });
 
   it('uses formatted values in the tooltip', () => {
