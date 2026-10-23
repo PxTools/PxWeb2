@@ -120,6 +120,9 @@ function PresentationView({
             staticTitle={staticTitle}
             onChartReady={setChart}
             screenSize={screenSize}
+            numberFormatter={(value) =>
+              t('number.simple_number', { value: `${value}` })
+            }
             translations={{
               showMore: showMoreText,
               showLess: showLessText,
