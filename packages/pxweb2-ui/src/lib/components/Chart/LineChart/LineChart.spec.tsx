@@ -291,9 +291,7 @@ describe('LineChart', () => {
     expect(
       (yAxis.axisLabel?.formatter as (value: number) => string)(1234),
     ).toBe('formatted 1234');
-    expect(
-      yAxis.name?.replaceAll('\n', ' '),
-    ).toBe(mockDataset.unit);
+    expect(yAxis.name?.replaceAll('\n', ' ')).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
@@ -343,8 +341,7 @@ describe('LineChart', () => {
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const yAxis = option.yAxis as echarts.YAXisComponentOption;
     const formatter = yAxis.axisLabel?.formatter as
-      | ((value: number) => string)
-      | undefined;
+      ((value: number) => string) | undefined;
 
     expect(formatter?.(1234)).toBe(new Intl.NumberFormat('sv').format(1234));
   });
