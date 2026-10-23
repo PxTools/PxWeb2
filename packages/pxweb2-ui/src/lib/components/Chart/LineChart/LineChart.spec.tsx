@@ -572,6 +572,56 @@ describe('LineChart', () => {
     expect(html).toContain('<rect');
   });
 
+  it('renders the ECharts arrow shape for the sixth line series in the tooltip', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    const arrowSeries = [
+      ...mockDataset.series,
+      { key: 'series3', name: 'Series 3' },
+      { key: 'series4', name: 'Series 4' },
+      { key: 'series5', name: 'Series 5' },
+    ];
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      series: arrowSeries,
+    });
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
+    });
+
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 5 });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+    const html = formatter?.([
+      {
+        axisValueLabel: '2024',
+        dataIndex: 0,
+        seriesIndex: 5,
+        seriesName: 'Series 5',
+        color: '#ff0000',
+        data: {},
+      },
+    ]);
+
+    expect(html).toContain('<path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="#ff0000"');
+  });
+
   it('uses formatted values in the tooltip', () => {
     const chart = {
       on: vi.fn(),

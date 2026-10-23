@@ -19,7 +19,7 @@ function getTooltipSymbolSvg(color: string, seriesIndex: number): string {
     case 'pin':
       return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1a2.2 2.2 0 0 0-2.2 2.2c0 1.8 2.2 5.6 2.2 5.6s2.2-3.8 2.2-5.6A2.2 2.2 0 0 0 5 1z" fill="${color}" /></svg>`;
     case 'arrow':
-      return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 5h5V3l3 2-3 2V5H1z" fill="${color}" /></svg>`;
+      return `<svg width="10" height="10" viewBox="0 0 13.33 10" aria-hidden="true"><path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="${color}" /></svg>`;
     default:
       return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="${color}" /></svg>`;
   }
