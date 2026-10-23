@@ -98,6 +98,7 @@ interface LineChartProps {
   readonly staticTitle: string;
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
+  readonly numberFormatter?: (value: number) => string;
   readonly translations: LineChartTranslations;
   readonly onChartReady?: (chart: ChartInstance | null) => void;
   readonly screenSize?: ScreenSize;
@@ -108,6 +109,7 @@ export function LineChart({
   staticTitle,
   colors,
   emptyStateSvgName,
+  numberFormatter,
   translations,
   onChartReady,
   screenSize = 'large',
@@ -145,6 +147,12 @@ export function LineChart({
       : 'ManWithMagnifyingGlass';
 
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const resolvedNumberFormatter = useMemo(
+    () =>
+      numberFormatter ??
+      new Intl.NumberFormat(pxtable.metadata?.language).format,
+    [pxtable.metadata?.language, numberFormatter],
+  );
   const hasLegendOverflow = dataset.series.length > 5;
   const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
   const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
@@ -290,6 +298,10 @@ export function LineChart({
       },
       yAxis: {
         name: wrappedYAxisName,
+        axisLabel: {
+          formatter: (value: string | number) =>
+            resolvedNumberFormatter(Number(value)),
+        },
         nameTextStyle: {
           lineHeight: xAxisLabelConfig.lineHeight,
         },
@@ -405,6 +417,7 @@ export function LineChart({
     screenSize,
     wrappedXAxisName,
     wrappedYAxisName,
+    resolvedNumberFormatter,
     xAxisLabelConfig.lineHeight,
     xAxisLabelConfig.formatter,
     xAxisLabelsHeight,
