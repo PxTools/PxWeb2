@@ -20,12 +20,14 @@ import {
   PxTable,
   LocalAlert,
   LineChart,
+  BarChart,
 } from '@pxweb2/pxweb2-ui';
 import useTableData from '../../context/useTableData';
 import useVariables from '../../context/useVariables';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getConfig } from '../../util/config/getConfig';
 import {
+  ViewMode,
   getViewMode,
   getDataViewMode,
 } from '../../pages/TableViewer/Utils/tableViewerHelper';
@@ -61,8 +63,9 @@ const MemoizedTable = React.memo(
 
 type PresentationViewProps = {
   readonly pxtable: PxTable;
-  readonly viewMode: 'table' | 'linechart';
+  readonly viewMode: ViewMode;
   readonly isMobile: boolean;
+  readonly chartEnabled: boolean;
   readonly isFadingTable: boolean;
   readonly gradientContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly tableContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -73,6 +76,7 @@ function PresentationView({
   pxtable,
   viewMode,
   isMobile,
+  chartEnabled,
   isFadingTable,
   gradientContainerRef,
   tableContainerRef,
@@ -109,26 +113,50 @@ function PresentationView({
           </div>
         </div>
       </Activity>
-      <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
-        <div
-          className={cl(classes.chartContainer, {
-            [classes.fadeChart]: isFadingTable,
-          })}
-        >
-          <LineChart
-            pxtable={pxtable}
-            staticTitle={staticTitle}
-            onChartReady={setChart}
-            screenSize={screenSize}
-            translations={{
-              showMore: showMoreText,
-              showLess: showLessText,
-              emptyStateTitle: lineChartEmptyStateTitle,
-              emptyStateDescription: lineChartEmptyStateDescription,
-            }}
-          />
-        </div>
-      </Activity>
+      {chartEnabled && (
+        <>
+          <Activity mode={viewMode === 'linechart' ? 'visible' : 'hidden'}>
+            <div
+              className={cl(classes.chartContainer, {
+                [classes.fadeChart]: isFadingTable,
+              })}
+            >
+              <LineChart
+                pxtable={pxtable}
+                staticTitle={staticTitle}
+                onChartReady={setChart}
+                screenSize={screenSize}
+                translations={{
+                  showMore: showMoreText,
+                  showLess: showLessText,
+                  emptyStateTitle: lineChartEmptyStateTitle,
+                  emptyStateDescription: lineChartEmptyStateDescription,
+                }}
+              />
+            </div>
+          </Activity>
+          <Activity mode={viewMode === 'barchart' ? 'visible' : 'hidden'}>
+            <div
+              className={cl(classes.chartContainer, {
+                [classes.fadeChart]: isFadingTable,
+              })}
+            >
+              <BarChart
+                pxtable={pxtable}
+                staticTitle={staticTitle}
+                onChartReady={setChart}
+                screenSize={screenSize}
+                translations={{
+                  showMore: showMoreText,
+                  showLess: showLessText,
+                  emptyStateTitle: lineChartEmptyStateTitle,
+                  emptyStateDescription: lineChartEmptyStateDescription,
+                }}
+              />
+            </div>
+          </Activity>
+        </>
+      )}
     </>
   );
 }
@@ -402,6 +430,7 @@ export function Presentation({
               pxtable={tableData.data}
               viewMode={viewMode}
               isMobile={isMobile}
+              chartEnabled={chartEnabled}
               isFadingTable={isFadingTable}
               gradientContainerRef={gradientContainerRef}
               tableContainerRef={tableContainerRef}

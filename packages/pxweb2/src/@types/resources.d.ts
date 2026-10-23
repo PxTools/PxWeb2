@@ -165,7 +165,7 @@ export default interface Resources {
             };
             warnings: {
               multiple_units: {
-                description: 'The line chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the line chart.';
+                description: 'Different units are selected in the filter. These cannot be displayed in the same line chart.';
                 title: 'The line chart cannot be displayed';
               };
             };
@@ -208,40 +208,40 @@ export default interface Resources {
           };
           customize: {
             auto_pivot: {
-              aria_label: 'Organize table automatically';
+              aria_label: 'Organise table automatically';
               description: 'Automatically arranges rows and columns for a clearer table';
               screen_reader_announcement: 'Table organised after {{table_heading}}';
-              title: 'Organize table automatically';
+              title: 'Organise table automatically';
             };
             change_order: {
               description: 'Description text...';
               title: 'Change order';
+            };
+            manual_pivoting: {
+              description: 'Manually arrange rows and columns to choose what is displayed where in the table';
+              manual_pivoting_modal: {
+                cancel_button: 'Cancel';
+                confirm_button: 'Save';
+                dialog_opened: 'Manual table arrangement opened. Rows and columns can be rearranged.';
+                emty_list: 'Drag or move items here';
+                header: 'Rearrange table on your own';
+                header_title: 'Columns';
+                info_text: 'Choose what is displayed where in the table by moving items between rows and columns and rearranging them.';
+                item_dropped: '{{item}} dropped in {{group}}.';
+                item_moved: '{{item}} moved to position {{position}} in {{group}}.';
+                item_selected: '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.';
+                keyboard_instructions: 'Press Space or Enter to pick up an item. Use arrow keys to move it, then press Enter to drop. Press Escape to cancel.';
+                label: 'Organise table manually';
+                move_cancelled: '{{item}} move cancelled.';
+                stub_title: 'Rows';
+              };
+              title: 'Organise table manually';
             };
             pivot: {
               aria_label: 'Rotate table clockwise';
               description: '';
               screen_reader_announcement: 'Table rotated after {{first_variables}} and {{last_variable}}';
               title: 'Rotate table';
-            };
-            manual_pivoting: {
-              description: 'Sort rows and columns yourself to choose what is displayed where in the table';
-              title: 'Organise table manually';
-              manual_pivoting_modal: {
-                label: 'Organise table manually';
-                header: 'Rearrange table manually';
-                info_text: 'Choose what is displayed where in the table by moving items between rows and columns and rearranging them';
-                stub_title: 'Stub';
-                header_title: 'Header';
-                cancel_button: 'Cancel';
-                confirm_button: 'Save';
-                emty_list: 'Drag or move items here';
-                dialog_opened: 'Manual table arrangement opened. Rows and columns can be rearranged.';
-                keyboard_instructions: 'Press Space or Enter to pick up an item. Use arrow keys to move it, then press Enter to drop. Press Escape to cancel.';
-                item_selected: '{{item}} selected. Use arrow keys to move, Enter to drop, Escape to cancel.';
-                item_moved: '{{item}} moved to position {{position}} in {{group}}.';
-                item_dropped: '{{item}} dropped in {{group}}.';
-                move_cancelled: '{{item}} move cancelled.';
-              };
             };
             title: 'Customise';
           };
@@ -275,7 +275,9 @@ export default interface Resources {
               html: 'HTML (.html)';
               jsonstat2: 'JSON-stat2 (.json)';
               parquet: 'Parquet (.parquet)';
+              png: 'Chart (.png)';
               px: 'Px-file (.px)';
+              svg: 'Chart (.svg)';
             };
             loading_announcement: 'File is still being processed. Please wait.';
             title: 'Download as file';
@@ -342,6 +344,9 @@ export default interface Resources {
           };
         };
         view: {
+          barchart: {
+            title: 'Bar chart';
+          };
           linechart: {
             title: 'Line chart';
           };

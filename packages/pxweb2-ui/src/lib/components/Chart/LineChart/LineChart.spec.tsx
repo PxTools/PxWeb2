@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
 import { LineChart, LegendToggleButton } from './LineChart';
+import { CartesianChart } from '../CartesianChart';
 import {
   downloadChartImage,
   exportPngFromSvgChart,
@@ -17,6 +18,7 @@ import {
 import {
   getChartCssVariables,
   getAdaptiveYAxisInterval,
+  getAdaptiveYAxisMin,
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
@@ -307,14 +309,57 @@ describe('LineChart', () => {
     });
     expect(option.tooltip).toMatchObject({
       trigger: 'axis',
-      extraCssText:
-        'max-width:370px;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;',
+      className: expect.any(String),
     });
     expect(option.series).toEqual([
       expect.objectContaining({ emphasis: { focus: 'series' } }),
       expect.objectContaining({ emphasis: { focus: 'series' } }),
       expect.objectContaining({ emphasis: { focus: 'series' } }),
     ]);
+  });
+
+  it('starts the bar chart y-axis at zero when all values are positive', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [{ name: '2024', men: 10, women: 12 }],
+    });
+
+    render(
+      <CartesianChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+        seriesType="bar"
+        getTooltipSymbolSvg={() => ''}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.yAxis).toMatchObject({ min: 0 });
+    expect(option.yAxis).not.toHaveProperty('breaks');
+  });
+
+  it('uses the adaptive y-axis minimum for bar charts with negative values', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [{ name: '2024', men: -10, women: 12 }],
+    });
+
+    render(
+      <CartesianChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+        seriesType="bar"
+        getTooltipSymbolSvg={() => ''}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.yAxis).toMatchObject({ min: getAdaptiveYAxisMin });
+    expect(option.yAxis).not.toHaveProperty('breaks');
   });
 
   it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
@@ -519,13 +564,64 @@ describe('LineChart', () => {
       },
     ]);
 
-    expect(html).toContain(
-      '<div style="font-family:PxWeb-font, sans-serif"><div style="margin-bottom:4px;">2024</div>',
-    );
+    expect(html).toContain('2024');
     expect(html).toContain('Women: <strong>12</strong>');
     expect(html).not.toContain('Men: <strong>10</strong>');
+    expect(html).not.toContain('style=');
     expect(html).toContain('fill="#ff0000"');
     expect(html).toContain('<rect');
+  });
+
+  it('renders the ECharts arrow shape for the sixth line series in the tooltip', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    const arrowSeries = [
+      ...mockDataset.series,
+      { key: 'series3', name: 'Series 3' },
+      { key: 'series4', name: 'Series 4' },
+      { key: 'series5', name: 'Series 5' },
+    ];
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      series: arrowSeries,
+    });
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
+    });
+
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
+
+    const mouseOverHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mouseover',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseOverHandler({ componentType: 'series', seriesIndex: 5 });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const formatter = getTooltipFormatter(option);
+    const html = formatter?.([
+      {
+        axisValueLabel: '2024',
+        dataIndex: 0,
+        seriesIndex: 5,
+        seriesName: 'Series 5',
+        color: '#ff0000',
+        data: {},
+      },
+    ]);
+
+    expect(html).toContain(
+      '<path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="#ff0000"',
+    );
   });
 
   it('uses formatted values in the tooltip', () => {

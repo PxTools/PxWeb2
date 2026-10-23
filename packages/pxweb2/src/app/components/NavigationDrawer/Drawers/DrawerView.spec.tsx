@@ -115,7 +115,7 @@ describe('DrawerView', () => {
     );
 
     expect(screen.getByTestId('content-box')).toBeInTheDocument();
-    expect(screen.getAllByTestId('action-item')).toHaveLength(2);
+    expect(screen.getAllByTestId('action-item')).toHaveLength(3);
     expect(screen.queryByTestId('local-alert')).not.toBeInTheDocument();
   });
 
