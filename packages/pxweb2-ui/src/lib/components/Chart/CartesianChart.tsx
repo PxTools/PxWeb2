@@ -112,6 +112,7 @@ export function CartesianChart({
     screenSize === 'medium' ||
     screenSize === 'small' ||
     screenSize === 'xsmall';
+  const isSmallScreen = screenSize === 'small' || screenSize === 'xsmall';
 
   const xAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
@@ -242,7 +243,7 @@ export function CartesianChart({
         top: TOP_CHART_PADDING,
         height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
-        left: '0',
+        left: isSmallScreen ? 48 : '0',
         right: '0',
         //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
@@ -397,18 +398,19 @@ export function CartesianChart({
     dataset,
     seriesType,
     resolvedColors,
+    screenSize,
+    xAxisLabelsHeight,
     chartTitle,
     chartSourcePart1,
     staticTitle,
-    screenSize,
     wrappedXAxisName,
-    wrappedYAxisName,
     xAxisLabelConfig.lineHeight,
     xAxisLabelConfig.formatter,
-    xAxisLabelsHeight,
+    wrappedYAxisName,
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
+    isSmallScreen,
     isMediumOrSmallerScreen,
     getTooltipSymbolSvg,
   ]);
