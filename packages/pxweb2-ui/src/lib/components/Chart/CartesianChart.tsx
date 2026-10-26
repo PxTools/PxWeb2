@@ -241,7 +241,7 @@ export function CartesianChart({
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        height: gridHeight,
+        height: isSmallScreen ? gridHeight - 24 : gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: isSmallScreen ? 24 : '0',
         right: isSmallScreen ? 24 : '0',
