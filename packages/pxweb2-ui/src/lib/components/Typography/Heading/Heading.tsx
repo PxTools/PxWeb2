@@ -4,14 +4,14 @@ import cl from 'clsx';
 import classes from './Heading.module.scss';
 
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
-  level?: '1' | '2' | '3' | '4' | '5' | '6';
-  align?: 'start' | 'center' | 'end';
-  textcolor?: 'default' | 'subtle';
-  spacing?: boolean;
-  children: string | React.ReactNode;
-  className?: string;
-  as?: React.ElementType;
+  readonly size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
+  readonly level?: '1' | '2' | '3' | '4' | '5' | '6';
+  readonly align?: 'start' | 'center' | 'end';
+  readonly textcolor?: 'default' | 'subtle';
+  readonly spacing?: boolean;
+  readonly children: string | React.ReactNode;
+  readonly className?: string;
+  readonly as?: React.ElementType;
 }
 
 export function Heading({
@@ -24,7 +24,7 @@ export function Heading({
   className = '',
   as,
   ...rest
-}: HeadingProps) {
+}: Readonly<HeadingProps>) {
   const Component = as ?? (`h${level}` as React.ElementType);
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
