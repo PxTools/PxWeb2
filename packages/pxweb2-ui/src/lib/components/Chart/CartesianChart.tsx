@@ -243,8 +243,8 @@ export function CartesianChart({
         top: TOP_CHART_PADDING,
         height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
-        left: isSmallScreen ? 48 : '0',
-        right: '0',
+        left: isSmallScreen ? 24 : '0',
+        right: isSmallScreen ? 24 : '0',
         //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
         // 'all' keeps the axis names inside the grid rect
