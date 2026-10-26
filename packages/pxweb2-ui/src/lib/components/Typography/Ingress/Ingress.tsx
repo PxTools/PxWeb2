@@ -3,11 +3,11 @@ import classes from './Ingress.module.scss';
 import React from 'react';
 
 export interface IngressProps extends React.HTMLAttributes<HTMLParagraphElement> {
-  children: React.ReactNode;
-  spacing?: boolean;
-  align?: 'start' | 'center' | 'end';
-  textcolor?: 'default' | 'subtle';
-  weight?: 'regular' | 'bold';
+  readonly children: React.ReactNode;
+  readonly spacing?: boolean;
+  readonly align?: 'start' | 'center' | 'end';
+  readonly textcolor?: 'default' | 'subtle';
+  readonly weight?: 'regular' | 'bold';
 }
 
 export function Ingress({
@@ -18,7 +18,7 @@ export function Ingress({
   children,
   className = '',
   ...rest
-}: IngressProps) {
+}: Readonly<IngressProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
 
   return (
