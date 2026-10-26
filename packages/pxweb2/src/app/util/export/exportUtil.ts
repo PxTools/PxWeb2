@@ -8,6 +8,7 @@ import {
 } from '@pxweb2/pxweb2-api-client';
 import { downloadChartImage, type ChartInstance } from '@pxweb2/pxweb2-ui';
 import type { FileOutputFormatType } from '../../constants/outputFormats';
+import type { ViewMode } from '../../pages/TableViewer/Utils/tableViewerHelper';
 
 export type TimeFilter = 'from' | 'top' | 'selected';
 
@@ -237,13 +238,17 @@ export function getTimestamp(): string {
  * The URL will include the base URL, current path, and query parameters.
  *
  * @param {string} id - The ID of the saved query.
+ * @param {ViewMode} viewMode - The current view mode to preserve in the URL.
  * @returns {string} - The complete URL for the saved query.
  */
-export function createSavedQueryURL(id: string): string {
+export function createSavedQueryURL(id: string, viewMode: ViewMode): string {
   const baseUrl = window.location.origin;
   const path = window.location.pathname;
   const queryParams = new URLSearchParams({
     sq: id,
   });
+  if (viewMode !== 'table') {
+    queryParams.set('view', viewMode);
+  }
   return `${baseUrl}${path}?${queryParams.toString()}`;
 }
