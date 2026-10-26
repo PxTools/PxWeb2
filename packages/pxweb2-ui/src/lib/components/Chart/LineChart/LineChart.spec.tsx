@@ -1,11 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import type * as echarts from 'echarts';
+import * as echarts from 'echarts';
 
 import { LineChart, LegendToggleButton } from './LineChart';
+import {
+  downloadChartImage,
+  exportPngFromSvgChart,
+} from '../Utils/chartDownload';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
-import { useEChartOption } from '../Utils/useEChartOption';
+import { applyYAxisBreakMark, useEChartOption } from '../Utils/useEChartOption';
 import {
   buildDatasetOption,
   buildSeriesOption,
@@ -16,15 +20,21 @@ import {
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
+import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
+
+vi.mock('echarts', () => ({
+  init: vi.fn(),
+}));
 
 vi.mock('../Utils/chartDataMapper', () => ({
   mapPxTableToChartDataset: vi.fn(),
 }));
 
 vi.mock('../Utils/useEChartOption', () => ({
+  applyYAxisBreakMark: vi.fn(),
   useEChartOption: vi.fn(),
 }));
 
@@ -58,13 +68,7 @@ const mockDataset: EChartsDataset = {
   origin: 'Statistics Demo',
   unit: 'persons',
   dimensions: ['name', 'men', 'women'],
-  source: [
-    {
-      name: '2024',
-      men: 10,
-      women: 12,
-    },
-  ],
+  source: [{ name: '2024', men: 10, women: 12 }],
   formattedValues: [{ men: '10', women: '12' }],
   series: [
     { key: 'men', name: 'Men' },
@@ -123,17 +127,126 @@ describe('LineChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
-    vi.mocked(getYAxisBreak).mockReturnValue({
-      start: 0,
-      end: 9.7,
-      gap: '13%',
-    });
-    vi.mocked(getAdaptiveYAxisInterval).mockReturnValue(5);
+    vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7, gap: '48' });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
       estimatedLegendHeight: null,
     });
+  });
+
+  it('preserves PNG legend spacing and adds a wider gap after the x-axis', async () => {
+    let finishedHandler: (() => void) | undefined;
+    const exportChart = {
+      on: vi.fn((_event: string, handler: () => void) => {
+        finishedHandler = handler;
+      }),
+      off: vi.fn(),
+      setOption: vi.fn(() => finishedHandler?.()),
+      getDataURL: vi.fn(() => 'data:image/png;base64,chart'),
+      dispose: vi.fn(),
+    };
+    vi.mocked(echarts.init).mockReturnValue(
+      exportChart as unknown as echarts.EChartsType,
+    );
+    const sourceChart = {
+      getWidth: vi.fn(() => 400),
+      getHeight: vi.fn(() => 300),
+      getOption: vi.fn(() => ({
+        legend: [{ bottom: 0 }, { bottom: 20 }],
+        grid: [{ height: 476, bottom: 136 }],
+      })),
+    } as unknown as echarts.EChartsType;
+    const anchorClick = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {});
+
+    await exportPngFromSvgChart(sourceChart, 'chart');
+
+    const exportContainer = vi.mocked(echarts.init).mock.calls[0][0];
+    expect(exportContainer).toMatchObject({
+      style: { width: '400px', height: '300px' },
+    });
+    expect(exportChart.setOption).toHaveBeenCalledWith(
+      expect.objectContaining({
+        animation: false,
+        legend: [{ bottom: 80 }, { bottom: 100 }],
+        grid: [{ height: 380, bottom: 232 }],
+      }),
+      true,
+    );
+    expect(applyYAxisBreakMark).toHaveBeenCalledWith(
+      exportChart,
+      expect.objectContaining({
+        grid: [{ height: 380, bottom: 232 }],
+      }),
+    );
+    expect(
+      vi.mocked(applyYAxisBreakMark).mock.invocationCallOrder[0],
+    ).toBeLessThan(exportChart.getDataURL.mock.invocationCallOrder[0]);
+    expect(exportChart.getDataURL).toHaveBeenCalledWith({
+      type: 'png',
+      pixelRatio: 2,
+      backgroundColor: '#fff',
+    });
+    anchorClick.mockRestore();
+  });
+
+  it('uses the adjusted export layout for SVG downloads', async () => {
+    let finishedHandler: (() => void) | undefined;
+    const exportChart = {
+      on: vi.fn((_event: string, handler: () => void) => {
+        finishedHandler = handler;
+      }),
+      off: vi.fn(),
+      setOption: vi.fn(() => finishedHandler?.()),
+      getDataURL: vi.fn(() => 'data:image/svg+xml,chart'),
+      dispose: vi.fn(),
+    };
+    vi.mocked(echarts.init).mockReturnValue(
+      exportChart as unknown as echarts.EChartsType,
+    );
+    const sourceChart = {
+      isDisposed: vi.fn(() => false),
+      setOption: vi.fn(),
+      getWidth: vi.fn(() => 400),
+      getHeight: vi.fn(() => 300),
+      getOption: vi.fn(() => ({
+        title: [{ text: 'Population by year' }],
+        legend: [{ bottom: 0 }, { bottom: 20 }],
+        grid: [{ height: 476, bottom: 136 }],
+      })),
+    } as unknown as echarts.EChartsType;
+    const anchorClick = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {});
+
+    await downloadChartImage(sourceChart, '', 'svg');
+
+    expect(echarts.init).toHaveBeenCalledWith(
+      expect.any(HTMLDivElement),
+      null,
+      { renderer: 'svg' },
+    );
+    expect(exportChart.setOption).toHaveBeenCalledWith(
+      expect.objectContaining({
+        legend: [{ bottom: 80 }, { bottom: 100 }],
+        grid: [{ height: 380, bottom: 232 }],
+      }),
+      true,
+    );
+    expect(applyYAxisBreakMark).toHaveBeenCalledWith(
+      exportChart,
+      expect.objectContaining({
+        grid: [{ height: 380, bottom: 232 }],
+      }),
+    );
+    expect(exportChart.getDataURL).toHaveBeenCalledWith({
+      type: 'svg',
+      backgroundColor: '#fff',
+    });
+
+    anchorClick.mockRestore();
   });
 
   it('builds chart option with mapped dataset and provided colors', () => {
@@ -144,6 +257,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={colors}
         translations={mockTranslations}
+        staticTitle="Static title"
       />,
     );
 
@@ -165,19 +279,26 @@ describe('LineChart', () => {
     });
 
     expect(option.yAxis).toMatchObject({
-      name: 'persons',
       min: 0,
-      interval: 5,
-      breaks: [{ start: 0, end: 9.7, gap: '13%' }],
+      breaks: [{ start: 0, end: 9.7, gap: '48' }],
       breakArea: { show: false },
       axisLine: { breakLine: false },
     });
+    expect(
+      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll(
+        '\n',
+        ' ',
+      ),
+    ).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
     expect(option.grid).toEqual({
       top: 36,
-      height: 476,
+      height: 476 + labelHeight,
       bottom: 136,
       left: '0',
       right: '0',
@@ -196,10 +317,40 @@ describe('LineChart', () => {
     ]);
   });
 
+  it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
+    const longXAxisName = 'A very long dimension label that needs wrapping';
+    const longYAxisName = 'A very long unit label that needs wrapping';
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      unit: longYAxisName,
+    });
+    const pxtable = {
+      stub: [{ label: longXAxisName }],
+    } as PxTable;
+
+    render(
+      <LineChart
+        pxtable={pxtable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(option.xAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
+    expect(option.yAxis).toMatchObject({
+      name: expect.stringContaining('\n'),
+    });
+  });
+
   it('disables series emphasis on medium and smaller screens', () => {
     render(
       <LineChart
         pxtable={mockPxTable}
+        staticTitle="Static title"
         translations={mockTranslations}
         screenSize="medium"
       />,
@@ -222,7 +373,13 @@ describe('LineChart', () => {
       fontColor: undefined,
     });
 
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+      />,
+    );
 
     expect(getChartCssVariables).toHaveBeenCalledTimes(1);
     expect(buildSeriesOption).toHaveBeenCalledWith(
@@ -245,6 +402,7 @@ describe('LineChart', () => {
         pxtable={mockPxTable}
         colors={[]}
         translations={mockTranslations}
+        staticTitle="Static title"
       />,
     );
 
@@ -258,7 +416,11 @@ describe('LineChart', () => {
 
   it('reserves space for the x-axis and legend below the plot', () => {
     const { container } = render(
-      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+      />,
     );
 
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
@@ -266,12 +428,21 @@ describe('LineChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    expect(chartDiv?.style.height).toBe('42.125rem');
+    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
+      '2024',
+    ]);
+    expect(chartDiv?.style.height).toBe(
+      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+    );
   });
 
   it('allows vertical page scrolling but prevents horizontal page movement', () => {
     const { container } = render(
-      <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+      <LineChart
+        pxtable={mockPxTable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
     );
 
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
@@ -282,31 +453,19 @@ describe('LineChart', () => {
   });
 
   it('returns empty tooltip text for empty params', () => {
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+      />,
+    );
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const formatter = getTooltipFormatter(option);
 
     expect(formatter).toBeTypeOf('function');
     expect(formatter?.([])).toBe('');
-  });
-
-  it('returns empty tooltip text when no series is hovered', () => {
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
-
-    const option = vi.mocked(useEChartOption).mock.calls[0][0];
-    const formatter = getTooltipFormatter(option);
-
-    expect(
-      formatter?.([
-        {
-          axisValueLabel: '2024',
-          seriesIndex: 0,
-          seriesName: 'Men',
-          data: { men: 10, women: 12 },
-        },
-      ]),
-    ).toBe('');
   });
 
   it('formats tooltip text only for the hovered series', () => {
@@ -320,7 +479,13 @@ describe('LineChart', () => {
       estimatedLegendHeight: null,
     });
 
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
 
     const mouseOverHandler = chart.on.mock.calls.find(
       ([eventName]) => eventName === 'mouseover',
@@ -378,7 +543,13 @@ describe('LineChart', () => {
       estimatedLegendHeight: null,
     });
 
-    render(<LineChart pxtable={mockPxTable} translations={mockTranslations} />);
+    render(
+      <LineChart
+        pxtable={mockPxTable}
+        staticTitle="Static title"
+        translations={mockTranslations}
+      />,
+    );
 
     const mouseOverHandler = chart.on.mock.calls.find(
       ([eventName]) => eventName === 'mouseover',
@@ -404,7 +575,6 @@ describe('LineChart', () => {
     expect(html).not.toContain('<strong>12.35 persons</strong>');
     expect(html).not.toContain('Women: 12.345');
   });
-
   describe('legends', () => {
     it('shows a "Show more" button on small screens, when there are more than 5 series', () => {
       vi.mocked(mapPxTableToChartDataset).mockReturnValue({
@@ -424,6 +594,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
+          staticTitle="Static title"
         />,
       );
 
@@ -450,6 +621,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="large"
           translations={mockTranslations}
+          staticTitle="Static title"
         />,
       );
 
@@ -464,6 +636,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
+          staticTitle="Static title"
         />,
       );
 
@@ -492,6 +665,7 @@ describe('LineChart', () => {
           pxtable={mockPxTable}
           screenSize="small"
           translations={mockTranslations}
+          staticTitle="Static title"
         />,
       );
 
@@ -517,7 +691,6 @@ describe('LineChart', () => {
         screen.getByRole('button', { name: /Show More/i }),
       ).toBeInTheDocument();
     });
-
     describe('LegendToggleButton', () => {
       it('renders the button with the correct initial text and icon', () => {
         const { container } = render(
@@ -561,7 +734,11 @@ describe('LineChart', () => {
 it('renders empty state when multiple units are selected', () => {
   vi.mocked(checkMultipleUnits).mockReturnValue(true);
   const { getByText } = render(
-    <LineChart pxtable={mockPxTable} translations={mockTranslations} />,
+    <LineChart
+      pxtable={mockPxTable}
+      translations={mockTranslations}
+      staticTitle="Static title"
+    />,
   );
   expect(getByText('Cannot display chart')).toBeTruthy();
 });

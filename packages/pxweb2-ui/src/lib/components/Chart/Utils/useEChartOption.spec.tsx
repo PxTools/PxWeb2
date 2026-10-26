@@ -128,6 +128,38 @@ describe('useEChartOption', () => {
     );
   });
 
+  it('preserves axis name text styles supplied by the chart option', () => {
+    const chartMock = createChartMock();
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+
+    const option: EChartsOption = {
+      xAxis: [{ nameTextStyle: { color: '#00ff00' } }],
+      yAxis: { nameTextStyle: { color: '#ff0000' } },
+    };
+
+    render(<HookHost option={option} />);
+
+    expect(chartMock.setOption).toHaveBeenCalledWith(
+      expect.objectContaining({
+        xAxis: [
+          expect.objectContaining({
+            nameTextStyle: expect.objectContaining({
+              color: '#00ff00',
+              align: 'left',
+            }),
+          }),
+        ],
+        yAxis: expect.objectContaining({
+          nameTextStyle: expect.objectContaining({
+            color: '#ff0000',
+            align: 'left',
+          }),
+        }),
+      }),
+      { replaceMerge: ['legend'] },
+    );
+  });
+
   it('applies wrapped title style when option has a single title object', () => {
     const chartMock = createChartMock(400);
     vi.mocked(echarts.init).mockReturnValue(chartMock);
@@ -149,6 +181,7 @@ describe('useEChartOption', () => {
             color: '#162327',
           },
         },
+
         tooltip: {
           textStyle: {
             fontFamily: 'PxWeb-font, sans-serif',
@@ -182,6 +215,11 @@ describe('useEChartOption', () => {
             overflow: 'break',
             width: 368,
             align: 'center',
+          },
+          subtextStyle: {
+            fontFamily: 'PxWeb-font, sans-serif',
+            fontSize: '0.875rem',
+            color: '#162327',
           },
         },
         yAxis: {
@@ -225,10 +263,20 @@ describe('useEChartOption', () => {
               fontSize: '0.875rem',
               color: '#162327',
             },
+            subtextStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
           },
           {
             text: 'Title 2',
             textStyle: {
+              fontFamily: 'PxWeb-font, sans-serif',
+              fontSize: '0.875rem',
+              color: '#162327',
+            },
+            subtextStyle: {
               fontFamily: 'PxWeb-font, sans-serif',
               fontSize: '0.875rem',
               color: '#162327',

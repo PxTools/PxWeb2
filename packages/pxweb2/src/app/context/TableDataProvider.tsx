@@ -14,6 +14,7 @@ import {
 import {
   PxTable,
   PxTableMetadata,
+  ChartInstance,
   getPxTableData,
   setPxTableData,
 } from '@pxweb2/pxweb2-ui';
@@ -54,9 +55,16 @@ export interface TableDataContextType {
   pivotToTable: (isMobile: boolean) => void;
   pivotToChart: () => void;
   pivot: (type: PivotType) => void;
+  pivotManual: (
+    heading: string[],
+    stub: string[],
+    isMobileMode: boolean,
+  ) => void;
   buildTableTitle: () => TableTitlePartsType;
   isFadingTable: boolean;
   setIsFadingTable: (value: boolean) => void;
+  chart: ChartInstance | null;
+  setChart: (chart: ChartInstance | null) => void;
 }
 
 interface TableDataProviderProps {
@@ -88,6 +96,9 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   pivot: () => {
     // No-op: useTableData hook prevents this from being called
   },
+  pivotManual: () => {
+    // No-op: useTableData hook prevents this from being called
+  },
   buildTableTitle: () => ({
     contentText: '',
     firstTitlePart: '',
@@ -96,6 +107,10 @@ const TableDataContext = createContext<TableDataContextType | undefined>({
   isFadingTable: false,
   setIsFadingTable: () => {
     // No-op
+  },
+  chart: null,
+  setChart: () => {
+    // No-op: useTableData hook prevents this from being called
   },
 });
 
@@ -138,6 +153,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const [isFadingTable, setIsFadingTable] = useState(false);
+  const [chart, setChart] = useState<ChartInstance | null>(null);
   const variables = useVariables();
 
   useEffect(() => {
@@ -1370,6 +1386,37 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Applies a manual pivot order from the edit dialog.
+   */
+  const pivotManual = React.useCallback(
+    (heading: string[], stub: string[], isMobileMode: boolean): void => {
+      if (data?.heading === undefined || data?.stub === undefined) {
+        return;
+      }
+
+      const tmpTable = copyPxTableWithoutData(data);
+      const nextHeading = structuredClone(heading);
+      const nextStub = structuredClone(stub);
+
+      pivotTable(tmpTable, nextStub, nextHeading);
+
+      // Reassemble table data
+      tmpTable.data = data.data;
+
+      setData(tmpTable);
+
+      if (isMobileMode) {
+        setStubMobile(nextStub);
+        setHeadingMobile(nextHeading);
+      } else {
+        setStubDesktop(nextStub);
+        setHeadingDesktop(nextHeading);
+      }
+    },
+    [data],
+  );
+
+  /**
    * Pivots the table according to the stub- and heading order.
    */
   function pivotTable(pxTable: PxTable, stub: string[], heading: string[]) {
@@ -1421,10 +1468,13 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToTable,
       pivotToChart,
       pivot,
+      pivotManual,
       buildTableTitle,
       isInitialized,
       isFadingTable,
       setIsFadingTable,
+      chart,
+      setChart,
     }),
     [
       data,
@@ -1435,10 +1485,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       pivotToTable,
       pivotToChart,
       pivot,
+      pivotManual,
       buildTableTitle,
       isInitialized,
       isFadingTable,
       setIsFadingTable,
+      chart,
     ],
   );
 

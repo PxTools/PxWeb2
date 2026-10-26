@@ -74,7 +74,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
         axisLabel: { ...axis.axisLabel, ...textStyle },
       }))
     : {
@@ -86,7 +86,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: {
+          ...textStyle,
+          align: 'left',
+          ...option.xAxis?.nameTextStyle,
+        },
         axisLabel: {
           ...option.xAxis?.axisLabel,
           ...textStyle,
@@ -100,7 +104,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
           lineStyle: { ...axis.axisLine?.lineStyle, ...axisColor },
         },
         axisLabel: { ...axis.axisLabel, ...textStyle },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
       }))
     : {
         ...option.yAxis,
@@ -111,7 +115,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
             ...axisColor,
           },
         },
-        nameTextStyle: { ...textStyle, align: 'left' },
+        nameTextStyle: {
+          ...textStyle,
+          align: 'left',
+          ...option.yAxis?.nameTextStyle,
+        },
         axisLabel: {
           ...option.yAxis?.axisLabel,
           ...textStyle,
@@ -131,10 +139,12 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
     ? option.title.map((titleItem) => ({
         ...titleItem,
         textStyle: { ...titleItem.textStyle, ...textStyle },
+        subtextStyle: { ...titleItem.subtextStyle, ...textStyle },
       }))
     : {
         ...option.title,
         textStyle: { ...option.title?.textStyle, ...textStyle },
+        subtextStyle: { ...option.title?.subtextStyle, ...textStyle },
       };
 
   const tooltip = Array.isArray(option.tooltip)
@@ -186,7 +196,7 @@ function getYAxisBreakRange(
 
 // Draws a compact "//" mark directly on the y-axis at the break, instead of relying on
 // ECharts' default zigzag band which stretches across the whole chart width.
-function applyYAxisBreakMark(
+export function applyYAxisBreakMark(
   chart: echarts.EChartsType,
   option: echarts.EChartsOption,
 ) {
