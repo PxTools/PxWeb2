@@ -69,7 +69,11 @@
   overflow-x: hidden;
   scrollbar-width: 3px;
   z-index: 10;
-  word-break: break-word;
+
+  // Keep word-break and overflow-wrap paired:
+  // together these replace deprecated word-break: break-word
+  word-break: normal;
+  overflow-wrap: anywhere;
 
   // Set container height to show 11.5 items. They are 44px tall.
   max-height: calc((44px * 11.5));

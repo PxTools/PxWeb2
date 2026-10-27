@@ -6,13 +6,13 @@ export interface LabelProps
   extends
     React.LabelHTMLAttributes<HTMLLabelElement | HTMLLegendElement>,
     React.HTMLAttributes<HTMLLabelElement | HTMLLegendElement> {
-  size?: 'medium' | 'small';
-  textcolor?: 'default' | 'subtle' | 'inherit';
-  visuallyHidden?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  forID?: string;
-  as?: React.ElementType;
+  readonly size?: 'medium' | 'small';
+  readonly textcolor?: 'default' | 'subtle' | 'inherit';
+  readonly visuallyHidden?: boolean;
+  readonly children?: React.ReactNode;
+  readonly className?: string;
+  readonly forID?: string;
+  readonly as?: React.ElementType;
 }
 
 export function Label({
@@ -24,7 +24,7 @@ export function Label({
   forID = '',
   as = 'label',
   ...rest
-}: LabelProps) {
+}: Readonly<LabelProps>) {
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const Component = as ?? ('label' as React.ElementType);
 

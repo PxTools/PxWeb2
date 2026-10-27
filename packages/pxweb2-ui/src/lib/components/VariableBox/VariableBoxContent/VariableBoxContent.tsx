@@ -605,11 +605,13 @@ export function VariableBoxContent({
   };
 
   //How many items should be sticky
-  const stickyTopValueCount = hasSevenOrMoreValues
-    ? 2
-    : hasTwoOrMoreValues
-      ? 1
-      : 0;
+  let stickyTopValueCount = 0;
+  if (hasTwoOrMoreValues) {
+    stickyTopValueCount = 1;
+  }
+  if (hasSevenOrMoreValues) {
+    stickyTopValueCount = 2;
+  }
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
@@ -634,8 +636,7 @@ export function VariableBoxContent({
   };
 
   // To override element styling added by Virtuoso when scrolling down
-
-  const TopItemListEmptyFragment = () => <></>;
+  const TopItemListEmptyFragment = () => null;
 
   //Set inital height to 44
   const [calcedHeight, setCalcedHeight] = useState(44);
@@ -756,8 +757,6 @@ export function VariableBoxContent({
           </div>
         </div>
       </div>
-
-      {/* TODO: Metadata Links are not implemented yet in the API. We have to wait for that to be done first. */}
     </div>
   );
 }

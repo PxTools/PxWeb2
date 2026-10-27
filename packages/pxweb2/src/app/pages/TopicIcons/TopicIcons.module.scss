@@ -31,5 +31,9 @@
   margin-top: 1rem;
   font-size: 1rem;
   text-align: center;
-  word-break: break-word;
+
+  // Keep word-break and overflow-wrap paired:
+  // together these replace deprecated word-break: break-word
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
