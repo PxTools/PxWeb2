@@ -87,6 +87,7 @@ const mockTranslations = {
 };
 
 const mockPxTable = {
+  metadata: { language: 'en' },
   stub: [{ label: 'Year' }],
 } as PxTable;
 
@@ -258,6 +259,7 @@ describe('LineChart', () => {
       <LineChart
         pxtable={mockPxTable}
         colors={colors}
+        numberFormatter={(value) => `formatted ${value}`}
         translations={mockTranslations}
         staticTitle="Static title"
       />,
@@ -286,12 +288,12 @@ describe('LineChart', () => {
       breakArea: { show: false },
       axisLine: { breakLine: false },
     });
+    const yAxis = option.yAxis as echarts.YAXisComponentOption;
+    expect(yAxis.axisLabel?.formatter).toBeTypeOf('function');
     expect(
-      (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll(
-        '\n',
-        ' ',
-      ),
-    ).toBe(mockDataset.unit);
+      (yAxis.axisLabel?.formatter as (value: number) => string)(1234),
+    ).toBe('formatted 1234');
+    expect(yAxis.name?.replaceAll('\n', ' ')).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({
       axisLine: { onZero: false },
     });
@@ -316,6 +318,33 @@ describe('LineChart', () => {
       expect.objectContaining({ emphasis: { focus: 'series' } }),
       expect.objectContaining({ emphasis: { focus: 'series' } }),
     ]);
+  });
+
+  it('formats value-axis labels using the table language when no formatter is provided', () => {
+    const pxtable = {
+      ...mockPxTable,
+      metadata: { language: 'sv' },
+    } as PxTable;
+
+    render(
+      <LineChart
+        pxtable={pxtable}
+        staticTitle="Static title"
+        translations={{
+          showMore: mockTranslations.showMore,
+          showLess: mockTranslations.showLess,
+          emptyStateTitle: mockTranslations.emptyStateTitle,
+          emptyStateDescription: mockTranslations.emptyStateDescription,
+        }}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const yAxis = option.yAxis as echarts.YAXisComponentOption;
+    const formatter = yAxis.axisLabel?.formatter as
+      ((value: number) => string) | undefined;
+
+    expect(formatter?.(1234)).toBe(new Intl.NumberFormat('sv').format(1234));
   });
 
   it('starts the bar chart y-axis at zero when all values are positive', () => {
