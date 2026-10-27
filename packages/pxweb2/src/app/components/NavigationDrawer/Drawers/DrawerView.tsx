@@ -44,19 +44,6 @@ export function DrawerView() {
           </li>
           <li>
             <ActionItem
-              largeIconName="LineChart"
-              size="large"
-              label={t('presentation_page.side_menu.view.linechart.title')}
-              ariaLabel={t('presentation_page.side_menu.view.linechart.title')}
-              onClick={() => {
-                pivotToChart();
-                setViewMode('linechart');
-              }}
-              toggleState={selectedViewMode === 'linechart'}
-            />
-          </li>
-          <li>
-            <ActionItem
               largeIconName="BarChart"
               size="large"
               label={t('presentation_page.side_menu.view.barchart.title')}
@@ -66,6 +53,19 @@ export function DrawerView() {
                 setViewMode('barchart');
               }}
               toggleState={selectedViewMode === 'barchart'}
+            />
+          </li>
+          <li>
+            <ActionItem
+              largeIconName="LineChart"
+              size="large"
+              label={t('presentation_page.side_menu.view.linechart.title')}
+              ariaLabel={t('presentation_page.side_menu.view.linechart.title')}
+              onClick={() => {
+                pivotToChart();
+                setViewMode('linechart');
+              }}
+              toggleState={selectedViewMode === 'linechart'}
             />
           </li>
         </ul>
