@@ -326,8 +326,8 @@
         "line_chart": {
           "warnings": {
             "multiple_units": {
-              "title": "Linjediagrammet kan inte visas",
-              "description": "Olika enheter är valt i filtret. De kan inte visas i samma linjediagram."
+              "title": "Diagrammet kan inte visas",
+              "description": "Olika enheter är valt i filtret. De kan inte visas i samma diagram."
             }
           },
           "legend": {
