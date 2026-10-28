@@ -33,12 +33,18 @@ const getTranslations = (t: TFunction) => ({
 
 type LineChartWithTranslationsProps = Omit<
   ComponentProps<typeof LineChart>,
-  'translations'
+  'numberFormatter' | 'translations'
 >;
 
 const LineChartWithTranslations = (props: LineChartWithTranslationsProps) => {
   const { t } = useTranslation();
-  return <LineChart {...props} translations={getTranslations(t)} />;
+  return (
+    <LineChart
+      {...props}
+      numberFormatter={(value) => t('number.simple_number', { value })}
+      translations={getTranslations(t)}
+    />
+  );
 };
 
 type Story = StoryObj<typeof LineChartWithTranslations>;
