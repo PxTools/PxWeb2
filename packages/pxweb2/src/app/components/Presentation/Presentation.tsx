@@ -88,16 +88,16 @@ function PresentationView({
   const { screenSize } = useApp();
 
   const lineChartEmptyStateTitle = t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.title',
+    'presentation_page.main_content.chart.warnings.multiple_units.title',
   );
   const lineChartEmptyStateDescription = t(
-    'presentation_page.main_content.chart.line_chart.warnings.multiple_units.description',
+    'presentation_page.main_content.chart.warnings.multiple_units.description',
   );
   const showMoreText = t(
-    'presentation_page.main_content.chart.line_chart.legend.show_more',
+    'presentation_page.main_content.chart.legend.show_more',
   );
   const showLessText = t(
-    'presentation_page.main_content.chart.line_chart.legend.show_less',
+    'presentation_page.main_content.chart.legend.show_less',
   );
 
   return (
