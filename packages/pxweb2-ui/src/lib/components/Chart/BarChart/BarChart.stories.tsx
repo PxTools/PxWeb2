@@ -22,12 +22,12 @@ export const Default: Story = chartStoryArgs.Default;
 export const CssVariableFallbackColors: Story =
   chartStoryArgs.CssVariableFallbackColors;
 export const CustomColors: Story = chartStoryArgs.CustomColors;
-export const EmptyColorsArrayUsesFallback: Story =
-  chartStoryArgs.EmptyColorsArrayUsesFallback;
-export const ManySeries: Story = chartStoryArgs.ManySeries;
-export const SparseData: Story = chartStoryArgs.SparseData;
 export const ManySeriesOnLargeScreen: Story =
   chartStoryArgs.ManySeriesOnLargeScreen;
 export const ManySeriesOnSmallScreen: Story =
   chartStoryArgs.ManySeriesOnSmallScreen;
 export const LongLegendLabels: Story = chartStoryArgs.LongLegendLabels;
+export const EmptyColorsArrayUsesFallback: Story =
+  chartStoryArgs.EmptyColorsArrayUsesFallback;
+export const ManySeries: Story = chartStoryArgs.ManySeries;
+export const SparseData: Story = chartStoryArgs.SparseData;
