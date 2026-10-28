@@ -131,15 +131,23 @@ describe('getAdaptiveYAxisMin', () => {
 
 describe('getAdaptiveYAxisMax', () => {
   it('rounds up to a clean snap value for positive ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 100, max: 200 })).toBe(250);
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, false)).toBe(250);
+  });
+
+  it('uses zero as the minimum for non-negative ranges when zero-based', () => {
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, true)).toBe(300);
+  });
+
+  it('keeps negative minima when zero-based', () => {
+    expect(getAdaptiveYAxisMax({ min: -10, max: 12 }, true)).toBe(20);
   });
 
   it('adds headroom and rounds up for small decimal ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 0, max: 1 })).toBe(1.5);
+    expect(getAdaptiveYAxisMax({ min: 0, max: 1 }, false)).toBe(1.5);
   });
 
   it('works when min and max are equal', () => {
-    expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
+    expect(getAdaptiveYAxisMax({ min: 5, max: 5 }, false)).toBe(5.5);
   });
 });
 

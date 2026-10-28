@@ -213,6 +213,7 @@ export function CartesianChart({
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
+  const yAxisZeroBased = seriesType === 'bar';
   const yAxisMin =
     (seriesType === 'bar' &&
       yAxisDataExtent !== undefined &&
@@ -298,7 +299,7 @@ export function CartesianChart({
         },
         scale: false,
         min: yAxisMin,
-        max: getAdaptiveYAxisMax,
+        max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
         interval: yAxisInterval,
         ...(yAxisBreak
           ? {
@@ -400,6 +401,7 @@ export function CartesianChart({
     resolvedColors,
     screenSize,
     xAxisLabelsHeight,
+    isSmallScreen,
     chartTitle,
     chartSourcePart1,
     staticTitle,
@@ -410,8 +412,8 @@ export function CartesianChart({
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
-    isSmallScreen,
     isMediumOrSmallerScreen,
+    yAxisZeroBased,
     getTooltipSymbolSvg,
   ]);
 

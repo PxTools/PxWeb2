@@ -114,11 +114,15 @@ export function getAdaptiveYAxisMin(value: {
   return roundedMin;
 }
 
-export function getAdaptiveYAxisMax(value: {
-  min: number;
-  max: number;
-}): number {
-  const min = Number(value.min);
+export function getAdaptiveYAxisMax(
+  value: {
+    min: number;
+    max: number;
+  },
+  zeroBased: boolean,
+): number {
+  const valueMin = Number(value.min);
+  const min = zeroBased && valueMin >= 0 ? 0 : valueMin;
   const max = Number(value.max);
   const span = Math.max(max - min, 1);
   const pad = span * 0.03;
