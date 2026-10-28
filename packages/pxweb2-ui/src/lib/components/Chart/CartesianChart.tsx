@@ -125,10 +125,10 @@ export function CartesianChart({
   }, [colors]);
 
   const resolvedEmptyStateTitle =
-    translations.emptyStateTitle?.trim() || 'Cannot display chart';
+    translations.emptyStateTitle?.trim() || 'The chart cannot be displayed';
   const resolvedEmptyStateDescription =
     translations.emptyStateDescription?.trim() ||
-    `The ${seriesType} chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the ${seriesType} chart.`;
+    `Different units are selected in the filter. These cannot be displayed in the same chart.`;
   const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
     emptyStateSvgName && emptyStateSvgName.trim().length > 0
       ? emptyStateSvgName

@@ -326,8 +326,8 @@
         "line_chart": {
           "warnings": {
             "multiple_units": {
-              "title": "Linjediagrammet kan ikke vises",
-              "description": "Det er valgt ulike måleenheter i filteret. Disse kan ikke vises i samme linjediagram."
+              "title": "Diagrammet kan ikke vises",
+              "description": "Det er valgt ulike måleenheter i filteret. Disse kan ikke vises i samme diagram."
             }
           },
           "legend": {
