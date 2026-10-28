@@ -317,17 +317,15 @@
         }
       },
       "chart": {
-        "line_chart": {
-          "warnings": {
-            "multiple_units": {
-              "title": "لا يمكن عرض المخطط",
-              "description": "تم تحديد وحدات مختلفة في عامل التصفية. لا يمكن عرضها في المخطط نفسه."
-            }
-          },
-          "legend": {
-            "show_more": "أظهر المزيد",
-            "show_less": "أظهر أقل"
+        "warnings": {
+          "multiple_units": {
+            "title": "لا يمكن عرض المخطط",
+            "description": "تم تحديد وحدات مختلفة في عامل التصفية. لا يمكن عرضها في المخطط نفسه."
           }
+        },
+        "legend": {
+          "show_more": "أظهر المزيد",
+          "show_less": "أظهر أقل"
         }
       },
       "about_table": {
