@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import type { Meta } from '@storybook/react-vite';
 
 import type { ChartProps } from './CartesianChart';
 import { setPxTableData } from '../Table/Utils/cubeHelper';
@@ -30,6 +31,17 @@ export function createTranslatedChartStory(
     return <ChartComponent {...props} translations={getTranslations(t)} />;
   };
 }
+
+type ChartStoryDecorator = Exclude<
+  NonNullable<Meta['decorators']>,
+  readonly unknown[]
+>;
+
+export const chartStoryDecorator: ChartStoryDecorator = (StoryComponent) => (
+  <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+    <StoryComponent />
+  </div>
+);
 
 function createVariable(
   id: string,
