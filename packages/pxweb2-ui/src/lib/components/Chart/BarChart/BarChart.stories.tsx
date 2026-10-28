@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart } from './BarChart';
 import {
   chartStoryArgs,
+  chartStoryDecorator,
   createTranslatedChartStory,
 } from '../cartesianChartStoryUtils';
 
@@ -12,13 +13,7 @@ type Story = StoryObj<typeof BarChartWithTranslations>;
 const meta: Meta<typeof BarChartWithTranslations> = {
   component: BarChartWithTranslations,
   title: 'Components/Chart/BarChart',
-  decorators: [
-    (StoryComponent) => (
-      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-        <StoryComponent />
-      </div>
-    ),
-  ],
+  decorators: [chartStoryDecorator],
 };
 
 export default meta;
