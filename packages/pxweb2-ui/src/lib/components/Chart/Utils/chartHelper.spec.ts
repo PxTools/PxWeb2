@@ -155,6 +155,10 @@ describe('getAdaptiveYAxisInterval', () => {
   it('uses the same snap unit that adaptive min and max use', () => {
     expect(getAdaptiveYAxisInterval({ min: 100, max: 200 })).toBe(50);
   });
+
+  it('uses a regular interval for ranges containing negative values', () => {
+    expect(getAdaptiveYAxisInterval({ min: -1216, max: 7090 })).toBe(5000);
+  });
 });
 
 describe('getYAxisBreak', () => {

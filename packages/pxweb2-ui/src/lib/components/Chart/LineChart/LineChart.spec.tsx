@@ -362,6 +362,36 @@ describe('LineChart', () => {
     expect(option.yAxis).not.toHaveProperty('breaks');
   });
 
+  it('sets an adaptive y-axis interval for negative line-chart values', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [
+        { name: '2020', men: -1216, women: -262, total: 3498 },
+        { name: '2021', men: 4190, women: 7090, total: 0 },
+      ],
+    });
+    vi.mocked(getYAxisBreak).mockReturnValueOnce(undefined);
+    vi.mocked(getAdaptiveYAxisInterval).mockReturnValueOnce(5000);
+
+    render(
+      <CartesianChart
+        pxtable={mockPxTable}
+        translations={mockTranslations}
+        staticTitle="Static title"
+        seriesType="line"
+        getTooltipSymbolSvg={() => ''}
+      />,
+    );
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+
+    expect(getAdaptiveYAxisInterval).toHaveBeenCalledWith({
+      min: -1216,
+      max: 7090,
+    });
+    expect(option.yAxis).toMatchObject({ interval: 5000 });
+  });
+
   it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
     const longXAxisName = 'A very long dimension label that needs wrapping';
     const longYAxisName = 'A very long unit label that needs wrapping';

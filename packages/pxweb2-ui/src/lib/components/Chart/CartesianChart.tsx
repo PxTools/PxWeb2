@@ -184,7 +184,7 @@ export function CartesianChart({
   }, [breakValueAxis, yAxisDataExtent]);
 
   const yAxisInterval = useMemo(() => {
-    if (!yAxisBreak || !yAxisDataExtent) {
+    if (!yAxisDataExtent || (!yAxisBreak && yAxisDataExtent.min >= 0)) {
       return undefined;
     }
 
