@@ -552,27 +552,6 @@ function compareByLabelAsc(a: PathItem, b: PathItem): number {
   return 0;
 }
 
-/**
- * Returns the comparator used for a given tree depth.
- * Depth is 1-based at the root.
- * - Depth 1–3: compare by label ascending.
- * - Depth 4–5: compare by numeric sortCode ascending, then label ascending.
- * - Depth 6+: no comparator (original order preserved).
- *
- * @param depth - 1-based depth of the current level in the subject tree.
- * @returns A comparator function for PathItem or undefined to preserve order.
- */
-function comparatorForDepth(depth: number) {
-  if (depth <= 3) {
-    return compareByLabelAsc;
-  }
-
-  if (depth <= 5) {
-    return compareBySortCodeThenLabelAsc;
-  }
-
-  return undefined; // keep original order for deeper levels
-}
 
 /**
  * Returns a new subject tree sorted per level by a depth-aware comparator.
@@ -586,7 +565,7 @@ function comparatorForDepth(depth: number) {
  */
 export function sortSubjectTree(subjects: PathItem[]): PathItem[] {
   const sortRec = (nodes: PathItem[], depth: number): PathItem[] => {
-    const cmp = comparatorForDepth(depth);
+    const cmp = compareBySortCodeThenLabelAsc;
     const sorted = cmp ? nodes.slice().sort(cmp) : nodes.slice();
 
     return sorted.map((node) => ({
