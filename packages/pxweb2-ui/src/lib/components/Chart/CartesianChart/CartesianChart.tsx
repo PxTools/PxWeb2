@@ -3,19 +3,19 @@ import * as echarts from 'echarts';
 import cl from 'clsx';
 
 import styles from './CartesianChart.module.scss';
-import { Button } from '../Button/Button';
+import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
   buildSeriesOption,
-} from './Utils/chartOptionBuilder';
-import { getFallbackLegendHeight } from './Utils/chartLegendHelper';
-import { useEChartOption } from './Utils/useEChartOption';
+} from '../Utils/chartOptionBuilder';
+import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
+import { useEChartOption } from '../Utils/useEChartOption';
 import {
   createResponsiveXAxisLabelConfig,
   wrapAxisName,
-} from './Utils/chartAxisLabelHelper';
-import { useResponsivePixelsPerRem } from './Utils/useResponsivePixelsPerRem';
-import { mapPxTableToChartDataset } from './Utils/chartDataMapper';
+} from '../Utils/chartAxisLabelHelper';
+import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
+import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
   getAdaptiveYAxisMax,
@@ -23,11 +23,11 @@ import {
   getChartCssVariables,
   checkMultipleUnits,
   getYAxisBreak,
-} from './Utils/chartHelper';
-import EmptyState from '../EmptyState/EmptyState';
-import type { EmptyStateProps } from '../EmptyState/EmptyState';
-import type { PxTable } from '../../shared-types/pxTable';
-import type { ScreenSize } from '../../types/screenSize';
+} from '../Utils/chartHelper';
+import EmptyState from '../../EmptyState/EmptyState';
+import type { EmptyStateProps } from '../../EmptyState/EmptyState';
+import type { PxTable } from '../../../shared-types/pxTable';
+import type { ScreenSize } from '../../../types/screenSize';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information

@@ -5,7 +5,7 @@ import {
   chartStoryArgs,
   chartStoryDecorator,
   createTranslatedChartStory,
-} from '../cartesianChartStoryUtils';
+} from '../CartesianChart/cartesianChartStoryUtils';
 
 const LineChartWithTranslations = createTranslatedChartStory(LineChart);
 type Story = StoryObj<typeof LineChartWithTranslations>;
