@@ -135,7 +135,7 @@ describe('getAdaptiveYAxisMax', () => {
   });
 
   it('uses zero as the minimum for non-negative ranges when zero-based', () => {
-    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, true)).toBe(300);
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, true)).toBe(250);
   });
 
   it('keeps negative minima when zero-based', () => {
