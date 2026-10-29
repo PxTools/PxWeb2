@@ -552,7 +552,6 @@ function compareByLabelAsc(a: PathItem, b: PathItem): number {
   return 0;
 }
 
-
 /**
  * Returns a new subject tree sorted per level by a depth-aware comparator.
  * - Levels 1–3 are sorted by label ascending.
