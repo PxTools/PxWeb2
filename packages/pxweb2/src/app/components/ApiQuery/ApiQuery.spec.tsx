@@ -133,8 +133,12 @@ describe('ApiQuery', () => {
     const select = screen.getByTestId('api-query-select');
     expect(select).toHaveValue('jsonstat2');
     expect(screen.getAllByRole('option')).toHaveLength(5);
-    expect(screen.queryByRole('option', { name: /png/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('option', { name: /svg/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: /png/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('option', { name: /svg/i }),
+    ).not.toBeInTheDocument();
 
     expect(screen.getByText('GET URL')).toBeInTheDocument();
     expect(
