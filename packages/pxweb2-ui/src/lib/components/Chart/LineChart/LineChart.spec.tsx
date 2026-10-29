@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { LineChart } from './LineChart';
-import { CartesianChart } from '../CartesianChart';
+import { CartesianChart } from '../CartesianChart/CartesianChart';
 import type { PxTable } from '../../../shared-types/pxTable';
 
-vi.mock('../CartesianChart', () => ({
+vi.mock('../CartesianChart/CartesianChart', () => ({
   CartesianChart: vi.fn(() => null),
 }));
 

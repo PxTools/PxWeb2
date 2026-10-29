@@ -4,41 +4,41 @@ import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
 import { CartesianChart, LegendToggleButton } from './CartesianChart';
-import { mapPxTableToChartDataset } from './Utils/chartDataMapper';
-import { useEChartOption } from './Utils/useEChartOption';
+import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
+import { useEChartOption } from '../Utils/useEChartOption';
 import {
   buildDatasetOption,
   buildSeriesOption,
-} from './Utils/chartOptionBuilder';
+} from '../Utils/chartOptionBuilder';
 import {
   getChartCssVariables,
   getAdaptiveYAxisInterval,
   getAdaptiveYAxisMin,
   checkMultipleUnits,
   getYAxisBreak,
-} from './Utils/chartHelper';
-import { createResponsiveXAxisLabelConfig } from './Utils/chartAxisLabelHelper';
-import * as Icons from '../Icon/Icons';
-import type { EChartsDataset } from './Utils/chartTypes';
-import type { PxTable } from '../../shared-types/pxTable';
+} from '../Utils/chartHelper';
+import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
+import * as Icons from '../../Icon/Icons';
+import type { EChartsDataset } from '../Utils/chartTypes';
+import type { PxTable } from '../../../shared-types/pxTable';
 
-vi.mock('./Utils/chartDataMapper', () => ({
+vi.mock('../Utils/chartDataMapper', () => ({
   mapPxTableToChartDataset: vi.fn(),
 }));
 
-vi.mock('./Utils/useEChartOption', () => ({
+vi.mock('../Utils/useEChartOption', () => ({
   applyYAxisBreakMark: vi.fn(),
   useEChartOption: vi.fn(),
 }));
 
-vi.mock('./Utils/chartLegendHelper', () => ({
+vi.mock('../Utils/chartLegendHelper', () => ({
   getFallbackLegendHeight: vi.fn(() => 120),
 }));
 
-vi.mock('./Utils/chartOptionBuilder', async () => {
+vi.mock('../Utils/chartOptionBuilder', async () => {
   const actual = await vi.importActual<
-    typeof import('./Utils/chartOptionBuilder')
-  >('./Utils/chartOptionBuilder');
+    typeof import('../Utils/chartOptionBuilder')
+  >('../Utils/chartOptionBuilder');
 
   return {
     ...actual,
@@ -47,7 +47,7 @@ vi.mock('./Utils/chartOptionBuilder', async () => {
   };
 });
 
-vi.mock('./Utils/chartHelper', () => ({
+vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
   getAdaptiveYAxisMin: vi.fn(),
   getAdaptiveYAxisMax: vi.fn(),

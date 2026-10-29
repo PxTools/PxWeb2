@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import type { Meta } from '@storybook/react-vite';
 
 import type { ChartProps } from './CartesianChart';
-import { setPxTableData } from '../Table/Utils/cubeHelper';
-import type { PxTable } from '../../shared-types/pxTable';
-import type { DataCell, PxData } from '../../shared-types/pxTableData';
-import type { Variable } from '../../shared-types/variable';
-import { VartypeEnum } from '../../shared-types/vartypeEnum';
+import { setPxTableData } from '../../Table/Utils/cubeHelper';
+import type { PxTable } from '../../../shared-types/pxTable';
+import type { DataCell, PxData } from '../../../shared-types/pxTableData';
+import type { Variable } from '../../../shared-types/variable';
+import { VartypeEnum } from '../../../shared-types/vartypeEnum';
 
 const getTranslations = (t: TFunction) => ({
   showMore: t('presentation_page.main_content.chart.legend.show_more'),
