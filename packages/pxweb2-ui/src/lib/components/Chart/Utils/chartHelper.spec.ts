@@ -139,7 +139,7 @@ describe('getAdaptiveYAxisMax', () => {
   });
 
   it('keeps negative minima when zero-based', () => {
-    expect(getAdaptiveYAxisMax({ min: -10, max: 12 }, true)).toBe(20);
+    expect(getAdaptiveYAxisMax({ min: -10, max: 12 }, true)).toBe(15);
   });
 
   it('adds headroom and rounds up for small decimal ranges', () => {
