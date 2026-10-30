@@ -21,7 +21,7 @@
   "dependencies": {
     "@pxweb2/pxweb2-ui": "^0.0.1",
     "lodash": "^4.18.1",
-    "motion": "^13.5.1",
+    "motion": "^14.5.0",
     "react-router": "^8.5.0"
   },
   "devDependencies": {
