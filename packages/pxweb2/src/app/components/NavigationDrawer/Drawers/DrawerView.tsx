@@ -44,6 +44,19 @@ export function DrawerView() {
           </li>
           <li>
             <ActionItem
+              largeIconName="BarChart"
+              size="large"
+              label={t('presentation_page.side_menu.view.barchart.title')}
+              ariaLabel={t('presentation_page.side_menu.view.barchart.title')}
+              onClick={() => {
+                pivotToChart();
+                setViewMode('barchart');
+              }}
+              toggleState={selectedViewMode === 'barchart'}
+            />
+          </li>
+          <li>
+            <ActionItem
               largeIconName="LineChart"
               size="large"
               label={t('presentation_page.side_menu.view.linechart.title')}

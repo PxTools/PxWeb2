@@ -1,6 +1,6 @@
 import { DataViewModeType } from '../../../context/DataViewModeType';
 
-export type ViewMode = 'table' | 'linechart';
+export type ViewMode = 'table' | 'linechart' | 'barchart';
 
 export function getViewMode(
   searchParams: URLSearchParams,
@@ -10,7 +10,11 @@ export function getViewMode(
     return 'table';
   }
 
-  return searchParams.get('view') === 'linechart' ? 'linechart' : 'table';
+  const view = searchParams.get('view');
+  if (view === 'linechart' || view === 'barchart') {
+    return view;
+  }
+  return 'table';
 }
 
 export function getSearchParamsWithViewMode(
@@ -26,7 +30,7 @@ export function getDataViewMode(
   viewMode: ViewMode,
   isMobile: boolean,
 ): DataViewModeType {
-  if (viewMode === 'linechart') {
+  if (viewMode === 'linechart' || viewMode === 'barchart') {
     return DataViewModeType.Chart;
   }
 

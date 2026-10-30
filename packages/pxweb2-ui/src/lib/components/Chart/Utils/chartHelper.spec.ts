@@ -131,21 +131,33 @@ describe('getAdaptiveYAxisMin', () => {
 
 describe('getAdaptiveYAxisMax', () => {
   it('rounds up to a clean snap value for positive ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 100, max: 200 })).toBe(250);
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, false)).toBe(250);
+  });
+
+  it('uses zero as the minimum for non-negative ranges when zero-based', () => {
+    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, true)).toBe(250);
+  });
+
+  it('keeps negative minima when zero-based', () => {
+    expect(getAdaptiveYAxisMax({ min: -10, max: 12 }, true)).toBe(15);
   });
 
   it('adds headroom and rounds up for small decimal ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 0, max: 1 })).toBe(1.5);
+    expect(getAdaptiveYAxisMax({ min: 0, max: 1 }, false)).toBe(1.5);
   });
 
   it('works when min and max are equal', () => {
-    expect(getAdaptiveYAxisMax({ min: 5, max: 5 })).toBe(5.5);
+    expect(getAdaptiveYAxisMax({ min: 5, max: 5 }, false)).toBe(5.5);
   });
 });
 
 describe('getAdaptiveYAxisInterval', () => {
   it('uses the same snap unit that adaptive min and max use', () => {
     expect(getAdaptiveYAxisInterval({ min: 100, max: 200 })).toBe(50);
+  });
+
+  it('uses a regular interval for ranges containing negative values', () => {
+    expect(getAdaptiveYAxisInterval({ min: -1216, max: 7090 })).toBe(5000);
   });
 });
 

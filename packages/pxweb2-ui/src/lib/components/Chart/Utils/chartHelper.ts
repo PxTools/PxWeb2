@@ -64,6 +64,15 @@ export function getChartCssVariables(): ChartCssValues | undefined {
   };
 }
 
+/**
+ * Rounds a positive number up to a nearby convenient value, such as 2, 5, or
+ * 10, to make chart-axis labels easier to read. Non-positive or non-finite
+ * values use `1` as a safe default.
+ *
+ * @param value - The number to round.
+ * @returns A convenient rounded number, or `1` when the input is invalid or
+ *   not positive.
+ */
 function getNiceNumber(value: number): number {
   if (!Number.isFinite(value) || value <= 0) {
     return 1;
@@ -85,16 +94,36 @@ function getNiceNumber(value: number): number {
   return 10 * base;
 }
 
-function getAdaptiveSnapUnit(min: number, max: number): number {
+/**
+ * Chooses a convenient rounding step based on the size of the data range.
+ * A zero-based axis uses a smaller step so it can show more intervals.
+ *
+ * @param min - The lower bound of the range used to calculate the step.
+ * @param max - The upper bound of the range used to calculate the step.
+ * @param zeroBased - Whether the axis starts at zero; defaults to `false`.
+ * @returns A rounded step size suitable for axis limits or tick marks.
+ */
+function getAdaptiveSnapUnit(
+  min: number,
+  max: number,
+  zeroBased = false,
+): number {
   const span = Math.max(max - min, 1);
 
-  // No fixed tick count: just derive a clean rounding grain from data span.
-  // For spans around 1.3M this typically becomes 500k.
-  return getNiceNumber(span / 3);
+  return getNiceNumber(span / (zeroBased ? 6 : 3));
 }
 
 const Y_AXIS_BREAK_GAP = '13%';
 
+/**
+ * Calculates a readable lower limit for the y-axis by adding a small margin
+ * below the smallest data value and rounding down to a convenient step.
+ * When all values are non-negative, the limit will not go below zero.
+ *
+ * @param value - The data range, with `min` as its lowest value and `max` as
+ *   its highest value.
+ * @returns The rounded lower limit to use for the y-axis.
+ */
 export function getAdaptiveYAxisMin(value: {
   min: number;
   max: number;
@@ -114,19 +143,41 @@ export function getAdaptiveYAxisMin(value: {
   return roundedMin;
 }
 
-export function getAdaptiveYAxisMax(value: {
-  min: number;
-  max: number;
-}): number {
-  const min = Number(value.min);
+/**
+ * Calculates a readable upper limit for the y-axis by adding a small margin
+ * above the largest data value and rounding it up to a convenient step.
+ *
+ * @param value - The data range, with `min` as its lowest value and `max` as
+ *   its highest value.
+ * @param zeroBased - Whether to calculate the range as starting at zero when
+ *   all data values are non-negative.
+ * @returns The rounded upper limit to use for the y-axis.
+ */
+export function getAdaptiveYAxisMax(
+  value: {
+    min: number;
+    max: number;
+  },
+  zeroBased: boolean,
+): number {
+  const valueMin = Number(value.min);
+  const min = zeroBased && valueMin >= 0 ? 0 : valueMin;
   const max = Number(value.max);
   const span = Math.max(max - min, 1);
   const pad = span * 0.03;
-  const snap = getAdaptiveSnapUnit(min, max);
+  const snap = getAdaptiveSnapUnit(min, max, zeroBased);
   const paddedMax = max + pad;
   return Math.ceil(paddedMax / snap) * snap;
 }
 
+/**
+ * Chooses a clean interval for y-axis tick marks based on the data range.
+ * The interval is rounded to a convenient value so the axis is easier to read.
+ *
+ * @param value - The data range, with `min` as its lowest value and `max` as
+ *   its highest value.
+ * @returns The numeric distance between consecutive y-axis tick marks.
+ */
 export function getAdaptiveYAxisInterval(value: {
   min: number;
   max: number;
@@ -137,6 +188,16 @@ export function getAdaptiveYAxisInterval(value: {
   return getAdaptiveSnapUnit(min, max);
 }
 
+/**
+ * Creates a visual break on the y-axis when all values are positive and the
+ * adaptive axis minimum is above zero. The break skips the empty range between
+ * zero and that minimum so the chart can focus on the data.
+ *
+ * @param value - The data range, with `min` as its lowest value and `max` as
+ *   its highest value.
+ * @returns The break range (`start` and `end`) and its visual gap size, or
+ *   `undefined` when a break is not appropriate.
+ */
 export function getYAxisBreak(value: {
   min: number;
   max: number;
