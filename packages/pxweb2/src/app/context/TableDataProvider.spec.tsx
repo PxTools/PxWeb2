@@ -58,11 +58,17 @@ vi.mock('@pxweb2/pxweb2-api-client', async (importOriginal) => {
 type ProbeProps = {
   mode: DataViewModeType;
   onDataChange: (data: PxTable | undefined) => void;
+  refetchAfterFirstData?: boolean;
 };
 
-function ProviderProbe({ mode, onDataChange }: ProbeProps) {
+function ProviderProbe({
+  mode,
+  onDataChange,
+  refetchAfterFirstData = false,
+}: ProbeProps) {
   const context = React.useContext(TableDataContext);
   const hasRequestedRef = React.useRef(false);
+  const hasRefetchedRef = React.useRef(false);
 
   React.useEffect(() => {
     if (context?.data !== undefined) {
@@ -82,6 +88,19 @@ function ProviderProbe({ mode, onDataChange }: ProbeProps) {
       );
     }
   }, [context, mode]);
+
+  React.useEffect(() => {
+    if (context?.data && refetchAfterFirstData && !hasRefetchedRef.current) {
+      hasRefetchedRef.current = true;
+      void context.fetchSavedQuery(
+        'saved-query-id',
+        {
+          language: 'en',
+        } as i18n,
+        mode,
+      );
+    }
+  }, [context, mode, refetchAfterFirstData]);
 
   return null;
 }
@@ -242,5 +261,169 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
 
     expect(data.stub.map((v) => v.id)).toEqual(['chartStub']);
     expect(data.heading.map((v) => v.id)).toEqual(['chartHeading']);
+  });
+
+  it('recalculates chart stub/heading when selected value counts change', async () => {
+    const initialTable = createPxTable();
+    initialTable.metadata.variables.find(
+      (variable) => variable.id === 'chartStub',
+    )!.values = [{ code: '1', label: 'One' }];
+    initialTable.metadata.variables.find(
+      (variable) => variable.id === 'chartHeading',
+    )!.values = [
+      { code: 'A', label: 'A' },
+      { code: 'B', label: 'B' },
+    ];
+
+    const updatedTable = createPxTable();
+    updatedTable.metadata.variables.find(
+      (variable) => variable.id === 'chartStub',
+    )!.values = [
+      { code: '1', label: 'One' },
+      { code: '2', label: 'Two' },
+      { code: '3', label: 'Three' },
+    ];
+    updatedTable.metadata.variables.find(
+      (variable) => variable.id === 'chartHeading',
+    )!.values = [
+      { code: 'A', label: 'A' },
+      { code: 'B', label: 'B' },
+    ];
+
+    vi.mocked(initStubAndHeadingDesktop).mockReturnValue({
+      stubOrderDesktop: [
+        'desktopStub',
+        'desktopHeading',
+        'mobileStub',
+        'chartStub',
+        'chartHeading',
+      ],
+      headingOrderDesktop: [],
+    });
+
+    vi.mocked(mapJsonStat2Response)
+      .mockReturnValueOnce(initialTable)
+      .mockReturnValueOnce(updatedTable);
+    vi.mocked(initStubAndHeadingChart)
+      .mockReturnValueOnce({
+        stubOrderChart: ['chartHeading'],
+        headingOrderChart: [
+          'desktopStub',
+          'desktopHeading',
+          'mobileStub',
+          'chartStub',
+        ],
+      })
+      .mockReturnValueOnce({
+        stubOrderChart: ['chartStub'],
+        headingOrderChart: [
+          'desktopStub',
+          'desktopHeading',
+          'mobileStub',
+          'chartHeading',
+        ],
+      });
+
+    const receivedTables: PxTable[] = [];
+    render(
+      <TableDataProvider>
+        <ProviderProbe
+          mode={DataViewModeType.Chart}
+          refetchAfterFirstData
+          onDataChange={(data) => {
+            if (data) {
+              receivedTables.push(data);
+            }
+          }}
+        />
+      </TableDataProvider>,
+    );
+
+    await waitFor(() => {
+      expect(receivedTables).toHaveLength(2);
+    });
+
+    expect(receivedTables[0].stub.map((variable) => variable.id)).toEqual([
+      'chartHeading',
+    ]);
+    expect(receivedTables[1].stub.map((variable) => variable.id)).toEqual([
+      'chartStub',
+    ]);
+    expect(initStubAndHeadingChart).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps a newly added variable in the chart heading', async () => {
+    const initialTable = createPxTable();
+    const updatedTable = createPxTable();
+    updatedTable.metadata.variables.push({
+      id: 'newVariable',
+      label: 'New variable',
+      mandatory: false,
+      type: VartypeEnum.REGULAR_VARIABLE,
+      values: [
+        { code: 'A', label: 'Value A' },
+        { code: 'B', label: 'Value B' },
+      ],
+    });
+
+    vi.mocked(initStubAndHeadingDesktop).mockReturnValue({
+      stubOrderDesktop: [
+        'desktopStub',
+        'desktopHeading',
+        'mobileStub',
+        'chartStub',
+        'chartHeading',
+      ],
+      headingOrderDesktop: [],
+    });
+    vi.mocked(mapJsonStat2Response)
+      .mockReturnValueOnce(initialTable)
+      .mockReturnValueOnce(updatedTable);
+    vi.mocked(initStubAndHeadingChart)
+      .mockReturnValueOnce({
+        stubOrderChart: ['chartStub'],
+        headingOrderChart: [
+          'desktopStub',
+          'desktopHeading',
+          'mobileStub',
+          'chartHeading',
+        ],
+      })
+      .mockReturnValueOnce({
+        stubOrderChart: ['chartStub'],
+        headingOrderChart: [
+          'desktopStub',
+          'desktopHeading',
+          'mobileStub',
+          'chartHeading',
+          'newVariable',
+        ],
+      });
+
+    const receivedTables: PxTable[] = [];
+    render(
+      <TableDataProvider>
+        <ProviderProbe
+          mode={DataViewModeType.Chart}
+          refetchAfterFirstData
+          onDataChange={(data) => {
+            if (data) {
+              receivedTables.push(data);
+            }
+          }}
+        />
+      </TableDataProvider>,
+    );
+
+    await waitFor(() => {
+      expect(receivedTables).toHaveLength(2);
+    });
+
+    expect(receivedTables[1].stub.map((variable) => variable.id)).toEqual([
+      'chartStub',
+    ]);
+    expect(receivedTables[1].heading.map((variable) => variable.id)).toContain(
+      'newVariable',
+    );
   });
 });

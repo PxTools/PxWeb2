@@ -22,15 +22,17 @@ import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 
 import {
   addFormattingToPxTable,
-  filterStubAndHeadingArrays,
+  reconcileVariableOrders,
   autoPivotTable,
   pivotTableCW,
   TableTitlePartsType,
   getTableTitleParts,
+  getOrdersForMode,
   initStubAndHeadingDesktop,
   initStubAndHeadingMobile,
   initStubAndHeadingChart,
   getChartStubVariableId,
+  isNewTableOrLanguage,
 } from './TableDataProviderUtils';
 import { problemMessage } from '../util/problemMessage';
 import { PivotType } from './PivotType';
@@ -262,6 +264,47 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   /**
+   * Initializes the stub and heading orders for a new table in each view, then pivots
+   * the table to match the requested view mode.
+   *
+   * @param pxTable - The table whose view orders should be initialized and applied.
+   * @param dataViewMode - The view mode whose stub and heading order should be applied.
+   */
+  const initializeOrdersForNewTable = React.useCallback(
+    (pxTable: PxTable, dataViewMode: DataViewModeType) => {
+      const { stubOrderDesktop, headingOrderDesktop } =
+        initializeStubAndHeadingDesktop(pxTable);
+
+      const { stubOrderMobile, headingOrderMobile } =
+        initializeStubAndHeadingMobile(pxTable);
+
+      const { stubOrderChart, headingOrderChart } =
+        initializeStubAndHeadingChart(pxTable);
+
+      const activeOrders = getOrdersForMode(
+        {
+          stubDesktop: stubOrderDesktop,
+          headingDesktop: headingOrderDesktop,
+          stubMobile: stubOrderMobile,
+          headingMobile: headingOrderMobile,
+          stubChart: stubOrderChart,
+          headingChart: headingOrderChart,
+        },
+        dataViewMode,
+      );
+
+      if (activeOrders) {
+        pivotTable(pxTable, activeOrders.stub, activeOrders.heading);
+      }
+    },
+    [
+      initializeStubAndHeadingDesktop,
+      initializeStubAndHeadingMobile,
+      initializeStubAndHeadingChart,
+    ],
+  );
+
+  /**
    * Remember order of variables in stub and heading when table setup is changed.
    *
    * @param pxTable - PxTable containing the data and metadata for display in table.
@@ -270,98 +313,45 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    */
   const initializeStubAndHeading = React.useCallback(
     (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string) => {
-      if (
-        accumulatedData === undefined || //NOSONAR: This is a valid check to determine if the accumulated data is undefined or if the table ID or language has changed.
-        accumulatedData.metadata.id !== pxTable.metadata.id ||
-        accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
-      ) {
-        // First time we get data OR we have a new table OR language is changed.
-        const { stubOrderDesktop, headingOrderDesktop } =
-          initializeStubAndHeadingDesktop(pxTable);
+      if (isNewTableOrLanguage(accumulatedData, pxTable, lang)) {
+        initializeOrdersForNewTable(pxTable, dataViewMode);
+        return;
+      }
 
-        const { stubOrderMobile, headingOrderMobile } =
-          initializeStubAndHeadingMobile(pxTable);
+      // Variable changes can make the chart axis or series order stale; refresh it only in chart mode.
+      const chartOrders =
+        dataViewMode === DataViewModeType.Chart
+          ? initializeStubAndHeadingChart(pxTable)
+          : undefined;
+      const orders = reconcileVariableOrders(
+        pxTable,
+        dataViewMode,
+        {
+          stubDesktop,
+          headingDesktop,
+          stubMobile,
+          headingMobile,
+          stubChart,
+          headingChart,
+        },
+        chartOrders,
+      );
 
-        const { stubOrderChart, headingOrderChart } =
-          initializeStubAndHeadingChart(pxTable);
+      setStubDesktop(orders.stubDesktop);
+      setHeadingDesktop(orders.headingDesktop);
+      setStubMobile(orders.stubMobile);
+      setHeadingMobile(orders.headingMobile);
+      setStubChart(orders.stubChart);
+      setHeadingChart(orders.headingChart);
 
-        if (dataViewMode === DataViewModeType.MobileTable) {
-          pivotTable(pxTable, stubOrderMobile, headingOrderMobile);
-        } else if (dataViewMode === DataViewModeType.DesktopTable) {
-          pivotTable(pxTable, stubOrderDesktop, headingOrderDesktop);
-        } else if (dataViewMode === DataViewModeType.Chart) {
-          pivotTable(pxTable, stubOrderChart, headingOrderChart);
-        }
-      } else {
-        // The number of variables has changed.
-
-        // Variable has been removed
-        // Remove all variables in stubMobile, headingMobile, stubDesktop and headingDesktop that does not exist in table variables
-        const variableIds = pxTable.metadata.variables.map(
-          (variable) => variable.id,
-        );
-        if (variableIds.length < stubDesktop.length + headingDesktop.length) {
-          const filtered = filterStubAndHeadingArrays(
-            variableIds,
-            stubDesktop,
-            headingDesktop,
-            stubMobile,
-            headingMobile,
-            stubChart,
-            headingChart,
-          );
-
-          setStubDesktop(filtered.stubDesktop);
-          setHeadingDesktop(filtered.headingDesktop);
-          setStubMobile(filtered.stubMobile);
-          setHeadingMobile(filtered.headingMobile);
-          setStubChart(filtered.stubChart);
-          setHeadingChart(filtered.headingChart);
-        }
-
-        if (dataViewMode === DataViewModeType.MobileTable) {
-          pivotTable(pxTable, stubMobile, headingMobile);
-        } else if (dataViewMode === DataViewModeType.DesktopTable) {
-          pivotTable(pxTable, stubDesktop, headingDesktop);
-        } else if (dataViewMode === DataViewModeType.Chart) {
-          pivotTable(pxTable, stubChart, headingChart);
-        }
-
-        // Variable has been added
-        // Find all new variables and add them to the stub - Desktop
-        const remainingVariables = pxTable.metadata.variables.filter(
-          (variable) =>
-            !stubDesktop.includes(variable.id) &&
-            !headingDesktop.includes(variable.id),
-        );
-
-        if (remainingVariables.length > 0) {
-          const newStubDesktop = structuredClone(stubDesktop);
-          const newStubMobile = structuredClone(stubMobile);
-          const newHeadingChart = structuredClone(headingChart);
-
-          remainingVariables.forEach((variable) => {
-            if (!newStubDesktop.includes(variable.id)) {
-              pxTable.stub.push(variable);
-              newStubDesktop.push(variable.id);
-            }
-            if (!newStubMobile.includes(variable.id)) {
-              newStubMobile.push(variable.id);
-            }
-            if (!newHeadingChart.includes(variable.id)) {
-              newHeadingChart.push(variable.id);
-            }
-          });
-          setStubDesktop(newStubDesktop);
-          setStubMobile(newStubMobile);
-          setHeadingChart(newHeadingChart);
-        }
+      const activeOrders = getOrdersForMode(orders, dataViewMode);
+      if (activeOrders) {
+        pivotTable(pxTable, activeOrders.stub, activeOrders.heading);
       }
     },
     [
       accumulatedData,
-      initializeStubAndHeadingDesktop,
-      initializeStubAndHeadingMobile,
+      initializeOrdersForNewTable,
       initializeStubAndHeadingChart,
       stubDesktop,
       headingDesktop,
