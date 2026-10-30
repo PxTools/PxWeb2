@@ -4,7 +4,7 @@ COPY . ./
 RUN npm ci && npm run build-artifact
 
 # production environment
-FROM nginx/nginx-unprivileged:1.31.7-alpine-slim@sha256:e4e4a614c327f2e2c364f3731890805e2fc8d1fe216bdf0836956dbb80db5e01
+FROM nginx/nginx-unprivileged:1.31.7-alpine-slim@sha256:9f239061cbd9cc83fa684c653a5e825a0726410364aa3401f9490d7dc8c35e77
 COPY --from=build /app/packages/pxweb2/dist /usr/share/nginx/html
 COPY nginx/conf.d /etc/nginx/conf.d
 EXPOSE 8080
