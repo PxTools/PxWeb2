@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.13.1](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.13.1) (2026-10-30)
+
+
+### :bug: Bug Fixes
+
+* Various old Sonarqube  issues ([#1558](https://github.com/PxTools/PxWeb2/issues/1558)) ([3859d9d](https://github.com/PxTools/PxWeb2/commit/3859d9d2eab7e9feacb6d64f07500b168669ddbf))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump fast-uri from 3.1.8 to 3.1.9 ([#1583](https://github.com/PxTools/PxWeb2/issues/1583)) ([19c4368](https://github.com/PxTools/PxWeb2/commit/19c43685e76de3357125be8675be6f3a512e65e3))
+* **deps:** bump actions/setup-node from 7.0.0 to 7.1.0 ([#1574](https://github.com/PxTools/PxWeb2/issues/1574)) ([2fe65a1](https://github.com/PxTools/PxWeb2/commit/2fe65a10c6c302e6cc26453ea5b33af246165f44))
+* **deps:** bump chromaui/action from 18.9.5 to 18.13.2 ([#1599](https://github.com/PxTools/PxWeb2/issues/1599)) ([c45e600](https://github.com/PxTools/PxWeb2/commit/c45e6009370d4db444a9630246bb55174b772064))
+* **deps:** bump github/codeql-action/upload-sarif ([#1596](https://github.com/PxTools/PxWeb2/issues/1596)) ([d324742](https://github.com/PxTools/PxWeb2/commit/d324742922d4bcce9960f0029b1a06472da2841a))
+* **deps:** bump SonarSource/sonarqube-scan-action from 8.2.2 to 8.3.0 ([#1560](https://github.com/PxTools/PxWeb2/issues/1560)) ([c36bc19](https://github.com/PxTools/PxWeb2/commit/c36bc1914e9d5a64bc9d48bb061657db51efe09c))
+* **deps:** bump undici and wrangler ([#1593](https://github.com/PxTools/PxWeb2/issues/1593)) ([f0d4f41](https://github.com/PxTools/PxWeb2/commit/f0d4f41da139bff55124c7bfce7fef401a9528c4))
+* **deps:** bump vite from 8.3.0 to 8.3.5 ([#1577](https://github.com/PxTools/PxWeb2/issues/1577)) ([747eabb](https://github.com/PxTools/PxWeb2/commit/747eabb796705a98a60a65afa1bfe3291e033dba))
+* Update and pin nginx image in Dockerfile ([#1585](https://github.com/PxTools/PxWeb2/issues/1585)) ([b72a668](https://github.com/PxTools/PxWeb2/commit/b72a668463b9c3a99ab0ea3b960a5455382d0737))
+
+
+### :broom: Chores
+
+* update dependencies across packages ([#1592](https://github.com/PxTools/PxWeb2/issues/1592)) ([e5bb355](https://github.com/PxTools/PxWeb2/commit/e5bb3550cf8bc82cef24a3055ae0b2ced011ac50))
+
 ## [2.13.0](https://github.com/PxTools/PxWeb2/compare/v2.12.0...v2.13.0) (2026-10-15)
 
 
