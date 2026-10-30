@@ -78,6 +78,7 @@ export interface ChartProps {
   readonly staticTitle: string;
   readonly colors?: string[];
   readonly emptyStateSvgName?: EmptyStateProps['svgName'];
+  readonly numberFormatter?: (value: number) => string;
   readonly translations: ChartTranslations;
   readonly onChartReady?: (chart: ChartInstance | null) => void;
   readonly screenSize?: ScreenSize;
@@ -94,6 +95,7 @@ export function CartesianChart({
   staticTitle,
   colors,
   emptyStateSvgName,
+  numberFormatter,
   translations,
   onChartReady,
   screenSize = 'large',
@@ -135,6 +137,12 @@ export function CartesianChart({
       : 'ManWithMagnifyingGlass';
 
   const dataset = useMemo(() => mapPxTableToChartDataset(pxtable), [pxtable]);
+  const resolvedNumberFormatter = useMemo(
+    () =>
+      numberFormatter ??
+      new Intl.NumberFormat(pxtable.metadata?.language).format,
+    [pxtable.metadata?.language, numberFormatter],
+  );
   const hasLegendOverflow = dataset.series.length > 5;
   const shouldShowLegendToggle = hasLegendOverflow && isMediumOrSmallerScreen;
   const shouldShowLimitedLegend = shouldShowLegendToggle && !isLegendExpanded;
@@ -294,6 +302,10 @@ export function CartesianChart({
       },
       yAxis: {
         name: wrappedYAxisName,
+        axisLabel: {
+          formatter: (value: string | number) =>
+            resolvedNumberFormatter(Number(value)),
+        },
         nameTextStyle: {
           lineHeight: xAxisLabelConfig.lineHeight,
         },
@@ -409,6 +421,7 @@ export function CartesianChart({
     xAxisLabelConfig.lineHeight,
     xAxisLabelConfig.formatter,
     wrappedYAxisName,
+    resolvedNumberFormatter,
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
