@@ -52,7 +52,7 @@
     "style-dictionary": "^5.7.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "unplugin-dts": "^1.1.2",
-    "wrangler": "^4.151.3"
+    "wrangler": "^4.156.0"
   },
   "engines": {
     "node": ">=24",
