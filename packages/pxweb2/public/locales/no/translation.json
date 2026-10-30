@@ -323,17 +323,15 @@
         }
       },
       "chart": {
-        "line_chart": {
-          "warnings": {
-            "multiple_units": {
-              "title": "Linjediagrammet kan ikke vises",
-              "description": "Det er valgt ulike måleenheter i filteret. Disse kan ikke vises i samme linjediagram."
-            }
-          },
-          "legend": {
-            "show_more": "Vis mer",
-            "show_less": "Vis mindre"
+        "warnings": {
+          "multiple_units": {
+            "title": "Diagrammet kan ikke vises",
+            "description": "Det er valgt ulike måleenheter i filteret. Disse kan ikke vises i samme diagram."
           }
+        },
+        "legend": {
+          "show_more": "Vis mer",
+          "show_less": "Vis mindre"
         }
       },
       "about_table": {

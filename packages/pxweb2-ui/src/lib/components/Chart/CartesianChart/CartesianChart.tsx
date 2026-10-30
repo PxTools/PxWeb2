@@ -3,19 +3,19 @@ import * as echarts from 'echarts';
 import cl from 'clsx';
 
 import styles from './CartesianChart.module.scss';
-import { Button } from '../Button/Button';
+import { Button } from '../../Button/Button';
 import {
   buildDatasetOption,
   buildSeriesOption,
-} from './Utils/chartOptionBuilder';
-import { getFallbackLegendHeight } from './Utils/chartLegendHelper';
-import { useEChartOption } from './Utils/useEChartOption';
+} from '../Utils/chartOptionBuilder';
+import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
+import { useEChartOption } from '../Utils/useEChartOption';
 import {
   createResponsiveXAxisLabelConfig,
   wrapAxisName,
-} from './Utils/chartAxisLabelHelper';
-import { useResponsivePixelsPerRem } from './Utils/useResponsivePixelsPerRem';
-import { mapPxTableToChartDataset } from './Utils/chartDataMapper';
+} from '../Utils/chartAxisLabelHelper';
+import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
+import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
   getAdaptiveYAxisMin,
   getAdaptiveYAxisMax,
@@ -23,11 +23,11 @@ import {
   getChartCssVariables,
   checkMultipleUnits,
   getYAxisBreak,
-} from './Utils/chartHelper';
-import EmptyState from '../EmptyState/EmptyState';
-import type { EmptyStateProps } from '../EmptyState/EmptyState';
-import type { PxTable } from '../../shared-types/pxTable';
-import type { ScreenSize } from '../../types/screenSize';
+} from '../Utils/chartHelper';
+import EmptyState from '../../EmptyState/EmptyState';
+import type { EmptyStateProps } from '../../EmptyState/EmptyState';
+import type { PxTable } from '../../../shared-types/pxTable';
+import type { ScreenSize } from '../../../types/screenSize';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information
@@ -127,10 +127,10 @@ export function CartesianChart({
   }, [colors]);
 
   const resolvedEmptyStateTitle =
-    translations.emptyStateTitle?.trim() || 'Cannot display chart';
+    translations.emptyStateTitle?.trim() || 'The chart cannot be displayed';
   const resolvedEmptyStateDescription =
     translations.emptyStateDescription?.trim() ||
-    `The ${seriesType} chart cannot be displayed because your selection includes contents with different units (for example number and percent). Please select contents with the same unit to see the ${seriesType} chart.`;
+    `Different units are selected in the filter. These cannot be displayed in the same chart.`;
   const resolvedEmptyStateSvgName: EmptyStateProps['svgName'] =
     emptyStateSvgName && emptyStateSvgName.trim().length > 0
       ? emptyStateSvgName
@@ -192,7 +192,7 @@ export function CartesianChart({
   }, [breakValueAxis, yAxisDataExtent]);
 
   const yAxisInterval = useMemo(() => {
-    if (!yAxisBreak || !yAxisDataExtent) {
+    if (!yAxisDataExtent || (!yAxisBreak && yAxisDataExtent.min >= 0)) {
       return undefined;
     }
 
@@ -221,6 +221,7 @@ export function CartesianChart({
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
+  const yAxisZeroBased = seriesType === 'bar';
   const yAxisMin =
     (seriesType === 'bar' &&
       yAxisDataExtent !== undefined &&
@@ -310,7 +311,7 @@ export function CartesianChart({
         },
         scale: false,
         min: yAxisMin,
-        max: getAdaptiveYAxisMax,
+        max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
         interval: yAxisInterval,
         ...(yAxisBreak
           ? {
@@ -412,6 +413,7 @@ export function CartesianChart({
     resolvedColors,
     screenSize,
     xAxisLabelsHeight,
+    isSmallScreen,
     chartTitle,
     chartSourcePart1,
     staticTitle,
@@ -423,8 +425,8 @@ export function CartesianChart({
     yAxisMin,
     yAxisInterval,
     yAxisBreak,
-    isSmallScreen,
     isMediumOrSmallerScreen,
+    yAxisZeroBased,
     getTooltipSymbolSvg,
   ]);
 

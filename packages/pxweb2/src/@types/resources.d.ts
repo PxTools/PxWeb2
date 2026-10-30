@@ -158,16 +158,14 @@ export default interface Resources {
           title: 'Information';
         };
         chart: {
-          line_chart: {
-            legend: {
-              show_less: 'Show less';
-              show_more: 'Show more';
-            };
-            warnings: {
-              multiple_units: {
-                description: 'Different units are selected in the filter. These cannot be displayed in the same line chart.';
-                title: 'The line chart cannot be displayed';
-              };
+          legend: {
+            show_less: 'Show less';
+            show_more: 'Show more';
+          };
+          warnings: {
+            multiple_units: {
+              description: 'Different units are selected in the filter. These cannot be displayed in the same chart.';
+              title: 'The chart cannot be displayed';
             };
           };
         };

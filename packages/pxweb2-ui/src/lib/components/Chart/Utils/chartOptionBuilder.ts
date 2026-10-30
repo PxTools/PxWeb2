@@ -73,6 +73,9 @@ export function buildSeriesOption(
       };
     }
 
-    return baseSeries;
+    return {
+      ...baseSeries,
+      barMaxWidth: 100,
+    };
   });
 }
