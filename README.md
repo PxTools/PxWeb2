@@ -1,21 +1,46 @@
-# PxWeb 2
+This repository contains JMeter test plans for performance testing of the PXWEB API, specifically for Tabell 08799.
 
-Welcome to PxWeb 2, the new interface for PxWeb. Right now we are working hard on the new version of PxWeb 2.
+🧰 Requirements
+Apache JMeter 5.4.1
 
-For more detailed information about this project, please refer to our [Project pages](https://www.pxtools.net/PxWeb2/).
+Please ensure JMeter 5.4.1 is installed before running any test plans, as compatibility with other versions is not guaranteed.
 
-If you want to have a look at the current state of PxWeb2 you could always see our automatic build of our main branch at [pxweb2.pages.dev](https://pxweb2.pages.dev/).
+📂 Test Plans
+Once JMeter is installed, you can open and run the following test plans (.jmx) depending on the version of the PX API you want to test:
 
-## Contact
+**Ytelsestest av V1.0 PXWEB Tabell 08799.jmx**
 
-If you're interested in this project and want to know more, feel free to contact
+Corresponds to version 1.0 of the PX API
 
-Project leader: [Kristin Glomsås, krg@ssb.no](mailto:krg@ssb.no)
+**Ytelsestest av V2.0 PXWEB Tabell 08799.jmx**
 
-Scrum master: [Åsa Arrhén, asa.arrhen@scb.se](asa.arrhen@scb.se)
+Corresponds to version 2.0 of the PX API
 
-## Thanks
+🚀 How to Use
+Download and extract JMeter 5.4.1.
 
-<a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
+Start JMeter using the jmeter executable.
 
-Thanks to [Chromatic](https://www.chromatic.com/) for providing the visual testing platform that helps us review UI changes and catch visual regressions.
+Open the desired .jmx test plan file from this repository.
+
+Configure endpoints or parameters if necessary.
+
+Run the test and analyze results in the listeners provided (e.g., Summary Report, View Results Tree).
+
+📌 Notes
+These test plans are intended for internal testing purposes.
+
+If you need to adapt the test plans to other tables or endpoints, duplicate and modify accordingly.
+
+Test data and expected responses are based on current structure and may require updates if the API evolves.
+
+
+
+
+
+
+
+
+
+
+
