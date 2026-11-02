@@ -149,17 +149,23 @@
   display: flex;
   align-self: stretch;
   padding-top: 2px;
-  overflow-wrap: anywhere;
-  word-break: break-word;
   hyphens: auto;
+
+  // Keep word-break and overflow-wrap paired:
+  // together these replace deprecated word-break: break-word
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .alert-body-medium {
   display: flex;
   align-self: stretch;
-  overflow-wrap: anywhere;
-  word-break: break-word;
   hyphens: auto;
+
+  // Keep word-break and overflow-wrap paired:
+  // together these replace deprecated word-break: break-word
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .truncate-text-small {

@@ -15,7 +15,6 @@ export type VariableListProps = {
   isTablet?: boolean;
   selectedVBValues: SelectedVBValues[];
 
-  // TODO: Optimise here? Duplicate with props in VariableBox
   handleCodeListChange: (selectedItem: SelectOption, varId: string) => void;
   handleCheckboxChange: (varId: string, value: string) => void;
   handleMixedCheckboxChange: (
