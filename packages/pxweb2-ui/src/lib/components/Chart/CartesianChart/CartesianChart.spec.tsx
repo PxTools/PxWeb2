@@ -176,8 +176,8 @@ describe('CartesianChart', () => {
       top: 36,
       height: 476 + labelHeight,
       bottom: 136,
-      left: '0',
-      right: '0',
+      left: 0,
+      right: 0,
       outerBoundsContain: 'all',
       outerBoundsMode: 'same',
     });
