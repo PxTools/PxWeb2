@@ -214,11 +214,12 @@ export function CartesianChart({
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
   const yAxisZeroBased = seriesType === 'bar';
-  const yAxisMin =
-    (seriesType === 'bar' &&
+  const yAxisShouldBeZeroBased = (yAxisZeroBased &&
       yAxisDataExtent !== undefined &&
       yAxisDataExtent.min >= 0) ||
-    yAxisBreak
+    yAxisBreak;
+  const yAxisMin =
+    yAxisShouldBeZeroBased
       ? 0
       : getAdaptiveYAxisMin;
 
@@ -232,20 +233,22 @@ export function CartesianChart({
           : { focus: 'series' as const },
       }),
     ) as echarts.EChartsOption['series'];
+
+    const gridPadding = isSmallScreen ? 24 : 0;
     const gridHeight =
       CHART_PLOT_HEIGHT_PX[screenSize] -
       TOP_CHART_PADDING -
       X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight;
+      xAxisLabelsHeight - gridPadding;
 
     return {
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        height: isSmallScreen ? gridHeight - 24 : gridHeight,
+        height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
-        left: isSmallScreen ? 24 : '0',
-        right: isSmallScreen ? 24 : '0',
+        left: gridPadding,
+        right: gridPadding,
         //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
         // 'all' keeps the axis names inside the grid rect
