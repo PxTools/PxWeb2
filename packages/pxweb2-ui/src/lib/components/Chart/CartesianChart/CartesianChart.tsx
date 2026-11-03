@@ -214,14 +214,12 @@ export function CartesianChart({
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
   const yAxisZeroBased = seriesType === 'bar';
-  const yAxisShouldBeZeroBased = (yAxisZeroBased &&
+  const yAxisShouldBeZeroBased =
+    (yAxisZeroBased &&
       yAxisDataExtent !== undefined &&
       yAxisDataExtent.min >= 0) ||
     yAxisBreak;
-  const yAxisMin =
-    yAxisShouldBeZeroBased
-      ? 0
-      : getAdaptiveYAxisMin;
+  const yAxisMin = yAxisShouldBeZeroBased ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
@@ -239,7 +237,8 @@ export function CartesianChart({
       CHART_PLOT_HEIGHT_PX[screenSize] -
       TOP_CHART_PADDING -
       X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight - gridPadding;
+      xAxisLabelsHeight -
+      gridPadding;
 
     return {
       ...buildDatasetOption(dataset),

@@ -110,7 +110,7 @@ function getAdaptiveSnapUnit(
 ): number {
   const span = Math.max(max - min, 1);
   const stepCount = zeroBased ? 6 : 3;
-  
+
   return getNiceNumber(span / stepCount);
 }
 
