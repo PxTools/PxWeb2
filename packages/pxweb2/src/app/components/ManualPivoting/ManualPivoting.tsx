@@ -213,10 +213,11 @@ export function ManualPivot({
       return null;
     }
 
-    const sharedBottom = Math.max(
-      headerRect?.bottom ?? Number.NEGATIVE_INFINITY,
-      stubRect?.bottom ?? Number.NEGATIVE_INFINITY,
-    ) + DROP_ZONE_BOTTOM_EXTENSION;
+    const sharedBottom =
+      Math.max(
+        headerRect?.bottom ?? Number.NEGATIVE_INFINITY,
+        stubRect?.bottom ?? Number.NEGATIVE_INFINITY,
+      ) + DROP_ZONE_BOTTOM_EXTENSION;
     const getGroupDistance = (rect: DOMRect | undefined) =>
       rect
         ? distanceToRect({
