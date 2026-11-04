@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { i18n } from 'i18next';
 
 import { TableDataContext, TableDataProvider } from './TableDataProvider';
 import { DataViewModeType } from './DataViewModeType';
-import { SavedQueriesService } from '@pxweb2/pxweb2-api-client';
+import { SavedQueriesService, TablesService } from '@pxweb2/pxweb2-api-client';
 import { mapJsonStat2Response } from '../../mappers/JsonStat2ResponseMapper';
 import {
   addFormattingToPxTable,
@@ -13,14 +13,18 @@ import {
   initStubAndHeadingDesktop,
   initStubAndHeadingMobile,
 } from './TableDataProviderUtils';
-import { PxTable, VartypeEnum } from '@pxweb2/pxweb2-ui';
+import { getPxTableData, PxTable, VartypeEnum } from '@pxweb2/pxweb2-ui';
+
+const selectionState = vi.hoisted(() => ({
+  codes: undefined as string[] | undefined,
+}));
 
 vi.mock('./useVariables', () => ({
   default: () => ({
     hasLoadedInitialSelection: false,
-    getUniqueIds: () => [],
+    getUniqueIds: () => (selectionState.codes ? ['chartStub'] : []),
     getSelectedCodelistById: () => undefined,
-    getSelectedValuesByIdSorted: () => [],
+    getSelectedValuesByIdSorted: () => selectionState.codes ?? [],
     pxTableMetadata: undefined,
   }),
 }));
@@ -52,7 +56,105 @@ vi.mock('@pxweb2/pxweb2-api-client', async (importOriginal) => {
       ...actual.SavedQueriesService,
       runSaveQuery: vi.fn(),
     },
+    TablesService: {
+      ...actual.TablesService,
+      getTableDataByPost: vi.fn(),
+    },
   };
+});
+
+describe('TableDataProvider selection order', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    selectionState.codes = ['1970', '1971', '1973', '1975', '1976'];
+    vi.mocked(SavedQueriesService.runSaveQuery).mockResolvedValue('mock-data');
+    vi.mocked(TablesService.getTableDataByPost).mockResolvedValue('mock-data');
+    vi.mocked(initStubAndHeadingDesktop).mockReturnValue({
+      stubOrderDesktop: [],
+      headingOrderDesktop: ['chartStub'],
+    });
+    vi.mocked(initStubAndHeadingMobile).mockReturnValue({
+      stubOrderMobile: ['chartStub'],
+      headingOrderMobile: [],
+    });
+    vi.mocked(initStubAndHeadingChart).mockReturnValue({
+      stubOrderChart: ['chartStub'],
+      headingOrderChart: [],
+    });
+  });
+
+  afterEach(() => {
+    selectionState.codes = undefined;
+  });
+
+  function createYearTable(codes: string[]): PxTable {
+    const table = createPxTable();
+    const variable = table.metadata.variables.find(
+      (item) => item.id === 'chartStub',
+    )!;
+    variable.values = codes.map((code) => ({ code, label: code }));
+    table.metadata.variables = [variable];
+    table.stub = [];
+    table.heading = [variable];
+    table.data.variableOrder = ['chartStub'];
+    table.data.cube = Object.fromEntries(
+      codes.map((code) => [code, { value: Number(code) * 10 }]),
+    );
+    return table;
+  }
+
+  it.each([
+    DataViewModeType.DesktopTable,
+    DataViewModeType.MobileTable,
+    DataViewModeType.Chart,
+  ])(
+    'keeps values and cells ordered after removing and adding in %s',
+    async (mode) => {
+      vi.mocked(mapJsonStat2Response)
+        .mockReturnValueOnce(createYearTable(selectionState.codes!))
+        .mockReturnValueOnce(createYearTable(['1980']))
+        .mockReturnValueOnce(createYearTable(['1969', '1972']));
+
+      const { result } = renderHook(() => React.useContext(TableDataContext)!, {
+        wrapper: TableDataProvider,
+      });
+      const language = { language: 'en' } as i18n;
+
+      await act(async () => {
+        await result.current.fetchSavedQuery('saved-query-id', language, mode);
+      });
+
+      async function select(codes: string[], expectedApiCalls: number) {
+        selectionState.codes = codes;
+        await act(async () => {
+          await result.current.fetchTableData('table-id', language, mode);
+        });
+        const table = result.current.data!;
+        expect(
+          table.metadata.variables[0].values.map((value) => value.code),
+        ).toEqual(codes);
+        expect(
+          [...table.stub, ...table.heading][0].values.map(
+            (value) => value.code,
+          ),
+        ).toEqual(codes);
+        expect(
+          codes.map((code) => getPxTableData(table.data.cube, [code])?.value),
+        ).toEqual(codes.map((code) => Number(code) * 10));
+        expect(TablesService.getTableDataByPost).toHaveBeenCalledTimes(
+          expectedApiCalls,
+        );
+      }
+
+      await select(['1970', '1971', '1975', '1976'], 0);
+      await select(['1970', '1971', '1975', '1976', '1980'], 1);
+      await select(['1969', '1970', '1971', '1972', '1975', '1976', '1980'], 2);
+      await select(
+        ['1969', '1970', '1971', '1972', '1973', '1975', '1976', '1980'],
+        2,
+      );
+    },
+  );
 });
 
 type ProbeProps = {
