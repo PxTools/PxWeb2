@@ -205,10 +205,7 @@ describe('ManualPivoting', () => {
     confirmPivot();
 
     const [, headerItems, stubItems] = onClose.mock.calls[0];
-    expect(headerItems.map((item: Variable) => item.id)).toEqual([
-      'h1',
-      's1',
-    ]);
+    expect(headerItems.map((item: Variable) => item.id)).toEqual(['h1', 's1']);
     expect(stubItems.map((item: Variable) => item.id)).toEqual(['s2', 's3']);
   });
 
