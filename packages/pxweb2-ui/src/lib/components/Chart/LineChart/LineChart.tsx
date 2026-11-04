@@ -1,10 +1,14 @@
-import { CartesianChart } from '../CartesianChart/CartesianChart';
-import type { ChartProps } from '../CartesianChart/CartesianChart';
+import {
+  CartesianChart,
+  type ChartProps,
+} from '../CartesianChart/CartesianChart';
 import { LINE_SERIES_SYMBOLS } from '../Utils/chartOptionBuilder';
 
-export type { ChartInstance } from '../CartesianChart/CartesianChart';
-export { LegendToggleButton } from '../CartesianChart/CartesianChart';
-export type { ChartProps as LineChartProps } from '../CartesianChart/CartesianChart';
+export {
+  LegendToggleButton,
+  type ChartInstance,
+  type ChartProps as LineChartProps,
+} from '../CartesianChart/CartesianChart';
 
 function getTooltipSymbolSvg(color: string, seriesIndex: number): string {
   const symbol = LINE_SERIES_SYMBOLS[seriesIndex % LINE_SERIES_SYMBOLS.length];
