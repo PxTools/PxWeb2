@@ -351,7 +351,9 @@ export default function useFilterUrlSync(
           window.location.pathname +
           (built ? `?${built}` : '') +
           window.location.hash;
-        navigate(url, { replace: true });
+
+        // URL syncing does not await navigation completion; void makes that explicit.
+        void navigate(url, { replace: true });
       }
     },
     [navigate, t],
