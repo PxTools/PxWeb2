@@ -184,7 +184,7 @@ export function CartesianChart({
   }, [breakValueAxis, yAxisDataExtent]);
 
   const yAxisInterval = useMemo(() => {
-    if (!yAxisDataExtent || (!yAxisBreak && yAxisDataExtent.min >= 0)) {
+    if (!yAxisBreak || !yAxisDataExtent) {
       return undefined;
     }
 
@@ -516,6 +516,7 @@ export function CartesianChart({
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
+      // TODO: The chart.off calls produces console warnings. Fix this.
       chart.off('mouseover', handleSeriesInteraction);
       chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);
