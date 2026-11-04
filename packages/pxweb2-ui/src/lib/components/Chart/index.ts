@@ -1,6 +1,5 @@
 export { LineChart } from './LineChart/LineChart';
 export { BarChart } from './BarChart/BarChart';
-export { LegendToggleButton } from './CartesianChart/CartesianChart';
 export type {
   ChartInstance,
   ChartProps,
