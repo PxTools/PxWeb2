@@ -73,6 +73,7 @@ vi.mock('../ContentTop/ContentTop', () => ({
 vi.mock('@pxweb2/pxweb2-ui', () => ({
   Table: () => <table aria-label="Test table" />,
   LineChart: () => null,
+  BarChart: () => null,
   EmptyState: () => null,
   LocalAlert: () => null,
 }));

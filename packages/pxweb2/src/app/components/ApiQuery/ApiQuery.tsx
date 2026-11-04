@@ -32,6 +32,9 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
   };
   const translate = t as unknown as (key: string) => string;
   const apiLinkUrl = t('presentation_page.side_menu.save.api.link_url');
+  const apiFileFormats = fileFormats.filter(
+    (format) => format.value !== 'png' && format.value !== 'svg',
+  );
 
   function selectedOptionChanged(selectedItem: SelectOption | undefined) {
     if (selectedItem) {
@@ -60,7 +63,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
           className={cl(styles.selectWidthOverride)}
           label={t('presentation_page.side_menu.save.api.select_format')}
           variant="default"
-          selectedOption={fileFormats
+          selectedOption={apiFileFormats
             .map((format) => ({
               value: format.value,
               label: translate(
@@ -69,7 +72,7 @@ export const ApiQuery: React.FC<ApiQueryProps> = () => {
             }))
             .find((option) => option.value === selectedFormat)}
           onChange={selectedOptionChanged}
-          options={fileFormats.map((format) => ({
+          options={apiFileFormats.map((format) => ({
             value: format.value,
             label: translate(
               `presentation_page.side_menu.save.file.formats.${format.value}`,
