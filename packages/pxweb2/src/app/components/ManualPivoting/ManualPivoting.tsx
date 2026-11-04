@@ -197,7 +197,9 @@ export function ManualPivot({
     const hitPadding = 20;
     const groupSwitchHysteresis = 14;
     /** Calculates the shortest distance from a point to a rectangle. */
-    const distanceToRect = (rect: DOMRect): number => {
+    const distanceToRect = (
+      rect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>,
+    ): number => {
       const dx = Math.max(rect.left - x, 0, x - rect.right);
       const dy = Math.max(rect.top - y, 0, y - rect.bottom);
       return Math.hypot(dx, dy);
@@ -210,11 +212,25 @@ export function ManualPivot({
       return null;
     }
 
+    const sharedBottom = Math.max(
+      headerRect?.bottom ?? Number.NEGATIVE_INFINITY,
+      stubRect?.bottom ?? Number.NEGATIVE_INFINITY,
+    );
+    const getGroupDistance = (rect: DOMRect | undefined) =>
+      rect
+        ? distanceToRect({
+            left: rect.left,
+            right: rect.right,
+            top: rect.top,
+            bottom: sharedBottom,
+          })
+        : Number.POSITIVE_INFINITY;
+
     const headerDistance = headerRect
-      ? distanceToRect(headerRect)
+      ? getGroupDistance(headerRect)
       : Number.POSITIVE_INFINITY;
     const stubDistance = stubRect
-      ? distanceToRect(stubRect)
+      ? getGroupDistance(stubRect)
       : Number.POSITIVE_INFINITY;
     const currentHoveredGroup = hoveredGroupRef.current;
 
