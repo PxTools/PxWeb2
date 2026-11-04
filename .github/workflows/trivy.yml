@@ -6,6 +6,10 @@ on:
   schedule:
     - cron: '10 11 * * 0'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -13,13 +17,15 @@ jobs:
   docker:
     permissions:
       contents: read
-      security-events: write
-      actions: read
+      security-events: write # Required to upload Trivy scan results to the GitHub Security tab.
+      actions: read # Required by the SARIF upload action to access workflow run metadata.
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
