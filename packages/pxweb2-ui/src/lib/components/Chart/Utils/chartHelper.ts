@@ -109,8 +109,9 @@ function getAdaptiveSnapUnit(
   zeroBased = false,
 ): number {
   const span = Math.max(max - min, 1);
+  const stepCount = zeroBased ? 6 : 3;
 
-  return getNiceNumber(span / (zeroBased ? 6 : 3));
+  return getNiceNumber(span / stepCount);
 }
 
 const Y_AXIS_BREAK_GAP = '13%';
@@ -161,12 +162,18 @@ export function getAdaptiveYAxisMax(
   zeroBased: boolean,
 ): number {
   const valueMin = Number(value.min);
-  const min = zeroBased && valueMin >= 0 ? 0 : valueMin;
+  let min = valueMin;
+
+  if (zeroBased && valueMin >= 0) {
+    min = 0;
+  }
+
   const max = Number(value.max);
   const span = Math.max(max - min, 1);
   const pad = span * 0.03;
   const snap = getAdaptiveSnapUnit(min, max, zeroBased);
   const paddedMax = max + pad;
+
   return Math.ceil(paddedMax / snap) * snap;
 }
 

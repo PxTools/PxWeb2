@@ -192,7 +192,7 @@ export function CartesianChart({
   }, [breakValueAxis, yAxisDataExtent]);
 
   const yAxisInterval = useMemo(() => {
-    if (!yAxisDataExtent || (!yAxisBreak && yAxisDataExtent.min >= 0)) {
+    if (!yAxisBreak || !yAxisDataExtent) {
       return undefined;
     }
 
@@ -222,13 +222,12 @@ export function CartesianChart({
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
   const yAxisZeroBased = seriesType === 'bar';
-  const yAxisMin =
-    (seriesType === 'bar' &&
+  const yAxisShouldBeZeroBased =
+    (yAxisZeroBased &&
       yAxisDataExtent !== undefined &&
       yAxisDataExtent.min >= 0) ||
-    yAxisBreak
-      ? 0
-      : getAdaptiveYAxisMin;
+    yAxisBreak;
+  const yAxisMin = yAxisShouldBeZeroBased ? 0 : getAdaptiveYAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
@@ -240,20 +239,23 @@ export function CartesianChart({
           : { focus: 'series' as const },
       }),
     ) as echarts.EChartsOption['series'];
+
+    const gridPadding = isSmallScreen ? 24 : 0;
     const gridHeight =
       CHART_PLOT_HEIGHT_PX[screenSize] -
       TOP_CHART_PADDING -
       X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight;
+      xAxisLabelsHeight -
+      gridPadding;
 
     return {
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        height: isSmallScreen ? gridHeight - 24 : gridHeight,
+        height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
-        left: isSmallScreen ? 24 : '0',
-        right: isSmallScreen ? 24 : '0',
+        left: gridPadding,
+        right: gridPadding,
         //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
         // 'all' keeps the axis names inside the grid rect
@@ -527,6 +529,7 @@ export function CartesianChart({
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
+      // TODO: The chart.off calls produces console warnings. Fix this.
       chart.off('mouseover', handleSeriesInteraction);
       chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);
