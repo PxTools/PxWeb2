@@ -226,10 +226,9 @@ describe('CartesianChart', () => {
         { name: '2021', men: 4190, women: 7090, total: 0 },
       ],
     });
-    vi.mocked(getYAxisBreak).mockReturnValueOnce(undefined);
     vi.mocked(getAdaptiveYAxisInterval).mockReturnValueOnce(5000);
 
-    renderChart({ seriesType: 'line' });
+    renderChart({ seriesType: 'line', breakValueAxis: true });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     expect(getAdaptiveYAxisInterval).toHaveBeenCalledWith({
