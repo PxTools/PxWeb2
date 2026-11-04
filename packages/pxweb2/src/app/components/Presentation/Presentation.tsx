@@ -224,8 +224,10 @@ export function Presentation({
             containerGradient.classList.remove(classes.hidegradientLeft);
           }
         } else {
-          containerGradient.classList.add(classes.hidegradientRight);
-          containerGradient.classList.add(classes.hidegradientLeft);
+          containerGradient.classList.add(
+            classes.hidegradientRight,
+            classes.hidegradientLeft,
+          );
         }
       }
     };

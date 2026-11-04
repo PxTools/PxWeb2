@@ -22,6 +22,7 @@ import {
   Variable,
   VartypeEnum,
 } from '@pxweb2/pxweb2-ui';
+import { DataViewModeType } from './DataViewModeType';
 
 import { translateOutsideReactWithParams } from '../util/language/translateOutsideReact';
 import { getConfig } from '../util/config/getConfig';
@@ -318,6 +319,126 @@ export function filterStubAndHeadingArrays(
     stubChart: stubChart.filter((id) => variableIds.includes(id)),
     headingChart: headingChart.filter((id) => variableIds.includes(id)),
   };
+}
+
+interface StubAndHeadingOrders {
+  stubDesktop: string[];
+  headingDesktop: string[];
+  stubMobile: string[];
+  headingMobile: string[];
+  stubChart: string[];
+  headingChart: string[];
+}
+
+export function getOrdersForMode(
+  orders: StubAndHeadingOrders,
+  dataViewMode: DataViewModeType,
+): { stub: string[]; heading: string[] } | undefined {
+  switch (dataViewMode) {
+    case DataViewModeType.MobileTable:
+      return { stub: orders.stubMobile, heading: orders.headingMobile };
+    case DataViewModeType.DesktopTable:
+      return { stub: orders.stubDesktop, heading: orders.headingDesktop };
+    case DataViewModeType.Chart:
+      return { stub: orders.stubChart, heading: orders.headingChart };
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Reconciles the saved stub and heading orders with the variables in the current table.
+ * Removed variable IDs are filtered out, newly added variables are added to the relevant
+ * default orders, and chart orders are refreshed when the active view is a chart.
+ * The input orders are not mutated.
+ *
+ * @param pxTable - The table whose variable IDs define the current orders.
+ * @param dataViewMode - The active view mode; chart mode applies the supplied chart orders.
+ * @param currentOrders - The current stub and heading orders for desktop, mobile, and chart views.
+ * @param chartOrders - Optional freshly initialized chart orders to use in chart mode.
+ * @returns Updated stub and heading orders for all three views.
+ */
+export function reconcileVariableOrders(
+  pxTable: PxTable,
+  dataViewMode: DataViewModeType,
+  currentOrders: StubAndHeadingOrders,
+  chartOrders?: {
+    stubOrderChart: string[];
+    headingOrderChart: string[];
+  },
+): StubAndHeadingOrders {
+  const variableIds = pxTable.metadata.variables.map((variable) => variable.id);
+  const variableIdSet = new Set(variableIds);
+  // Check membership rather than array lengths so a removed-and-replaced variable is detected.
+  const hasRemovedVariables = Object.values(currentOrders).some(
+    (order: string[]) => order.some((id) => !variableIdSet.has(id)),
+  );
+
+  // Filter removed IDs from every view, or make a fresh object before applying updates.
+  const nextOrders: StubAndHeadingOrders = hasRemovedVariables
+    ? filterStubAndHeadingArrays(
+        variableIds,
+        currentOrders.stubDesktop,
+        currentOrders.headingDesktop,
+        currentOrders.stubMobile,
+        currentOrders.headingMobile,
+        currentOrders.stubChart,
+        currentOrders.headingChart,
+      )
+    : { ...currentOrders };
+
+  // Chart mode recalculates its axis and series orders from the current table.
+  if (dataViewMode === DataViewModeType.Chart && chartOrders) {
+    nextOrders.stubChart = chartOrders.stubOrderChart;
+    nextOrders.headingChart = chartOrders.headingOrderChart;
+  }
+
+  // New variables default to the desktop/mobile stub and chart heading.
+  const remainingVariables = pxTable.metadata.variables.filter(
+    (variable) =>
+      !nextOrders.stubDesktop.includes(variable.id) &&
+      !nextOrders.headingDesktop.includes(variable.id),
+  );
+
+  if (remainingVariables.length > 0) {
+    // Copy only the arrays that may receive new IDs; preserve the other view orders.
+    const stubDesktop = [...nextOrders.stubDesktop];
+    const stubMobile = [...nextOrders.stubMobile];
+    const headingChart = [...nextOrders.headingChart];
+
+    remainingVariables.forEach((variable) => {
+      if (!stubDesktop.includes(variable.id)) {
+        stubDesktop.push(variable.id);
+      }
+      if (!stubMobile.includes(variable.id)) {
+        stubMobile.push(variable.id);
+      }
+      if (!headingChart.includes(variable.id)) {
+        headingChart.push(variable.id);
+      }
+    });
+
+    nextOrders.stubDesktop = stubDesktop;
+    nextOrders.stubMobile = stubMobile;
+    nextOrders.headingChart = headingChart;
+  }
+
+  return nextOrders;
+}
+
+export function isNewTableOrLanguage(
+  accumulatedData: PxTable | undefined,
+  pxTable: PxTable,
+  lang: string,
+): boolean {
+  if (accumulatedData === undefined) {
+    return true;
+  }
+
+  return (
+    accumulatedData.metadata.id !== pxTable.metadata.id ||
+    accumulatedData.metadata.language.toLowerCase() !== lang.toLowerCase()
+  );
 }
 
 export function autoPivotTable(
