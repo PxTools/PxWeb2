@@ -209,6 +209,65 @@ describe('ManualPivoting', () => {
     expect(stubItems.map((item: Variable) => item.id)).toEqual(['s2', 's3']);
   });
 
+  it('allows dropping at the end of a multi-item group below the taller list', () => {
+    const onClose = vi.fn();
+
+    render(
+      <ManualPivot
+        isOpen={true}
+        onClose={onClose}
+        headerVariables={[
+          makeVariable('h1', 'Header 1'),
+          makeVariable('h2', 'Header 2'),
+        ]}
+        stubVariables={[
+          makeVariable('s1', 'Stub 1'),
+          makeVariable('s2', 'Stub 2'),
+          makeVariable('s3', 'Stub 3'),
+        ]}
+      />,
+    );
+
+    const zones = document.querySelectorAll('ul');
+    const stubZone = zones[0]?.parentElement;
+    const headerZone = zones[1]?.parentElement;
+    expect(stubZone).not.toBeNull();
+    expect(headerZone).not.toBeNull();
+
+    setRect(stubZone!, makeRect(0, 100, 100, 250));
+    setRect(headerZone!, makeRect(120, 100, 220, 190));
+    setRect(getItem('s1'), makeRect(0, 100, 100, 140));
+    setRect(getItem('h1'), makeRect(120, 100, 220, 140));
+    setRect(getItem('h2'), makeRect(120, 146, 220, 186));
+
+    fireEvent.dragStart(getItem('s1'));
+    fireEvent(
+      getItem('s1'),
+      new MouseEvent('drag', {
+        bubbles: true,
+        clientX: 170,
+        clientY: 330,
+      }),
+    );
+    fireEvent(
+      getItem('s1'),
+      new MouseEvent('dragend', {
+        bubbles: true,
+        clientX: 170,
+        clientY: 330,
+      }),
+    );
+    confirmPivot();
+
+    const [, headerItems, stubItems] = onClose.mock.calls[0];
+    expect(headerItems.map((item: Variable) => item.id)).toEqual([
+      'h1',
+      'h2',
+      's1',
+    ]);
+    expect(stubItems.map((item: Variable) => item.id)).toEqual(['s2', 's3']);
+  });
+
   it('calls onClose with updated=true and reordered lists on confirm', () => {
     const onClose = vi.fn();
 

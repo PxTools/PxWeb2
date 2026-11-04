@@ -23,6 +23,7 @@ import EmtyList from './EmtyList/EmtyList';
 
 type VariableGroup = 'header' | 'stub';
 const MINIMUM_ITEM_HEIGHT = 40;
+const DROP_ZONE_BOTTOM_EXTENSION = MINIMUM_ITEM_HEIGHT * 3;
 type DragEvent = MouseEvent | TouchEvent | PointerEvent;
 type DropPreview = {
   group: VariableGroup;
@@ -215,7 +216,7 @@ export function ManualPivot({
     const sharedBottom = Math.max(
       headerRect?.bottom ?? Number.NEGATIVE_INFINITY,
       stubRect?.bottom ?? Number.NEGATIVE_INFINITY,
-    );
+    ) + DROP_ZONE_BOTTOM_EXTENSION;
     const getGroupDistance = (rect: DOMRect | undefined) =>
       rect
         ? distanceToRect({
