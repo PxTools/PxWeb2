@@ -33,14 +33,18 @@ const { table, mockLineChart, mockBarChart, mockT } = vi.hoisted(() => ({
     stub: [],
     heading: [],
   } satisfies PxTable,
-  mockLineChart: vi.fn((props: { numberFormatter: (value: number) => string }) => {
-    void props.numberFormatter;
-    return null;
-  }),
-  mockBarChart: vi.fn((props: { numberFormatter: (value: number) => string }) => {
-    void props.numberFormatter;
-    return null;
-  }),
+  mockLineChart: vi.fn(
+    (props: { numberFormatter: (value: number) => string }) => {
+      void props.numberFormatter;
+      return null;
+    },
+  ),
+  mockBarChart: vi.fn(
+    (props: { numberFormatter: (value: number) => string }) => {
+      void props.numberFormatter;
+      return null;
+    },
+  ),
   mockT: vi.fn((key: string, options?: { value: string }) =>
     options ? `${key}:${options.value}` : key,
   ),
@@ -167,7 +171,9 @@ function renderPresentation(
   }
 
   if (initialEntry === '/') {
-    expect(result.getByRole('table', { name: 'Test table' })).toBeInTheDocument();
+    expect(
+      result.getByRole('table', { name: 'Test table' }),
+    ).toBeInTheDocument();
   } else {
     expect(
       result.container.querySelector('table[aria-label="Test table"]'),
