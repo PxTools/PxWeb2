@@ -6,9 +6,7 @@ import type {
 import cl from 'clsx';
 import styles from './StartPageDetails.module.scss';
 
-type StartPageDetailsProps = Readonly<{
-  detailsSection?: StartpageLocaleContent['detailsSection'];
-}>;
+type StartPageDetailsProps = Pick<StartpageLocaleContent, 'detailsSection'>;
 
 const renderLinksList = (items?: Readonly<DetailLink[]>) => {
   if (!items?.length) {

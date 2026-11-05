@@ -1,3 +1,4 @@
+import { getConfig } from '../config/getConfig';
 import type { LocaleContent } from '../config/localeContentTypes';
 
 // In-memory cache for previously fetched content per language
@@ -9,7 +10,7 @@ const pendingRequests = new Map<string, Promise<LocaleContent | null>>();
 export async function fetchLocaleContent(
   lang: string,
 ): Promise<LocaleContent | null> {
-  const key = lang || 'en';
+  const key = lang || getConfig().language.defaultLanguage;
 
   if (cache.has(key)) {
     return cache.get(key)!;

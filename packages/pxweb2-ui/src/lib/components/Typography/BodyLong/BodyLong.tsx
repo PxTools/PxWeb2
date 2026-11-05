@@ -22,7 +22,7 @@ export function BodyLong({
   className = '',
   as,
   ...rest
-}: BodyLongProps) {
+}: Readonly<BodyLongProps>) {
   const Component = as ?? (`p` as React.ElementType);
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const weightClassExtension = weight === 'regular' ? '' : '-' + weight;
