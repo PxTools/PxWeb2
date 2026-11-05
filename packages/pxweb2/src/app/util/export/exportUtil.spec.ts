@@ -1,3 +1,4 @@
+/// <reference types="vitest/jsdom" />
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import {
@@ -261,23 +262,14 @@ describe('getTimestamp', () => {
 });
 
 describe('createSavedQueryURL', () => {
-  const originalLocation = window.location;
+  const originalUrl = window.location.href;
 
   beforeEach(() => {
-    // @ts-ignore
-    delete window.location;
-    // @ts-ignore
-    window.location = {
-      origin: 'https://example.com',
-      pathname: '/myapp/page',
-    };
+    jsdom.reconfigure({ url: 'https://example.com/myapp/page' });
   });
 
   afterEach(() => {
-    Object.defineProperty(window, 'location', {
-      value: originalLocation,
-      writable: true,
-    });
+    jsdom.reconfigure({ url: originalUrl });
   });
 
   it('should create a URL with the given saved query id', () => {

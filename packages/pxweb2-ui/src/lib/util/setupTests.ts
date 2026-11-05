@@ -2,10 +2,16 @@ import { vi, beforeEach } from 'vitest';
 import type { ReactNode } from 'react';
 
 // jsdom lacks scrollIntoView; mock it
-globalThis.HTMLElement.prototype.scrollIntoView = vi.fn();
+if (typeof HTMLElement !== 'undefined') {
+  globalThis.HTMLElement.prototype.scrollIntoView = vi.fn();
+}
 
 // Disable CSS animations and transitions in tests for faster execution
 beforeEach(() => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
   const style = document.createElement('style');
   style.innerHTML = `
     *,

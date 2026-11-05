@@ -11,6 +11,7 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: 'jsdom',
+      pool: 'vmThreads',
       testTimeout: 20000,
       hookTimeout: 20000,
       include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
