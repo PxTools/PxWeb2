@@ -48,13 +48,6 @@ beforeEach(() => {
   getLanguagePathMock.mockImplementation((pathname: string) =>
     pathname === '/' ? '/lang/root' : `/lang${pathname}`,
   );
-
-  // Stub global location
-  vi.stubGlobal('location', {
-    pathname: '/root/page',
-    search: '?q=1',
-    hash: '#h',
-  });
 });
 
 describe('createBreadcrumbItems', () => {
@@ -156,7 +149,7 @@ describe('createBreadcrumbItems', () => {
       label: 'Current page',
       href: '/lang/some',
     });
-    expect(items.length).toBe(4);
+    expect(items).toHaveLength(4);
   });
 
   it('handles undefined/null pathElements (no intermediate breadcrumb items)', () => {
