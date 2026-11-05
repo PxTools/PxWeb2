@@ -1,5 +1,48 @@
 # Changelog
 
+## [2.14.0](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.14.0) (2026-11-05)
+
+
+### :sparkles: Features
+
+* Display as barchart ([08fb84c](https://github.com/PxTools/PxWeb2/commit/08fb84c99537de7bfe316016925d82020406c5f8))
+
+
+### :bug: Bug Fixes
+
+* Chart dataset selection change bug ([9e84eed](https://github.com/PxTools/PxWeb2/commit/9e84eedfb00b2c3bdcf66f76be08b930359b72de))
+* Consolidate container gradiant left right and add tests in presentation ([#1610](https://github.com/PxTools/PxWeb2/issues/1610)) ([8d83f4b](https://github.com/PxTools/PxWeb2/commit/8d83f4bedff11f07e3d517abbc04e6d4c8557188))
+* Correct mock path for highlighter in CodeSnippetBody tests ([#1619](https://github.com/PxTools/PxWeb2/issues/1619)) ([312d8b4](https://github.com/PxTools/PxWeb2/commit/312d8b40a17d972e3f0f2edb4d60de0903a56e1c))
+* Keep active filters when using skip to links in startpage ([#1612](https://github.com/PxTools/PxWeb2/issues/1612)) ([f2b4fee](https://github.com/PxTools/PxWeb2/commit/f2b4feeb14cfb68cb4bda6c9763ec94d1db6e198))
+* Various old Sonarqube  issues ([#1558](https://github.com/PxTools/PxWeb2/issues/1558)) ([3859d9d](https://github.com/PxTools/PxWeb2/commit/3859d9d2eab7e9feacb6d64f07500b168669ddbf))
+
+
+### :test_tube: Tests
+
+* Speed up Vitest with vmThreads ([#1616](https://github.com/PxTools/PxWeb2/issues/1616)) ([d3fed06](https://github.com/PxTools/PxWeb2/commit/d3fed0605440e7da9801ddfc90aef5a26026e4e1))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump fast-uri from 3.1.8 to 3.1.9 ([#1583](https://github.com/PxTools/PxWeb2/issues/1583)) ([19c4368](https://github.com/PxTools/PxWeb2/commit/19c43685e76de3357125be8675be6f3a512e65e3))
+* **deps:** bump actions/setup-node from 7.0.0 to 7.1.0 ([#1574](https://github.com/PxTools/PxWeb2/issues/1574)) ([2fe65a1](https://github.com/PxTools/PxWeb2/commit/2fe65a10c6c302e6cc26453ea5b33af246165f44))
+* **deps:** bump chromaui/action from 18.13.2 to 18.13.3 ([#1606](https://github.com/PxTools/PxWeb2/issues/1606)) ([71c3f7c](https://github.com/PxTools/PxWeb2/commit/71c3f7cf2fde085411558deaeade465ac5e2d50e))
+* **deps:** bump chromaui/action from 18.9.5 to 18.13.2 ([#1599](https://github.com/PxTools/PxWeb2/issues/1599)) ([c45e600](https://github.com/PxTools/PxWeb2/commit/c45e6009370d4db444a9630246bb55174b772064))
+* **deps:** bump docker/login-action from 4.6.0 to 4.7.0 ([#1607](https://github.com/PxTools/PxWeb2/issues/1607)) ([fddd3f7](https://github.com/PxTools/PxWeb2/commit/fddd3f749a5bd8d99ea4e0fc05006e6523108b49))
+* **deps:** bump github/codeql-action/upload-sarif ([#1596](https://github.com/PxTools/PxWeb2/issues/1596)) ([d324742](https://github.com/PxTools/PxWeb2/commit/d324742922d4bcce9960f0029b1a06472da2841a))
+* **deps:** bump motion from 14.5.0 to 14.6.0 ([#1608](https://github.com/PxTools/PxWeb2/issues/1608)) ([1328534](https://github.com/PxTools/PxWeb2/commit/13285347b9224b36884e52f2e95b79bd01fe77c5))
+* **deps:** bump SonarSource/sonarqube-scan-action from 8.2.2 to 8.3.0 ([#1560](https://github.com/PxTools/PxWeb2/issues/1560)) ([c36bc19](https://github.com/PxTools/PxWeb2/commit/c36bc1914e9d5a64bc9d48bb061657db51efe09c))
+* **deps:** bump undici and wrangler ([#1593](https://github.com/PxTools/PxWeb2/issues/1593)) ([f0d4f41](https://github.com/PxTools/PxWeb2/commit/f0d4f41da139bff55124c7bfce7fef401a9528c4))
+* **deps:** bump vite from 8.3.0 to 8.3.5 ([#1577](https://github.com/PxTools/PxWeb2/issues/1577)) ([747eabb](https://github.com/PxTools/PxWeb2/commit/747eabb796705a98a60a65afa1bfe3291e033dba))
+* Update and pin nginx image in Dockerfile ([#1585](https://github.com/PxTools/PxWeb2/issues/1585)) ([b72a668](https://github.com/PxTools/PxWeb2/commit/b72a668463b9c3a99ab0ea3b960a5455382d0737))
+
+
+### :broom: Chores
+
+* Change Nginx image to new owner ([#1603](https://github.com/PxTools/PxWeb2/issues/1603)) ([88ad095](https://github.com/PxTools/PxWeb2/commit/88ad0954ae58a49c6a567ec9c4730697493f3f35))
+* update dependencies across packages ([#1592](https://github.com/PxTools/PxWeb2/issues/1592)) ([e5bb355](https://github.com/PxTools/PxWeb2/commit/e5bb3550cf8bc82cef24a3055ae0b2ced011ac50))
+* Upgrade motion package from 13.5.1 to 14.5.0 ([#1602](https://github.com/PxTools/PxWeb2/issues/1602)) ([f9ef0b0](https://github.com/PxTools/PxWeb2/commit/f9ef0b0789ad62626c82ba9c70e5590110dd27ae))
+
 ## [2.13.0](https://github.com/PxTools/PxWeb2/compare/v2.12.0...v2.13.0) (2026-10-15)
 
 
