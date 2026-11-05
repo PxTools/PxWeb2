@@ -281,14 +281,26 @@ describe('createSavedQueryURL', () => {
   });
 
   it('should create a URL with the given saved query id', () => {
-    const url = createSavedQueryURL('12345');
+    const url = createSavedQueryURL('12345', 'table');
     expect(url).toBe('https://example.com/myapp/page?sq=12345');
   });
 
   it('should encode the id if it contains special characters', () => {
-    const url = createSavedQueryURL('id with spaces & symbols');
+    const url = createSavedQueryURL('id with spaces & symbols', 'table');
     expect(url).toBe(
       'https://example.com/myapp/page?sq=id+with+spaces+%26+symbols',
+    );
+  });
+
+  it('includes the line chart view when requested', () => {
+    expect(createSavedQueryURL('12345', 'linechart')).toBe(
+      'https://example.com/myapp/page?sq=12345&view=linechart',
+    );
+  });
+
+  it('does not include the table view in the saved query URL', () => {
+    expect(createSavedQueryURL('12345', 'table')).toBe(
+      'https://example.com/myapp/page?sq=12345',
     );
   });
 });

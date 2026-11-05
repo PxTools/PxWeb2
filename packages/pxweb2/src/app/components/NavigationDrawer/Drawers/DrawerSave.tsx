@@ -35,6 +35,8 @@ import {
   fileFormats,
   type FileOutputFormatType,
 } from '../../../constants/outputFormats';
+import { getViewMode } from '../../../pages/TableViewer/Utils/tableViewerHelper';
+import { getConfig } from '../../../util/config/getConfig';
 export { fileFormats } from '../../../constants/outputFormats';
 
 // File formats moved to shared constants in app/constants/outputFormats
@@ -376,7 +378,12 @@ export function DrawerSave({ tableId }: DrawerSaveProps) {
     ).then(
       (id) => {
         // Create saved query URL
-        const savedQueryUrl = createSavedQueryURL(id);
+        const chartEnabled = getConfig().features?.chartEnabled === true;
+        const viewMode = getViewMode(
+          new URLSearchParams(window.location.search),
+          chartEnabled,
+        );
+        const savedQueryUrl = createSavedQueryURL(id, viewMode);
 
         setsaveQueryUrl(savedQueryUrl);
         setQueryId(id);
