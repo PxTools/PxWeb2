@@ -59,8 +59,12 @@ export function DrawerView() {
             <ActionItem
               largeIconName="HorizontalBarChart"
               size="large"
-              label={t('presentation_page.side_menu.view.horizontal_barchart.title')}
-              ariaLabel={t('presentation_page.side_menu.view.horizontal_barchart.title')}
+              label={t(
+                'presentation_page.side_menu.view.horizontal_barchart.title',
+              )}
+              ariaLabel={t(
+                'presentation_page.side_menu.view.horizontal_barchart.title',
+              )}
               onClick={() => {
                 pivotToChart();
                 setViewMode('horizontalbarchart');
