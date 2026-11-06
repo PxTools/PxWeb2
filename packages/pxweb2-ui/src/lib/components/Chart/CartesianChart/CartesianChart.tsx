@@ -86,6 +86,7 @@ export interface ChartProps {
 
 interface CartesianChartProps extends ChartProps {
   readonly seriesType: 'line' | 'bar';
+  readonly orientation?: 'vertical' | 'horizontal';
   readonly breakValueAxis?: boolean;
   readonly getTooltipSymbolSvg: (color: string, seriesIndex: number) => string;
 }
