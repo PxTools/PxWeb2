@@ -101,6 +101,7 @@ export function CartesianChart({
   onChartReady,
   screenSize = 'large',
   seriesType,
+  orientation = 'vertical',
   breakValueAxis = false,
   getTooltipSymbolSvg,
 }: CartesianChartProps) {
@@ -111,6 +112,7 @@ export function CartesianChart({
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
+  const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
     screenSize === 'medium' ||
     screenSize === 'small' ||
@@ -233,8 +235,11 @@ export function CartesianChart({
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, seriesType, resolvedColors).map(
-      (seriesOption) => ({
+      (seriesOption, index) => ({
         ...seriesOption,
+        encode: isHorizontal
+          ? { x: dataset.series[index].key, y: 'name' }
+          : { x: 'name', y: dataset.series[index].key },
         emphasis: isMediumOrSmallerScreen
           ? { disabled: true }
           : { focus: 'series' as const },
@@ -278,56 +283,80 @@ export function CartesianChart({
         },
       ],
 
-      xAxis: {
-        type: 'category' as const,
-        name: wrappedXAxisName,
-        nameLocation: 'end',
-        // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
-        nameMoveOverlap: true,
-        nameTextStyle: {
-          lineHeight: xAxisLabelConfig.lineHeight,
-        },
-        axisLabel: {
-          rotate: 45,
-          interval: 0,
-          align: 'right',
-          lineHeight: xAxisLabelConfig.lineHeight,
-          verticalAlign: 'top',
-          overflow: 'break',
-          hideOverlap: true,
-          formatter: xAxisLabelConfig.formatter,
-        },
-        axisLine: {
-          show: true,
-          onZero: false,
-        },
-        axisTick: { show: true, alignWithLabel: true },
-      },
-      yAxis: {
-        name: wrappedYAxisName,
-        axisLabel: {
-          formatter: (value: string | number) =>
-            resolvedNumberFormatter(Number(value)),
-        },
-        nameTextStyle: {
-          lineHeight: xAxisLabelConfig.lineHeight,
-        },
-        scale: false,
-        min: yAxisMin,
-        max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
-        interval: yAxisInterval,
-        ...(yAxisBreak
-          ? {
-              breaks: [yAxisBreak],
-              breakArea: { show: false },
-            }
-          : {}),
-        axisLine: {
-          show: true,
-          breakLine: false,
-        },
-        axisTick: { show: true },
-      },
+      xAxis: isHorizontal
+        ? {
+            type: 'value' as const,
+            name: wrappedYAxisName,
+            nameTextStyle: {
+              lineHeight: xAxisLabelConfig.lineHeight,
+            },
+            scale: false,
+            min: yAxisMin,
+            max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
+            axisLine: { show: true },
+            axisTick: { show: true },
+          }
+        : {
+            type: 'category' as const,
+            name: wrappedXAxisName,
+            nameLocation: 'end',
+            // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
+            nameMoveOverlap: true,
+            nameTextStyle: {
+              lineHeight: xAxisLabelConfig.lineHeight,
+            },
+            axisLabel: {
+              rotate: 45,
+              interval: 0,
+              align: 'right',
+              lineHeight: xAxisLabelConfig.lineHeight,
+              verticalAlign: 'top',
+              overflow: 'break',
+              hideOverlap: true,
+              formatter: xAxisLabelConfig.formatter,
+            },
+            axisLine: {
+              show: true,
+              onZero: false,
+            },
+            axisTick: { show: true, alignWithLabel: true },
+          },
+      yAxis: isHorizontal
+        ? {
+            type: 'category' as const,
+            name: wrappedXAxisName,
+            inverse: true,
+            nameTextStyle: {
+              lineHeight: xAxisLabelConfig.lineHeight,
+            },
+            axisLine: { show: true, onZero: false },
+            axisTick: { show: true, alignWithLabel: true },
+          }
+        : {
+            name: wrappedYAxisName,
+            axisLabel: {
+              formatter: (value: string | number) =>
+                resolvedNumberFormatter(Number(value)),
+            },
+            nameTextStyle: {
+              lineHeight: xAxisLabelConfig.lineHeight,
+            },
+            scale: false,
+            min: yAxisMin,
+            max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
+            interval: yAxisInterval,
+            ...(yAxisBreak
+              ? {
+                  breaks: [yAxisBreak],
+                  breakArea: { show: false },
+                }
+              : {}),
+            axisLine: {
+              show: true,
+              breakLine: false,
+            },
+            axisTick: { show: true },
+          },
       legend: {
         data: visibleLegendData,
         orient: 'horizontal',
@@ -413,6 +442,7 @@ export function CartesianChart({
     visibleLegendData,
     dataset,
     seriesType,
+    isHorizontal,
     resolvedColors,
     screenSize,
     xAxisLabelsHeight,
