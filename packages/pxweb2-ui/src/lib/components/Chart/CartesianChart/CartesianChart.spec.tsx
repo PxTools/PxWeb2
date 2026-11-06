@@ -214,6 +214,7 @@ describe('CartesianChart', () => {
       type: 'category',
       name: 'Year',
       inverse: true,
+      nameLocation: 'start',
     });
     expect(option.series).toEqual([
       expect.objectContaining({ encode: { x: 'men', y: 'name' } }),

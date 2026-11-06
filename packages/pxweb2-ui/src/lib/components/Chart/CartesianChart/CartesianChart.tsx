@@ -326,6 +326,7 @@ export function CartesianChart({
             type: 'category' as const,
             name: wrappedXAxisName,
             inverse: true,
+            nameLocation: 'start',
             nameTextStyle: {
               lineHeight: xAxisLabelConfig.lineHeight,
             },
