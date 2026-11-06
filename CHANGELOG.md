@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.15.0](https://github.com/PxTools/PxWeb2/compare/v2.14.0...v2.15.0) (2026-11-06)
+
+
+### :sparkles: Features
+
+* Add number formatting support to CartesianChart ([#1588](https://github.com/PxTools/PxWeb2/issues/1588)) ([4b3cee4](https://github.com/PxTools/PxWeb2/commit/4b3cee4e154d4160c9cb9e296619794966bd359e))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps:** bump motion from 14.6.0 to 14.7.1 ([#1618](https://github.com/PxTools/PxWeb2/issues/1618)) ([2f459e1](https://github.com/PxTools/PxWeb2/commit/2f459e1bb43fe03bd9af0fb8af73fa68bf9dbf92))
+
 ## [2.14.0](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.14.0) (2026-11-05)
 
 
