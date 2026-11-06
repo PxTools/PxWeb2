@@ -604,7 +604,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         (variable) => selectionMap.has(variable.id),
       );
 
-      // Cache order can differ from selection order because it retains removed values.
+      // Display order follows the metadata-sorted selection, not the cache that retains removed values.
       pxTable.metadata.variables.forEach((variable) => {
         const valuesByCode = new Map(
           variable.values.map((value) => [value.code, value]),
