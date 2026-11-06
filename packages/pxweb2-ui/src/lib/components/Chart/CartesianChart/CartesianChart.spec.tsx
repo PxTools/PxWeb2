@@ -305,6 +305,41 @@ describe('CartesianChart', () => {
     );
   });
 
+  it('uses the provided number formatter for y-axis labels', () => {
+    const numberFormatter = vi.fn((value: number) => `formatted: ${value}`);
+
+    renderChart({ numberFormatter });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const yAxis = option.yAxis as echarts.YAXisComponentOption;
+    const formatter = yAxis.axisLabel?.formatter;
+
+    expect(typeof formatter).toBe('function');
+    expect((formatter as (value: string | number) => string)('1234.5')).toBe(
+      'formatted: 1234.5',
+    );
+    expect(numberFormatter).toHaveBeenCalledWith(1234.5);
+  });
+
+  it('formats y-axis labels using the table language by default', () => {
+    const language = 'de-DE';
+    const pxtable = {
+      ...mockPxTable,
+      metadata: { language },
+    } as PxTable;
+
+    renderChart({ pxtable });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const yAxis = option.yAxis as echarts.YAXisComponentOption;
+    const formatter = yAxis.axisLabel?.formatter;
+
+    expect(typeof formatter).toBe('function');
+    expect((formatter as (value: string | number) => string)(1234.5)).toBe(
+      new Intl.NumberFormat(language).format(1234.5),
+    );
+  });
+
   it('reserves space for the x-axis and legend below the plot', () => {
     const { container } = renderChart();
     const chartDiv = Array.from(container.querySelectorAll('div')).find(
