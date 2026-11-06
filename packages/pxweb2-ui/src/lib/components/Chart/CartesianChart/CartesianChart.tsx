@@ -287,6 +287,10 @@ export function CartesianChart({
         ? {
             type: 'value' as const,
             name: wrappedYAxisName,
+            axisLabel: {
+              formatter: (value: string | number) =>
+                resolvedNumberFormatter(Number(value)),
+            },
             nameTextStyle: {
               lineHeight: xAxisLabelConfig.lineHeight,
             },
