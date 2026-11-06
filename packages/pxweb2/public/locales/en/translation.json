@@ -189,6 +189,9 @@
         },
         "barchart": {
           "title": "Bar chart"
+        },
+        "horizontal_barchart": {
+          "title": "Horizontal bar chart"
         }
       },
       "edit": {

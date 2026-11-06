@@ -6,49 +6,61 @@ import Presentation from './Presentation';
 import classes from './Presentation.module.scss';
 import type { PxTable } from '@pxweb2/pxweb2-ui';
 
-const { table, mockLineChart, mockBarChart, mockT } = vi.hoisted(() => ({
-  table: {
-    metadata: {
-      id: '1',
-      language: 'en',
-      availableLanguages: ['en'],
-      label: 'Test table',
-      updated: new Date('2026-01-01'),
-      source: '',
-      infofile: '',
-      decimals: 0,
-      officialStatistics: false,
-      aggregationAllowed: false,
-      contents: '',
-      descriptionDefault: false,
-      matrix: '',
-      subjectCode: '',
-      subjectArea: '',
-      variables: [],
-      contacts: [],
-      definitions: {},
-      notes: [],
+const { table, mockLineChart, mockBarChart, mockT, mockApp, mockPivotToChart } =
+  vi.hoisted(() => ({
+    table: {
+      metadata: {
+        id: '1',
+        language: 'en',
+        availableLanguages: ['en'],
+        label: 'Test table',
+        updated: new Date('2026-01-01'),
+        source: '',
+        infofile: '',
+        decimals: 0,
+        officialStatistics: false,
+        aggregationAllowed: false,
+        contents: '',
+        descriptionDefault: false,
+        matrix: '',
+        subjectCode: '',
+        subjectArea: '',
+        variables: [],
+        contacts: [],
+        definitions: {},
+        notes: [],
+      },
+      data: { cube: {}, variableOrder: [], isLoaded: true },
+      stub: [],
+      heading: [],
+    } satisfies PxTable,
+    mockLineChart: vi.fn(
+      (props: { numberFormatter: (value: number) => string }) => {
+        void props.numberFormatter;
+        return null;
+      },
+    ),
+    mockBarChart: vi.fn(
+      (props: {
+        numberFormatter: (value: number) => string;
+        orientation?: string;
+      }) => {
+        void props.numberFormatter;
+        return (
+          <div data-testid={`bar-chart-${props.orientation ?? 'vertical'}`} />
+        );
+      },
+    ),
+    mockT: vi.fn((key: string, options?: { value: string }) =>
+      options ? `${key}:${options.value}` : key,
+    ),
+    mockApp: {
+      isMobile: false,
+      screenSize: 'large',
+      getSavedQueryId: () => '',
     },
-    data: { cube: {}, variableOrder: [], isLoaded: true },
-    stub: [],
-    heading: [],
-  } satisfies PxTable,
-  mockLineChart: vi.fn(
-    (props: { numberFormatter: (value: number) => string }) => {
-      void props.numberFormatter;
-      return null;
-    },
-  ),
-  mockBarChart: vi.fn(
-    (props: { numberFormatter: (value: number) => string }) => {
-      void props.numberFormatter;
-      return null;
-    },
-  ),
-  mockT: vi.fn((key: string, options?: { value: string }) =>
-    options ? `${key}:${options.value}` : key,
-  ),
-}));
+    mockPivotToChart: vi.fn(),
+  }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: mockT, i18n: { language: 'en' } }),
@@ -58,11 +70,7 @@ vi.mock('../../util/config/getConfig', () => ({
 }));
 
 vi.mock('../../context/useApp', () => ({
-  default: () => ({
-    isMobile: false,
-    screenSize: 'large',
-    getSavedQueryId: () => '',
-  }),
+  default: () => mockApp,
 }));
 vi.mock('../../context/useTableData', () => {
   const tableData = {
@@ -71,7 +79,7 @@ vi.mock('../../context/useTableData', () => {
     setIsFadingTable: vi.fn(),
     fetchTableData: vi.fn(),
     pivotToDesktop: vi.fn(),
-    pivotToChart: vi.fn(),
+    pivotToChart: mockPivotToChart,
     setChart: vi.fn(),
   };
   return { default: () => tableData };
@@ -189,6 +197,8 @@ describe('Presentation', () => {
     mockLineChart.mockClear();
     mockBarChart.mockClear();
     mockT.mockClear();
+    mockPivotToChart.mockClear();
+    mockApp.isMobile = false;
   });
 
   it('renders the table and gradient containers', () => {
@@ -215,6 +225,43 @@ describe('Presentation', () => {
       value: '1234.5',
     });
   });
+
+  it('renders the horizontal bar chart with translated number formatting', () => {
+    const { getByTestId } = renderPresentation(
+      undefined,
+      '/?view=horizontalbarchart',
+    );
+
+    expect(getByTestId('bar-chart-horizontal')).toBeVisible();
+    expect(getByTestId('bar-chart-vertical')).not.toBeVisible();
+    const chartProps = mockBarChart.mock.calls.find(
+      ([props]) => props.orientation === 'horizontal',
+    )?.[0];
+    expect(chartProps?.numberFormatter(1234.5)).toBe(
+      'number.simple_number:1234.5',
+    );
+  });
+
+  it.each(['linechart', 'barchart', 'horizontalbarchart'])(
+    'pivots the %s view to chart when the screen size changes',
+    (view) => {
+      const { rerender } = renderPresentation(undefined, `/?view=${view}`);
+      mockPivotToChart.mockClear();
+      mockApp.isMobile = true;
+
+      rerender(
+        <MemoryRouter initialEntries={[`/?view=${view}`]}>
+          <Presentation
+            selectedTabId="1"
+            isExpanded={false}
+            setIsExpanded={vi.fn()}
+          />
+        </MemoryRouter>,
+      );
+
+      expect(mockPivotToChart).toHaveBeenCalledTimes(1);
+    },
+  );
 
   describe('Presentation gradient handling', () => {
     afterEach(() => {

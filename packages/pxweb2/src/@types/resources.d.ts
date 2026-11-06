@@ -345,6 +345,9 @@ export default interface Resources {
           barchart: {
             title: 'Bar chart';
           };
+          horizontal_barchart: {
+            title: 'Horizontal bar chart';
+          };
           linechart: {
             title: 'Line chart';
           };

@@ -186,10 +186,56 @@ describe('CartesianChart', () => {
       className: expect.any(String),
     });
     expect(option.series).toEqual([
-      expect.objectContaining({ emphasis: { focus: 'series' } }),
-      expect.objectContaining({ emphasis: { focus: 'series' } }),
-      expect.objectContaining({ emphasis: { focus: 'series' } }),
+      expect.objectContaining({
+        encode: { x: 'name', y: 'men' },
+        emphasis: { focus: 'series' },
+      }),
+      expect.objectContaining({
+        encode: { x: 'name', y: 'women' },
+        emphasis: { focus: 'series' },
+      }),
+      expect.objectContaining({
+        encode: { x: 'name', y: 'total' },
+        emphasis: { focus: 'series' },
+      }),
     ]);
+  });
+
+  it('uses a category y-axis and maps each series to the horizontal value axis', () => {
+    renderChart({ orientation: 'horizontal' });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    expect(option.xAxis).toMatchObject({
+      type: 'value',
+      name: mockDataset.unit,
+      min: 0,
+    });
+    expect(option.yAxis).toMatchObject({
+      type: 'category',
+      name: 'Year',
+      inverse: true,
+      nameLocation: 'start',
+    });
+    expect(option.series).toEqual([
+      expect.objectContaining({ encode: { x: 'men', y: 'name' } }),
+      expect.objectContaining({ encode: { x: 'women', y: 'name' } }),
+      expect.objectContaining({ encode: { x: 'total', y: 'name' } }),
+    ]);
+  });
+
+  it('uses the adaptive value-axis minimum for horizontal bars with negative values', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: [{ name: '2024', men: -10, women: 12 }],
+    });
+
+    renderChart({ orientation: 'horizontal' });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    expect(option.xAxis).toMatchObject({
+      type: 'value',
+      min: getAdaptiveYAxisMin,
+    });
   });
 
   it('starts the bar chart y-axis at zero when all values are positive', () => {
@@ -333,6 +379,43 @@ describe('CartesianChart', () => {
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     const yAxis = option.yAxis as echarts.YAXisComponentOption;
     const formatter = yAxis.axisLabel?.formatter;
+
+    expect(typeof formatter).toBe('function');
+    expect((formatter as (value: string | number) => string)(1234.5)).toBe(
+      new Intl.NumberFormat(language).format(1234.5),
+    );
+  });
+
+  it('uses the provided number formatter for horizontal value-axis labels', () => {
+    const numberFormatter = vi.fn((value: number) => `formatted: ${value}`);
+
+    renderChart({ orientation: 'horizontal', numberFormatter });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const xAxis = option.xAxis as echarts.XAXisComponentOption;
+    const yAxis = option.yAxis as echarts.YAXisComponentOption;
+    const formatter = xAxis.axisLabel?.formatter;
+
+    expect(typeof formatter).toBe('function');
+    expect((formatter as (value: string | number) => string)('1234.5')).toBe(
+      'formatted: 1234.5',
+    );
+    expect(numberFormatter).toHaveBeenCalledWith(1234.5);
+    expect(yAxis.axisLabel?.formatter).toBeUndefined();
+  });
+
+  it('formats horizontal value-axis labels using the table language by default', () => {
+    const language = 'de-DE';
+    const pxtable = {
+      ...mockPxTable,
+      metadata: { language },
+    } as PxTable;
+
+    renderChart({ pxtable, orientation: 'horizontal' });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const xAxis = option.xAxis as echarts.XAXisComponentOption;
+    const formatter = xAxis.axisLabel?.formatter;
 
     expect(typeof formatter).toBe('function');
     expect((formatter as (value: string | number) => string)(1234.5)).toBe(
