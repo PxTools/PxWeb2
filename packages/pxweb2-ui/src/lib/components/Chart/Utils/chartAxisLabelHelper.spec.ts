@@ -67,6 +67,12 @@ describe('createResponsiveCategoryLabelConfig', () => {
       formattedLabel.split('\n').length * 20,
     );
   });
+
+  it('preserves surrounding words when splitting a long word', () => {
+    const config = createResponsiveCategoryLabelConfig(40, 16, 20);
+
+    expect(config.formatter('hi abcdefgh lo')).toBe('hi\nabcd\nefgh\nlo');
+  });
 });
 
 describe('createResponsiveXAxisLabelConfig', () => {

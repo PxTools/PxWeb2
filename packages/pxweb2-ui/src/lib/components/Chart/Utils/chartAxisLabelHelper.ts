@@ -243,6 +243,56 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
   };
 }
 
+function splitCategoryLabelWord(
+  word: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string[] {
+  if (measureAxisNameText(word, fontSizePx) <= maxWidthPx) {
+    return [word];
+  }
+
+  const chunks: string[] = [];
+  let chunk = '';
+  for (const character of Array.from(word)) {
+    const candidate = `${chunk}${character}`;
+    if (chunk && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+      chunks.push(chunk);
+      chunk = character;
+    } else {
+      chunk = candidate;
+    }
+  }
+  if (chunk) {
+    chunks.push(chunk);
+  }
+  return chunks;
+}
+
+function appendCategoryLabelWord(
+  word: string,
+  lines: string[],
+  line: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string {
+  const chunks = splitCategoryLabelWord(word, maxWidthPx, fontSizePx);
+  if (chunks.length > 1) {
+    if (line) {
+      lines.push(line);
+    }
+    lines.push(...chunks.slice(0, -1));
+    return chunks[chunks.length - 1];
+  }
+
+  const candidate = line ? `${line} ${word}` : word;
+  if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+    lines.push(line);
+    return word;
+  }
+  return candidate;
+}
+
 /**
  * Creates wrapping and measurement settings for category labels on a horizontal bar chart.
  * @param maxWidthPx Maximum label-column width in pixels.
@@ -268,36 +318,7 @@ export function createResponsiveCategoryLabelConfig(
     let line = '';
 
     for (const word of text.split(' ')) {
-      if (measureAxisNameText(word, fontSizePx) > maxWidthPx) {
-        if (line) {
-          lines.push(line);
-          line = '';
-        }
-
-        let chunk = '';
-        for (const character of Array.from(word)) {
-          const candidate = `${chunk}${character}`;
-          if (
-            chunk &&
-            measureAxisNameText(candidate, fontSizePx) > maxWidthPx
-          ) {
-            lines.push(chunk);
-            chunk = character;
-          } else {
-            chunk = candidate;
-          }
-        }
-        line = chunk;
-        continue;
-      }
-
-      const candidate = line ? `${line} ${word}` : word;
-      if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = candidate;
-      }
+      line = appendCategoryLabelWord(word, lines, line, maxWidthPx, fontSizePx);
     }
 
     if (line) {
