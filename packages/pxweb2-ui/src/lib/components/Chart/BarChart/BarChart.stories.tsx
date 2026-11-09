@@ -31,3 +31,37 @@ export const EmptyColorsArrayUsesFallback: Story =
   chartStoryArgs.EmptyColorsArrayUsesFallback;
 export const ManySeries: Story = chartStoryArgs.ManySeries;
 export const SparseData: Story = chartStoryArgs.SparseData;
+
+const horizontalStory = (story: Story): Story => ({
+  ...story,
+  args: {
+    ...story.args,
+    orientation: 'horizontal',
+  },
+});
+
+export const HorizontalDefault: Story = horizontalStory(chartStoryArgs.Default);
+export const HorizontalCssVariableFallbackColors: Story = horizontalStory(
+  chartStoryArgs.CssVariableFallbackColors,
+);
+export const HorizontalCustomColors: Story = horizontalStory(
+  chartStoryArgs.CustomColors,
+);
+export const HorizontalManySeriesOnLargeScreen: Story = horizontalStory(
+  chartStoryArgs.ManySeriesOnLargeScreen,
+);
+export const HorizontalManySeriesOnSmallScreen: Story = horizontalStory(
+  chartStoryArgs.ManySeriesOnSmallScreen,
+);
+export const HorizontalLongLegendLabels: Story = horizontalStory(
+  chartStoryArgs.LongLegendLabels,
+);
+export const HorizontalEmptyColorsArrayUsesFallback: Story = horizontalStory(
+  chartStoryArgs.EmptyColorsArrayUsesFallback,
+);
+export const HorizontalManySeries: Story = horizontalStory(
+  chartStoryArgs.ManySeries,
+);
+export const HorizontalSparseData: Story = horizontalStory(
+  chartStoryArgs.SparseData,
+);
