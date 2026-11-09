@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  createResponsiveCategoryLabelConfig,
   createResponsiveXAxisLabelConfig,
   wrapAxisName,
 } from './chartAxisLabelHelper';
@@ -41,6 +42,30 @@ describe('wrapAxisName', () => {
 
   it('returns empty text for an empty name', () => {
     expect(wrapAxisName('  ', 50, 16)).toBe('');
+  });
+});
+
+describe('createResponsiveCategoryLabelConfig', () => {
+  it('wraps labels to the configured width and estimates their rendered width', () => {
+    const config = createResponsiveCategoryLabelConfig(80, 16, 20);
+    const label = 'A long category label';
+    const formattedLabel = config.formatter(label);
+
+    expect(formattedLabel).toContain('\n');
+    expect(formattedLabel.replaceAll('\n', ' ')).toBe(label);
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(80);
+  });
+
+  it('breaks long unspaced labels to fit the responsive width cap', () => {
+    const config = createResponsiveCategoryLabelConfig(40, 16, 20);
+    const label = 'A'.repeat(100);
+    const formattedLabel = config.formatter(label);
+
+    expect(formattedLabel).toContain('\n');
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(40);
+    expect(config.estimateHeight([label])).toBe(
+      formattedLabel.split('\n').length * 20,
+    );
   });
 });
 

@@ -11,6 +11,7 @@ import {
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
+  createResponsiveCategoryLabelConfig,
   createResponsiveXAxisLabelConfig,
   wrapAxisName,
 } from '../Utils/chartAxisLabelHelper';
@@ -63,6 +64,15 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   small: 400,
   xsmall: 300,
 };
+const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
+  xxlarge: 280,
+  xlarge: 240,
+  large: 200,
+  medium: 160,
+  small: 120,
+  xsmall: 100,
+};
+const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 72;
 
 export type ChartInstance = echarts.EChartsType;
 
@@ -217,10 +227,36 @@ export function CartesianChart({
     () => createResponsiveXAxisLabelConfig(pixelsPerRem),
     [pixelsPerRem],
   );
-  const xAxisLabelsHeight = xAxisLabelConfig.estimateHeight(
-    dataset.source.map((row) => row.name),
+  const categoryLabelConfig = useMemo(
+    () =>
+      createResponsiveCategoryLabelConfig(
+        CATEGORY_LABEL_MAX_WIDTH_PX[screenSize],
+        axisNameFontSizePx,
+        xAxisLabelConfig.lineHeight,
+      ),
+    [axisNameFontSizePx, screenSize, xAxisLabelConfig.lineHeight],
   );
-  const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
+  const categoryLabels = dataset.source.map((row) => row.name);
+  const categoryLabelWidth = categoryLabelConfig.estimateWidth(categoryLabels);
+  const categoryLabelHeight =
+    categoryLabelConfig.estimateHeight(categoryLabels);
+  const xAxisLabelsHeight = isHorizontal
+    ? 0
+    : xAxisLabelConfig.estimateHeight(categoryLabels);
+  const horizontalRowHeight = Math.max(
+    MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
+    categoryLabelHeight + 8,
+  );
+  const horizontalChartPlotHeightPx = Math.max(
+    CHART_PLOT_HEIGHT_PX[screenSize],
+    dataset.source.length * horizontalRowHeight +
+      TOP_CHART_PADDING +
+      X_AXIS_LABEL_TO_LEGEND_GAP,
+  );
+  const chartPlotHeightRem =
+    (isHorizontal
+      ? horizontalChartPlotHeightPx
+      : CHART_PLOT_HEIGHT_PX[screenSize]) / pixelsPerRem;
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
@@ -247,12 +283,16 @@ export function CartesianChart({
     ) as echarts.EChartsOption['series'];
 
     const gridPadding = isSmallScreen ? 24 : 0;
-    const gridHeight =
-      CHART_PLOT_HEIGHT_PX[screenSize] -
-      TOP_CHART_PADDING -
-      X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight -
-      gridPadding;
+    const gridHeight = isHorizontal
+      ? horizontalChartPlotHeightPx -
+        TOP_CHART_PADDING -
+        X_AXIS_LABEL_TO_LEGEND_GAP -
+        gridPadding
+      : CHART_PLOT_HEIGHT_PX[screenSize] -
+        TOP_CHART_PADDING -
+        X_AXIS_LABEL_TO_LEGEND_GAP +
+        xAxisLabelsHeight -
+        gridPadding;
 
     return {
       ...buildDatasetOption(dataset),
@@ -333,6 +373,13 @@ export function CartesianChart({
             nameLocation: 'start',
             nameTextStyle: {
               lineHeight: xAxisLabelConfig.lineHeight,
+            },
+            axisLabel: {
+              width: Math.max(1, categoryLabelWidth),
+              lineHeight: xAxisLabelConfig.lineHeight,
+              overflow: 'break',
+              align: 'right',
+              formatter: categoryLabelConfig.formatter,
             },
             axisLine: { show: true, onZero: false },
             axisTick: { show: true, alignWithLabel: true },
@@ -458,6 +505,9 @@ export function CartesianChart({
     wrappedXAxisName,
     xAxisLabelConfig.lineHeight,
     xAxisLabelConfig.formatter,
+    categoryLabelConfig,
+    categoryLabelWidth,
+    horizontalChartPlotHeightPx,
     wrappedYAxisName,
     resolvedNumberFormatter,
     yAxisMin,

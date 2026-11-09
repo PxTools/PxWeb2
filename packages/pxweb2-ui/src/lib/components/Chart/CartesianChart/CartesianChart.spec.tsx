@@ -221,6 +221,41 @@ describe('CartesianChart', () => {
       expect.objectContaining({ encode: { x: 'women', y: 'name' } }),
       expect.objectContaining({ encode: { x: 'total', y: 'name' } }),
     ]);
+    expect(option.grid).toMatchObject({ left: expect.any(Number) });
+    expect((option.grid as echarts.GridComponentOption).left).toBe(0);
+    expect(option.yAxis).toMatchObject({
+      axisLabel: {
+        width: expect.any(Number),
+        lineHeight: expect.any(Number),
+        overflow: 'break',
+        align: 'right',
+      },
+    });
+    const horizontalYAxis = option.yAxis as echarts.YAXisComponentOption;
+    expect(horizontalYAxis.axisLabel?.lineHeight).toBe(
+      horizontalYAxis.nameTextStyle?.lineHeight,
+    );
+  });
+
+  it('grows horizontal chart height to fit category rows without rotated-label height', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: Array.from({ length: 20 }, (_, index) => ({
+        name: `Category ${index}`,
+        men: index,
+        women: index + 1,
+      })),
+    });
+
+    const { container } = renderChart({ orientation: 'horizontal' });
+    const chartDiv = Array.from(container.querySelectorAll('div')).find(
+      (element) => element.style.height,
+    );
+
+    expect(chartDiv).toBeTruthy();
+    expect(Number.parseFloat(chartDiv?.style.height ?? '0')).toBeGreaterThan(
+      (528 + 16 + 120) / 16,
+    );
   });
 
   it('uses the adaptive value-axis minimum for horizontal bars with negative values', () => {
@@ -401,7 +436,12 @@ describe('CartesianChart', () => {
       'formatted: 1234.5',
     );
     expect(numberFormatter).toHaveBeenCalledWith(1234.5);
-    expect(yAxis.axisLabel?.formatter).toBeUndefined();
+    expect(typeof yAxis.axisLabel?.formatter).toBe('function');
+    expect(
+      (yAxis.axisLabel?.formatter as (value: string | number) => string)(
+        '2024',
+      ),
+    ).toBe('2024');
   });
 
   it('formats horizontal value-axis labels using the table language by default', () => {

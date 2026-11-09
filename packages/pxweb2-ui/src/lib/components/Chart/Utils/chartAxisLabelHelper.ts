@@ -242,3 +242,89 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
     },
   };
 }
+
+/**
+ * Creates wrapping and measurement settings for category labels on a horizontal bar chart.
+ * @param maxWidthPx Maximum label-column width in pixels.
+ * @param fontSizePx Label font size in pixels.
+ * @param lineHeight Line height in pixels.
+ * @returns A label formatter and functions for estimating the required width and height.
+ */
+export function createResponsiveCategoryLabelConfig(
+  maxWidthPx: number,
+  fontSizePx: number,
+  lineHeight: number,
+) {
+  const wrapLabel = (value: unknown): string => {
+    const text =
+      typeof value === 'string' || typeof value === 'number'
+        ? `${value}`.trim().replace(/\s+/g, ' ')
+        : '';
+    if (!text || maxWidthPx <= 0 || fontSizePx <= 0) {
+      return text;
+    }
+
+    const lines: string[] = [];
+    let line = '';
+
+    for (const word of text.split(' ')) {
+      if (measureAxisNameText(word, fontSizePx) > maxWidthPx) {
+        if (line) {
+          lines.push(line);
+          line = '';
+        }
+
+        let chunk = '';
+        for (const character of Array.from(word)) {
+          const candidate = `${chunk}${character}`;
+          if (
+            chunk &&
+            measureAxisNameText(candidate, fontSizePx) > maxWidthPx
+          ) {
+            lines.push(chunk);
+            chunk = character;
+          } else {
+            chunk = candidate;
+          }
+        }
+        line = chunk;
+        continue;
+      }
+
+      const candidate = line ? `${line} ${word}` : word;
+      if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = candidate;
+      }
+    }
+
+    if (line) {
+      lines.push(line);
+    }
+    return lines.join('\n');
+  };
+
+  const getLines = (value: unknown) => wrapLabel(value).split('\n');
+
+  return {
+    formatter: wrapLabel,
+    estimateWidth: (values: readonly unknown[]): number =>
+      values.reduce<number>((maximumWidth, value) => {
+        const width = Math.max(
+          0,
+          ...getLines(value).map((line) =>
+            measureAxisNameText(line, fontSizePx),
+          ),
+        );
+        return Math.max(maximumWidth, width);
+      }, 0),
+    estimateHeight: (values: readonly unknown[]): number =>
+      values.reduce<number>(
+        (maximumHeight, value) =>
+          Math.max(maximumHeight, getLines(value).length * lineHeight),
+        0,
+      ),
+  };
+}
