@@ -282,7 +282,7 @@ function appendCategoryLabelWord(
       lines.push(line);
     }
     lines.push(...chunks.slice(0, -1));
-    return chunks[chunks.length - 1];
+    return chunks.at(-1) ?? '';
   }
 
   const candidate = line ? `${line} ${word}` : word;
