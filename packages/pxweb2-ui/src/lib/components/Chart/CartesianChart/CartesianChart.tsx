@@ -571,16 +571,18 @@ export function CartesianChart({
     };
 
     // On smaller screens, a click on the chart should show the tooltip for
-    // the closest data row. ECharts gives us a pixel position, so we first
-    // convert it to an x-axis position and then to a valid row index.
+    // the closest data row. Convert the pointer coordinate along the category
+    // axis to a valid row index.
     const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
       if (!isMediumOrSmallerScreen || dataset.source.length === 0) {
         return;
       }
 
+      const axisFinder = isHorizontal ? { yAxisIndex: 0 } : { xAxisIndex: 0 };
+      const pointerCoordinate = isHorizontal ? event.offsetY : event.offsetX;
       const axisCoordinate = chart.convertFromPixel(
-        { xAxisIndex: 0 },
-        event.offsetX,
+        axisFinder,
+        pointerCoordinate,
       );
 
       if (typeof axisCoordinate !== 'number' || Number.isNaN(axisCoordinate)) {
@@ -621,7 +623,7 @@ export function CartesianChart({
       chart.off('globalout', handleGlobalOut);
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
+  }, [chartRef, option, dataset, isMediumOrSmallerScreen, isHorizontal]);
 
   return (
     <>

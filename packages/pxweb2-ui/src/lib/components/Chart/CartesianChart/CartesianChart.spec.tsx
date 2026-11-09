@@ -487,6 +487,59 @@ describe('CartesianChart', () => {
     expect(chartDiv?.style.touchAction).toBe('pan-y');
   });
 
+  it.each([
+    {
+      orientation: 'vertical' as const,
+      axisFinder: { xAxisIndex: 0 },
+      pointerCoordinate: 42,
+    },
+    {
+      orientation: 'horizontal' as const,
+      axisFinder: { yAxisIndex: 0 },
+      pointerCoordinate: 84,
+    },
+  ])(
+    'uses the category-axis coordinate for $orientation bars on small screens',
+    ({ orientation, axisFinder, pointerCoordinate }) => {
+      const zrender = { on: vi.fn(), off: vi.fn() };
+      const chart = {
+        on: vi.fn(),
+        off: vi.fn(),
+        getZr: () => zrender,
+        convertFromPixel: vi.fn(() => 1.2),
+        dispatchAction: vi.fn(),
+      };
+      vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+        ...mockDataset,
+        source: [
+          { name: '2022', men: 10, women: 12 },
+          { name: '2023', men: 11, women: 13 },
+          { name: '2024', men: 12, women: 14 },
+        ],
+      });
+      vi.mocked(useEChartOption).mockReturnValue({
+        divRef: { current: null },
+        chartRef: { current: chart as unknown as echarts.EChartsType },
+        estimatedLegendHeight: null,
+      });
+
+      renderChart({ orientation, screenSize: 'small' });
+
+      const clickHandler = zrender.on.mock.calls.find(
+        ([eventName]) => eventName === 'click',
+      )?.[1] as (event: { offsetX: number; offsetY: number }) => void;
+      clickHandler({ offsetX: 42, offsetY: 84 });
+
+      expect(chart.convertFromPixel).toHaveBeenCalledWith(
+        axisFinder,
+        pointerCoordinate,
+      );
+      expect(chart.dispatchAction).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'showTip', dataIndex: 1 }),
+      );
+    },
+  );
+
   it('returns empty tooltip text for empty params', () => {
     renderChart();
 
