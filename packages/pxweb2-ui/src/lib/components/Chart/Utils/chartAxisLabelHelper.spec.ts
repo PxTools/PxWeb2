@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   createResponsiveCategoryLabelConfig,
-  createResponsiveXAxisLabelConfig,
+  createRotatedXAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
   wrapAxisName,
@@ -10,10 +10,7 @@ import {
 
 function createXAxisConfig(pixelsPerRem: number) {
   const fontSize = getAxisFontSize(pixelsPerRem);
-  return createResponsiveXAxisLabelConfig(
-    fontSize,
-    getAxisLineHeight(fontSize),
-  );
+  return createRotatedXAxisLabelConfig(fontSize, getAxisLineHeight(fontSize));
 }
 
 describe('wrapAxisName', () => {
@@ -85,14 +82,13 @@ describe('createResponsiveCategoryLabelConfig', () => {
   });
 });
 
-describe('createResponsiveXAxisLabelConfig', () => {
+describe('createRotatedXAxisLabelConfig', () => {
   it('leaves labels unwrapped when their rotated extent fits the height budget', () => {
     const config = createXAxisConfig(16);
     const label = 'Population by age group and region';
     const formattedLabel = config.formatter(label);
 
     expect(formattedLabel).toBe(label);
-    expect(config.lineHeight).toBe(20);
   });
 
   it('formats primitive labels without coercing objects to strings', () => {
@@ -117,8 +113,9 @@ describe('createResponsiveXAxisLabelConfig', () => {
     const config = createXAxisConfig(16);
     const label = 'A'.repeat(2000);
     const formattedLabel = config.formatter(label);
+    const lineHeight = getAxisLineHeight(getAxisFontSize(16));
     const maxLineCount = Math.floor(
-      (265 - 32) / (config.lineHeight * Math.cos(Math.PI / 4)),
+      (265 - 32) / (lineHeight * Math.cos(Math.PI / 4)),
     );
 
     expect(formattedLabel).not.toBe('');

@@ -14,8 +14,8 @@ import {
   getAxisFontSize,
   getAxisLineHeight,
   createResponsiveCategoryLabelConfig,
-  createResponsiveXAxisLabelConfig,
   wrapAxisName,
+  createRotatedXAxisLabelConfig,
 } from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
@@ -209,8 +209,8 @@ export function CartesianChart({
     () => wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisFontSize),
     [dataset.unit, axisFontSize],
   );
-  const xAxisLabelConfig = useMemo(
-    () => createResponsiveXAxisLabelConfig(axisFontSize, axisLineHeight),
+  const rotatedXAxisLabelConfig = useMemo(
+    () => createRotatedXAxisLabelConfig(axisFontSize, axisLineHeight),
     [axisFontSize, axisLineHeight],
   );
   const categoryLabelConfig = useMemo(
@@ -228,7 +228,7 @@ export function CartesianChart({
     categoryLabelConfig.estimateHeight(categoryLabels);
   const xAxisLabelsHeight = isHorizontal
     ? 0
-    : xAxisLabelConfig.estimateHeight(categoryLabels);
+    : rotatedXAxisLabelConfig.estimateHeight(categoryLabels);
   const horizontalRowHeight = Math.max(
     MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
     categoryLabelHeight + 8,
@@ -343,7 +343,7 @@ export function CartesianChart({
               verticalAlign: 'top',
               overflow: 'break',
               hideOverlap: true,
-              formatter: xAxisLabelConfig.formatter,
+              formatter: rotatedXAxisLabelConfig.formatter,
             },
             axisLine: {
               show: true,
@@ -440,7 +440,7 @@ export function CartesianChart({
     staticTitle,
     wrappedXAxisName,
     axisLineHeight,
-    xAxisLabelConfig.formatter,
+    rotatedXAxisLabelConfig.formatter,
     categoryLabelConfig,
     categoryLabelWidth,
     horizontalChartPlotHeightPx,
