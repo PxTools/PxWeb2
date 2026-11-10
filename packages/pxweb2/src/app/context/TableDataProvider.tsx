@@ -247,20 +247,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [],
   );
 
-const initializeStubAndHeadingChart = React.useCallback(
+  const initializeStubAndHeadingChart = React.useCallback(
     (pxTable: PxTable, isSavedQuery: boolean) => {
       let stubOrderChart: string[] = [];
       let headingOrderChart: string[] = [];
 
       if (isSavedQuery) {
-         stubOrderChart = pxTable.stub.map((variable) => variable.id);
-         headingOrderChart = pxTable.heading.map((variable) => variable.id);
+        stubOrderChart = pxTable.stub.map((variable) => variable.id);
+        headingOrderChart = pxTable.heading.map((variable) => variable.id);
+      } else {
+        const { stubOrderChart: stub, headingOrderChart: heading } =
+          initStubAndHeadingChart(pxTable);
+        stubOrderChart = stub;
+        headingOrderChart = heading;
       }
-     else {
-       const { stubOrderChart: stub, headingOrderChart: heading } = initStubAndHeadingChart(pxTable);
-       stubOrderChart = stub;
-       headingOrderChart = heading;
-     }
 
       setStubChart(stubOrderChart);
       setHeadingChart(headingOrderChart);
@@ -281,7 +281,11 @@ const initializeStubAndHeadingChart = React.useCallback(
    * @param dataViewMode - The view mode whose stub and heading order should be applied.
    */
   const initializeOrdersForNewTable = React.useCallback(
-    (pxTable: PxTable, dataViewMode: DataViewModeType, isSavedQuery: boolean) => {
+    (
+      pxTable: PxTable,
+      dataViewMode: DataViewModeType,
+      isSavedQuery: boolean,
+    ) => {
       const { stubOrderDesktop, headingOrderDesktop } =
         initializeStubAndHeadingDesktop(pxTable);
 
@@ -323,7 +327,12 @@ const initializeStubAndHeadingChart = React.useCallback(
    * @isSavedQuery - Indicates whether the table is being initialized from a saved query.
    */
   const initializeStubAndHeading = React.useCallback(
-    (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string, isSavedQuery: boolean = false) => {
+    (
+      pxTable: PxTable,
+      dataViewMode: DataViewModeType,
+      lang: string,
+      isSavedQuery: boolean = false,
+    ) => {
       if (isNewTableOrLanguage(accumulatedData, pxTable, lang)) {
         initializeOrdersForNewTable(pxTable, dataViewMode, isSavedQuery);
         return;
