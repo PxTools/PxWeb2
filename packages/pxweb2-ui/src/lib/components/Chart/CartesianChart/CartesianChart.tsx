@@ -25,25 +25,11 @@ import {
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
+import { formatChartTooltip } from '../Utils/chartTooltipHelper';
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { ScreenSize } from '../../../types/screenSize';
-
-// ECharts passes one of these objects to the tooltip formatter whenever the
-// user points at or clicks a chart value. The formatter uses this information
-// to decide what value and label to display.
-type TooltipParam = {
-  axisValueLabel?: string;
-  // Position of the selected row in the chart dataset.
-  dataIndex?: number;
-  // Position of the selected series in the dataset's series list.
-  seriesIndex: number;
-  seriesName: string;
-  // Raw chart values for the selected row, keyed by series name.
-  data?: Record<string, string | number | null>;
-  color?: string;
-};
 
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
@@ -423,71 +409,21 @@ export function CartesianChart({
         confine: true,
         appendToBody: true,
         className: styles.tooltip,
-        formatter: (params: unknown) => {
-          // ECharts can provide one tooltip item or an array of items.
-          // Convert both cases to an array so the code below handles them
-          // consistently.
-          const axisParams = (Array.isArray(params) ? params : [params]) as
-            TooltipParam[] | undefined;
-
-          // There is nothing to display when ECharts provides no data.
-          if (!axisParams || axisParams.length === 0) {
-            return '';
-          }
-
-          // On smaller screens, show the series selected by the user. If no
-          // series has been selected yet, use the first series from ECharts.
-          // On larger screens, the normal axis tooltip behavior is used.
-          const selectedSeriesIndex =
-            hoveredSeriesIndexRef.current ??
-            (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
-
-          // Without a series index, we cannot match the tooltip item to the
-          // chart's series metadata.
-          if (selectedSeriesIndex == null) {
-            return '';
-          }
-
-          // The first item contains the label for the current x-axis value.
-          const title = axisParams[0].axisValueLabel;
-
-          // Keep only tooltip items belonging to the selected series.
-          const hoveredParams = axisParams.filter(
-            (param) => param.seriesIndex === selectedSeriesIndex,
-          );
-          // Turn each selected tooltip item into one line of HTML.
-          const rows = hoveredParams
-            .map((param) => {
-              // Use the series index to find the matching series definition,
-              // including its key and display name.
-              const seriesMeta = dataset.series[param.seriesIndex];
-              const row = param.data;
-              const value = row?.[seriesMeta.key];
-
-              // Formatted values are stored separately from the raw chart
-              // values. Use the formatted value when available, otherwise
-              // fall back to the raw value supplied by ECharts.
-              const formattedValue =
-                (param.dataIndex == null
-                  ? undefined
-                  : dataset.formattedValues[param.dataIndex]?.[
-                      seriesMeta.key
-                    ]) ?? value;
-              const tooltipValue =
-                formattedValue == null ? '' : `${formattedValue}`;
-
-              // Repeat the available symbols when there are more series than
-              // symbols, and use a fallback color if ECharts provides none.
-              const color = param.color ?? '#666666';
-
-              return `<div class="${styles.tooltipRow}"><span class="${styles.tooltipMarker}">${getTooltipSymbolSvg(color, param.seriesIndex)}</span><span class="${styles.tooltipSeries}">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
-            })
-            .join('');
-
-          // Add the x-axis title above the generated value rows and return the
-          // complete HTML string that ECharts will render as the tooltip.
-          return `<div class="${styles.tooltipContent}"><div class="${styles.tooltipTitle}">${title}</div>${rows}</div>`;
-        },
+        formatter: (params: unknown) =>
+          formatChartTooltip(
+            params,
+            dataset,
+            hoveredSeriesIndexRef.current,
+            isMediumOrSmallerScreen,
+            {
+              tooltipContent: styles.tooltipContent,
+              tooltipMarker: styles.tooltipMarker,
+              tooltipRow: styles.tooltipRow,
+              tooltipSeries: styles.tooltipSeries,
+              tooltipTitle: styles.tooltipTitle,
+            },
+            getTooltipSymbolSvg,
+          ),
       },
     };
   }, [
