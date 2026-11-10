@@ -1,3 +1,5 @@
+import type { ScreenSize } from '../../../types/screenSize';
+
 // Maximum vertical space, in pixels, allowed for rotated x-axis labels.
 const MAX_X_AXIS_EXTENT = 265;
 // Space held back for the axis and surrounding chart layout.
@@ -14,6 +16,14 @@ const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
 // Font family used to measure axis-name text with canvas.
 const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
+const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
+  xxlarge: 280,
+  xlarge: 240,
+  large: 200,
+  medium: 160,
+  small: 120,
+  xsmall: 100,
+};
 
 /**
  * Measures axis-name text width in pixels, falling back to an average-character estimate when canvas is unavailable.
@@ -308,11 +318,12 @@ function appendCategoryLabelWord(
  * @param lineHeight Line height in pixels.
  * @returns A label formatter and functions for estimating the required width and height.
  */
-export function createResponsiveCategoryLabelConfig(
-  maxWidthPx: number,
+export function createCategoryYAxisLabelConfig(
+  screenSize: ScreenSize,
   fontSizePx: number,
   lineHeight: number,
 ) {
+  const maxWidthPx = CATEGORY_LABEL_MAX_WIDTH_PX[screenSize];
   const wrapLabel = (value: unknown): string => {
     const text =
       typeof value === 'string' || typeof value === 'number'

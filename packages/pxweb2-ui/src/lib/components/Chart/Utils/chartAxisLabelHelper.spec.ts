@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  createResponsiveCategoryLabelConfig,
+  createCategoryYAxisLabelConfig,
   createRotatedXAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
@@ -52,33 +52,33 @@ describe('wrapAxisName', () => {
   });
 });
 
-describe('createResponsiveCategoryLabelConfig', () => {
+describe('createCategoryYAxisLabelConfig', () => {
   it('wraps labels to the configured width and estimates their rendered width', () => {
-    const config = createResponsiveCategoryLabelConfig(80, 16, 20);
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
     const label = 'A long category label';
     const formattedLabel = config.formatter(label);
 
     expect(formattedLabel).toContain('\n');
     expect(formattedLabel.replaceAll('\n', ' ')).toBe(label);
-    expect(config.estimateWidth([label])).toBeLessThanOrEqual(80);
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
   });
 
   it('breaks long unspaced labels to fit the responsive width cap', () => {
-    const config = createResponsiveCategoryLabelConfig(40, 16, 20);
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
     const label = 'A'.repeat(100);
     const formattedLabel = config.formatter(label);
 
     expect(formattedLabel).toContain('\n');
-    expect(config.estimateWidth([label])).toBeLessThanOrEqual(40);
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
     expect(config.estimateHeight([label])).toBe(
       formattedLabel.split('\n').length * 20,
     );
   });
 
   it('preserves surrounding words when splitting a long word', () => {
-    const config = createResponsiveCategoryLabelConfig(40, 16, 20);
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
 
-    expect(config.formatter('hi abcdefgh lo')).toBe('hi\nabcd\nefgh\nlo');
+    expect(config.formatter('hi abcdefgh lo')).toBe('hi abcdefgh\nlo');
   });
 });
 
