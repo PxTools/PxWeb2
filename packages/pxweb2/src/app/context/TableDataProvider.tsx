@@ -247,10 +247,20 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     [],
   );
 
-  const initializeStubAndHeadingChart = React.useCallback(
-    (pxTable: PxTable) => {
-      const { stubOrderChart, headingOrderChart } =
-        initStubAndHeadingChart(pxTable);
+const initializeStubAndHeadingChart = React.useCallback(
+    (pxTable: PxTable, isSavedQuery: boolean) => {
+      let stubOrderChart: string[] = [];
+      let headingOrderChart: string[] = [];
+
+      if (isSavedQuery) {
+         stubOrderChart = pxTable.stub.map((variable) => variable.id);
+         headingOrderChart = pxTable.heading.map((variable) => variable.id);
+      }
+     else {
+       const { stubOrderChart: stub, headingOrderChart: heading } = initStubAndHeadingChart(pxTable);
+       stubOrderChart = stub;
+       headingOrderChart = heading;
+     }
 
       setStubChart(stubOrderChart);
       setHeadingChart(headingOrderChart);
@@ -271,7 +281,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param dataViewMode - The view mode whose stub and heading order should be applied.
    */
   const initializeOrdersForNewTable = React.useCallback(
-    (pxTable: PxTable, dataViewMode: DataViewModeType) => {
+    (pxTable: PxTable, dataViewMode: DataViewModeType, isSavedQuery: boolean) => {
       const { stubOrderDesktop, headingOrderDesktop } =
         initializeStubAndHeadingDesktop(pxTable);
 
@@ -279,7 +289,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         initializeStubAndHeadingMobile(pxTable);
 
       const { stubOrderChart, headingOrderChart } =
-        initializeStubAndHeadingChart(pxTable);
+        initializeStubAndHeadingChart(pxTable, isSavedQuery);
 
       const activeOrders = getOrdersForMode(
         {
@@ -310,18 +320,19 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param dataViewMode - The current data view mode (e.g., mobile, desktop, chart).
    * @param lang - The current language code (e.g., 'en', 'no').
+   * @isSavedQuery - Indicates whether the table is being initialized from a saved query.
    */
   const initializeStubAndHeading = React.useCallback(
-    (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string) => {
+    (pxTable: PxTable, dataViewMode: DataViewModeType, lang: string, isSavedQuery: boolean = false) => {
       if (isNewTableOrLanguage(accumulatedData, pxTable, lang)) {
-        initializeOrdersForNewTable(pxTable, dataViewMode);
+        initializeOrdersForNewTable(pxTable, dataViewMode, isSavedQuery);
         return;
       }
 
       // Variable changes can make the chart axis or series order stale; refresh it only in chart mode.
       const chartOrders =
         dataViewMode === DataViewModeType.Chart
-          ? initializeStubAndHeadingChart(pxTable)
+          ? initializeStubAndHeadingChart(pxTable, isSavedQuery)
           : undefined;
       const orders = reconcileVariableOrders(
         pxTable,
@@ -396,7 +407,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       // Add formatting to the PxTable datacell values
       await addFormattingToPxTable(pxTable);
 
-      initializeStubAndHeading(pxTable, dataViewMode, i18n.language);
+      initializeStubAndHeading(pxTable, dataViewMode, i18n.language, true);
       setData(pxTable);
 
       // Store as accumulated data
@@ -876,7 +887,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (pxTable: PxTable) => {
       if (checkIfChartNeedsReInitialize(pxTable)) {
         const { stubOrderChart, headingOrderChart } =
-          initializeStubAndHeadingChart(pxTable);
+          initializeStubAndHeadingChart(pxTable, false);
 
         pivotTable(pxTable, stubOrderChart, headingOrderChart);
       } else {
