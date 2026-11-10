@@ -28,8 +28,7 @@ export function formatChartTooltip(
   // ECharts can provide one tooltip item or an array of items.
   // Convert both cases to an array so the code below handles them consistently.
   const axisParams = (Array.isArray(params) ? params : [params]) as
-    | TooltipParam[]
-    | undefined;
+    TooltipParam[] | undefined;
 
   // There is nothing to display when ECharts provides no data.
   if (!axisParams || axisParams.length === 0) {
