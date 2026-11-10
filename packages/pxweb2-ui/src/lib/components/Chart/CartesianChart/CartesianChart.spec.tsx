@@ -17,7 +17,11 @@ import {
   checkMultipleUnits,
   getYAxisBreak,
 } from '../Utils/chartHelper';
-import { createResponsiveXAxisLabelConfig } from '../Utils/chartAxisLabelHelper';
+import {
+  createResponsiveXAxisLabelConfig,
+  getAxisFontSize,
+  getAxisLineHeight,
+} from '../Utils/chartAxisLabelHelper';
 import * as Icons from '../../Icon/Icons';
 import type { EChartsDataset } from '../Utils/chartTypes';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -95,6 +99,14 @@ function renderChart(
   );
 }
 
+function getXAxisLabelHeight(labels: string[]) {
+  const fontSize = getAxisFontSize(16);
+  return createResponsiveXAxisLabelConfig(
+    fontSize,
+    getAxisLineHeight(fontSize),
+  ).estimateHeight(labels);
+}
+
 function getTooltipFormatter(option: { tooltip?: unknown }) {
   const tooltip = Array.isArray(option.tooltip)
     ? option.tooltip[0]
@@ -169,9 +181,7 @@ describe('CartesianChart', () => {
       ),
     ).toBe(mockDataset.unit);
     expect(option.xAxis).toMatchObject({ axisLine: { onZero: false } });
-    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
-      '2024',
-    ]);
+    const labelHeight = getXAxisLabelHeight(['2024']);
     expect(option.grid).toEqual({
       top: 36,
       height: 476 + labelHeight,
@@ -470,9 +480,7 @@ describe('CartesianChart', () => {
     );
 
     expect(chartDiv).toBeTruthy();
-    const labelHeight = createResponsiveXAxisLabelConfig(16).estimateHeight([
-      '2024',
-    ]);
+    const labelHeight = getXAxisLabelHeight(['2024']);
     expect(chartDiv?.style.height).toBe(
       `${(528 + labelHeight + 16 + 120) / 16}rem`,
     );

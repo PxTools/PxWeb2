@@ -3,8 +3,18 @@ import { describe, expect, it } from 'vitest';
 import {
   createResponsiveCategoryLabelConfig,
   createResponsiveXAxisLabelConfig,
+  getAxisFontSize,
+  getAxisLineHeight,
   wrapAxisName,
 } from './chartAxisLabelHelper';
+
+function createXAxisConfig(pixelsPerRem: number) {
+  const fontSize = getAxisFontSize(pixelsPerRem);
+  return createResponsiveXAxisLabelConfig(
+    fontSize,
+    getAxisLineHeight(fontSize),
+  );
+}
 
 describe('wrapAxisName', () => {
   it('wraps at word boundaries when a line exceeds the maximum width', () => {
@@ -77,7 +87,7 @@ describe('createResponsiveCategoryLabelConfig', () => {
 
 describe('createResponsiveXAxisLabelConfig', () => {
   it('leaves labels unwrapped when their rotated extent fits the height budget', () => {
-    const config = createResponsiveXAxisLabelConfig(16);
+    const config = createXAxisConfig(16);
     const label = 'Population by age group and region';
     const formattedLabel = config.formatter(label);
 
@@ -86,7 +96,7 @@ describe('createResponsiveXAxisLabelConfig', () => {
   });
 
   it('formats primitive labels without coercing objects to strings', () => {
-    const config = createResponsiveXAxisLabelConfig(16);
+    const config = createXAxisConfig(16);
     const toString = vi.fn(() => 'object label');
 
     expect(config.formatter(2024)).toBe('2024');
@@ -95,7 +105,7 @@ describe('createResponsiveXAxisLabelConfig', () => {
   });
 
   it('wraps complete values only when their unwrapped extent exceeds the budget', () => {
-    const config = createResponsiveXAxisLabelConfig(16);
+    const config = createXAxisConfig(16);
     const label = 'A'.repeat(150);
     const formattedLabel = config.formatter(label);
 
@@ -104,7 +114,7 @@ describe('createResponsiveXAxisLabelConfig', () => {
   });
 
   it('truncates labels that exceed the wrapped height budget', () => {
-    const config = createResponsiveXAxisLabelConfig(16);
+    const config = createXAxisConfig(16);
     const label = 'A'.repeat(2000);
     const formattedLabel = config.formatter(label);
     const maxLineCount = Math.floor(
@@ -120,8 +130,8 @@ describe('createResponsiveXAxisLabelConfig', () => {
   });
 
   it('allows fewer wrapped lines when the root font size is larger', () => {
-    const standardSize = createResponsiveXAxisLabelConfig(16);
-    const largerSize = createResponsiveXAxisLabelConfig(20);
+    const standardSize = createXAxisConfig(16);
+    const largerSize = createXAxisConfig(20);
     const label = 'A'.repeat(180);
 
     expect(standardSize.formatter(label)).not.toBe('');
@@ -129,8 +139,8 @@ describe('createResponsiveXAxisLabelConfig', () => {
   });
 
   it('estimates the tallest formatted label and scales with root font size', () => {
-    const standardSize = createResponsiveXAxisLabelConfig(16);
-    const largerSize = createResponsiveXAxisLabelConfig(20);
+    const standardSize = createXAxisConfig(16);
+    const largerSize = createXAxisConfig(20);
     const labels = ['2024', 'A'.repeat(150)];
 
     expect(standardSize.estimateHeight(labels)).toBeGreaterThan(
