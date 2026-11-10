@@ -11,6 +11,8 @@ import {
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
+  getAxisFontSize,
+  getAxisLineHeight,
   createResponsiveCategoryLabelConfig,
   createResponsiveXAxisLabelConfig,
   wrapAxisName,
@@ -35,8 +37,6 @@ import type { ScreenSize } from '../../../types/screenSize';
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 // Pixel padding above the plot area.
 const TOP_CHART_PADDING = 36;
-// Base font size in rem, converted to pixels for axis-name wrapping.
-const CHART_FONT_SIZE_REM = 0.875;
 // Maximum pixel width before the x-axis name is wrapped onto another line.
 const X_AXIS_NAME_MAX_WIDTH_PX = 100;
 // Maximum pixel width before the y-axis name is wrapped onto another line.
@@ -199,28 +199,28 @@ export function CartesianChart({
   }, [yAxisBreak, yAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
-  const axisNameFontSizePx = pixelsPerRem * CHART_FONT_SIZE_REM;
+  const axisFontSize = getAxisFontSize(pixelsPerRem);
+  const axisLineHeight = getAxisLineHeight(axisFontSize);
   const wrappedXAxisName = useMemo(
-    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
-    [xAxisName, axisNameFontSizePx],
+    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisFontSize),
+    [xAxisName, axisFontSize],
   );
   const wrappedYAxisName = useMemo(
-    () =>
-      wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
-    [dataset.unit, axisNameFontSizePx],
+    () => wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisFontSize),
+    [dataset.unit, axisFontSize],
   );
   const xAxisLabelConfig = useMemo(
-    () => createResponsiveXAxisLabelConfig(pixelsPerRem),
-    [pixelsPerRem],
+    () => createResponsiveXAxisLabelConfig(axisFontSize, axisLineHeight),
+    [axisFontSize, axisLineHeight],
   );
   const categoryLabelConfig = useMemo(
     () =>
       createResponsiveCategoryLabelConfig(
         CATEGORY_LABEL_MAX_WIDTH_PX[screenSize],
-        axisNameFontSizePx,
-        xAxisLabelConfig.lineHeight,
+        axisFontSize,
+        axisLineHeight,
       ),
-    [axisNameFontSizePx, screenSize, xAxisLabelConfig.lineHeight],
+    [axisFontSize, screenSize, axisLineHeight],
   );
   const categoryLabels = dataset.source.map((row) => row.name);
   const categoryLabelWidth = categoryLabelConfig.estimateWidth(categoryLabels);
@@ -318,7 +318,7 @@ export function CartesianChart({
                 resolvedNumberFormatter(Number(value)),
             },
             nameTextStyle: {
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
             },
             scale: false,
             min: yAxisMin,
@@ -333,13 +333,13 @@ export function CartesianChart({
             // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
             nameMoveOverlap: true,
             nameTextStyle: {
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
             },
             axisLabel: {
               rotate: 45,
               interval: 0,
               align: 'right',
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
               verticalAlign: 'top',
               overflow: 'break',
               hideOverlap: true,
@@ -358,11 +358,11 @@ export function CartesianChart({
             inverse: true,
             nameLocation: 'start',
             nameTextStyle: {
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
             },
             axisLabel: {
               width: Math.max(1, categoryLabelWidth),
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
               overflow: 'break',
               align: 'right',
               formatter: categoryLabelConfig.formatter,
@@ -377,7 +377,7 @@ export function CartesianChart({
                 resolvedNumberFormatter(Number(value)),
             },
             nameTextStyle: {
-              lineHeight: xAxisLabelConfig.lineHeight,
+              lineHeight: axisLineHeight,
             },
             scale: false,
             min: yAxisMin,
@@ -439,7 +439,7 @@ export function CartesianChart({
     chartSourcePart1,
     staticTitle,
     wrappedXAxisName,
-    xAxisLabelConfig.lineHeight,
+    axisLineHeight,
     xAxisLabelConfig.formatter,
     categoryLabelConfig,
     categoryLabelWidth,

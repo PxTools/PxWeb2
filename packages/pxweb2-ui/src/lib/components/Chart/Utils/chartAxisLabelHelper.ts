@@ -149,19 +149,27 @@ function truncateWrappedText(
   return visibleLines.join('\n');
 }
 
+export function getAxisFontSize(pixelsPerRem: number) {
+  return pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
+}
+
+export function getAxisLineHeight(fontSize: number) {
+  return Math.max(
+    AXIS_LABEL_MIN_LINE_HEIGHT,
+    Math.ceil(fontSize * AXIS_LABEL_LINE_HEIGHT_RATIO),
+  );
+}
+
 /**
  * Creates font, formatting, and height-estimation settings for rotated x-axis labels.
  * The formatter wraps or truncates labels to keep them within the configured vertical extent.
  * @param pixelsPerRem The root font size in pixels, used to scale label font and line height.
  * @returns The label line height, a label formatter, and a function that estimates the required label height.
  */
-export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
-  const fontSize = pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
-  // Same calculation for line heightas in legend labels for consistency
-  const lineHeight = Math.max(
-    AXIS_LABEL_MIN_LINE_HEIGHT,
-    Math.ceil(fontSize * AXIS_LABEL_LINE_HEIGHT_RATIO),
-  );
+export function createResponsiveXAxisLabelConfig(
+  fontSize: number,
+  lineHeight: number,
+) {
   const maxLineCount = Math.floor(
     (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
