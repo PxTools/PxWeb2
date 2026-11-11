@@ -235,10 +235,13 @@ describe('CartesianChart', () => {
     expect((option.grid as echarts.GridComponentOption).left).toBe(0);
     expect(option.yAxis).toMatchObject({
       axisLabel: {
-        width: expect.any(Number),
+        rotate: 45,
+        interval: 0,
         lineHeight: expect.any(Number),
         overflow: 'break',
         align: 'right',
+        verticalAlign: 'bottom',
+        hideOverlap: true,
       },
     });
     const horizontalYAxis = option.yAxis as echarts.YAXisComponentOption;
