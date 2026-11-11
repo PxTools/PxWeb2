@@ -6,19 +6,20 @@
   "scripts": {
     "prepare": "husky",
     "lint": "eslint --fix",
-    "prettier": "npm run prettier --workspaces",
-    "typecheck": "npm run typecheck --workspaces && npm run typecheck:tests --workspaces",
-    "test": "npm run test --workspaces",
-    "coverage": "npm run coverage --workspaces",
-    "build": "npm run build-style-dictionary && npm run build --workspaces",
-    "build-artifact": "npm run build-style-dictionary && cd ./packages/pxweb2 && npm run build",
-    "build-storybook": "npm run build-storybook --workspace=@pxweb2/pxweb2-ui",
-    "build-i18n-interface": "npx i18next-resources-for-ts interface -i ./packages/pxweb2/public/locales/en -o ./packages/pxweb2/src/@types/resources.d.ts",
-    "build-style-dictionary": "cd ./packages/pxweb2-ui && npm run build-style-dictionary",
-    "build-api-client": "npx openapi-typescript-codegen --input https://raw.githubusercontent.com/PxTools/PxApiSpecs/master/PxAPI-2.yml --output ./packages/pxweb2-api-client/src --request ./packages/pxweb2-api-client/custom/request.ts"
+    "prettier": "pnpm -r prettier",
+    "typecheck": "pnpm -r typecheck && pnpm -r typecheck:tests",
+    "test": "pnpm -r test",
+    "coverage": "pnpm -r coverage",
+    "build": "pnpm build-style-dictionary && pnpm -r --no-sort --workspace-concurrency=1 build",
+    "build-artifact": "pnpm build-style-dictionary && pnpm --filter pxweb2 build",
+    "build-storybook": "pnpm --filter @pxweb2/pxweb2-ui build-storybook",
+    "build-i18n-interface": "pnpm dlx i18next-resources-for-ts interface -i ./packages/pxweb2/public/locales/en -o ./packages/pxweb2/src/@types/resources.d.ts",
+    "build-style-dictionary": "pnpm --filter @pxweb2/pxweb2-ui build-style-dictionary",
+    "build-api-client": "pnpm dlx openapi-typescript-codegen --input https://raw.githubusercontent.com/PxTools/PxApiSpecs/master/PxAPI-2.yml --output ./packages/pxweb2-api-client/src --request ./packages/pxweb2-api-client/custom/request.ts"
   },
   "private": true,
   "dependencies": {
+    "@pxweb2/pxweb2-ui": "workspace:^",
     "@uidotdev/usehooks": "^2.4.1",
     "@vitejs/plugin-react": "^6.1.2",
     "i18next": "^26.5.4",
@@ -48,7 +49,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-storybook": "10.6.3",
+    "husky": "^9.1.7",
     "jsdom": "^30.1.3",
+    "prettier": "^3.9.10",
     "style-dictionary": "^5.7.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "unplugin-dts": "^1.1.2",
@@ -56,12 +59,16 @@
   },
   "engines": {
     "node": ">=24",
-    "npm": ">=11.13.0"
+    "pnpm": ">=12.14.0"
   },
-  "packageManager": "npm@11.13.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.22.1",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.14.0",
   "readme": "ERROR: No README data found!",
-  "_id": "@pxweb2/source@0.0.0",
-  "workspaces": [
-    "packages/*"
-  ]
+  "_id": "@pxweb2/source@0.0.0"
 }

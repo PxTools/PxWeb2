@@ -4,8 +4,8 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "npm run storybook",
-    "build": "npm run build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
+    "start": "pnpm storybook",
+    "build": "pnpm build-style-dictionary && storybook build && mv ./storybook-static ../pxweb2/dist/storybook",
     "build-style-dictionary": "node ./style-dictionary/build.mjs",
     "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006",
@@ -19,10 +19,13 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@shikijs/langs": "^4.6.0",
+    "@shikijs/themes": "^4.6.0",
     "@tanstack/react-virtual": "^3.14.21",
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
+    "lodash": "^4.18.1",
     "motion": "^14.7.1"
   },
   "devDependencies": {
@@ -30,7 +33,10 @@
     "@storybook/addon-a11y": "10.6.3",
     "@storybook/addon-docs": "10.6.3",
     "@storybook/react-vite": "10.6.3",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/hast": "^3.0.5",
     "eslint-plugin-storybook": "10.6.3",
     "prop-types": "^15.8.1",
     "shiki": "^4.5.0",

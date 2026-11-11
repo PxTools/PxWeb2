@@ -1,0 +1,18 @@
+packages:
+  - 'packages/*'
+
+# Enforce a dependency release cooldown of 9 days (pnpm counts minutes).
+minimumReleaseAge: 12960
+
+# Enforce strict engine compatibility to ensure that the package is only
+# installed in compatible environments.
+engineStrict: true
+
+# No dependency may run lifecycle scripts on install, to prevent potential
+# security risks and unintended side effects during installation. Everything
+# not listed here is denied by default and fails the install until reviewed;
+# the entries below are the packages that have been reviewed and denied.
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  workerd: false

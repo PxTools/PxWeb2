@@ -4,8 +4,8 @@ This package contains the API client for PxWeb2. It provides functions to intera
 
 ## Building
 
-Run `npm run build` to build the library.
+Run `pnpm run build` to build the library.
 
 ## Running unit tests
 
-Run `npm run test` to execute the unit tests via [Vitest](https://vitest.dev/).
+Run `pnpm run test` to execute the unit tests via [Vitest](https://vitest.dev/).
