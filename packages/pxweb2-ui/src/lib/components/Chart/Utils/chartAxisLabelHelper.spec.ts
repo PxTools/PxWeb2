@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   // createCategoryYAxisLabelConfig,
-  createRotatedXAxisLabelConfig,
+  createRotatedAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
   wrapAxisName,
@@ -10,7 +10,7 @@ import {
 
 function createXAxisConfig(pixelsPerRem: number) {
   const fontSize = getAxisFontSize(pixelsPerRem);
-  return createRotatedXAxisLabelConfig(fontSize, getAxisLineHeight(fontSize));
+  return createRotatedAxisLabelConfig(fontSize, getAxisLineHeight(fontSize));
 }
 
 describe('wrapAxisName', () => {

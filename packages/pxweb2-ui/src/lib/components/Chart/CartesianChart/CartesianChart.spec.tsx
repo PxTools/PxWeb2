@@ -18,7 +18,7 @@ import {
   getYAxisBreak,
 } from '../Utils/chartHelper';
 import {
-  createRotatedXAxisLabelConfig,
+  createRotatedAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
 } from '../Utils/chartAxisLabelHelper';
@@ -101,7 +101,7 @@ function renderChart(
 
 function getXAxisLabelHeight(labels: string[]) {
   const fontSize = getAxisFontSize(16);
-  return createRotatedXAxisLabelConfig(
+  return createRotatedAxisLabelConfig(
     fontSize,
     getAxisLineHeight(fontSize),
   ).estimateHeight(labels);

@@ -171,13 +171,13 @@ export function getAxisLineHeight(fontSize: number) {
 }
 
 /**
- * Creates formatting, and height-estimation settings for rotated x-axis labels.
+ * Creates formatting, and height-estimation settings for rotated axis labels.
  * The formatter wraps or truncates labels to keep them within the configured vertical extent.
  * @param fontSize The label font size in pixels.
  * @param lineHeight The label line height in pixels.
  * @returns An object containing a label formatter, and a function estimating the required label height in pixels.
  */
-export function createRotatedXAxisLabelConfig(
+export function createRotatedAxisLabelConfig(
   fontSize: number,
   lineHeight: number,
 ) {
