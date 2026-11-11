@@ -273,6 +273,13 @@ export function CartesianChart({
         xAxisLabelsHeight -
         gridPadding;
 
+    const yAxisBreakOptions = yAxisBreak
+      ? {
+          breaks: [yAxisBreak],
+          breakArea: { show: false },
+        }
+      : {};
+
     return {
       ...buildDatasetOption(dataset),
       grid: {
@@ -384,12 +391,7 @@ export function CartesianChart({
             min: yAxisMin,
             max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
             interval: yAxisInterval,
-            ...(yAxisBreak
-              ? {
-                  breaks: [yAxisBreak],
-                  breakArea: { show: false },
-                }
-              : {}),
+            ...yAxisBreakOptions,
             axisLine: {
               show: true,
               breakLine: false,

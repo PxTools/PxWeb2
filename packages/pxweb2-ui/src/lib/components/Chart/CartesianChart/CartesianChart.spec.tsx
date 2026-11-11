@@ -174,6 +174,7 @@ describe('CartesianChart', () => {
     });
     expect(option.yAxis).toMatchObject({ min: 0 });
     expect(option.yAxis).not.toHaveProperty('breaks');
+    expect(option.yAxis).not.toHaveProperty('breakArea');
     expect(
       (option.yAxis as echarts.YAXisComponentOption).name?.replaceAll(
         '\n',
@@ -330,6 +331,10 @@ describe('CartesianChart', () => {
       max: 7090,
     });
     expect(option.yAxis).toMatchObject({ interval: 5000 });
+    expect(option.yAxis).toMatchObject({
+      breaks: [{ start: 0, end: 9.7, gap: '48' }],
+      breakArea: { show: false },
+    });
   });
 
   it('wraps long x-axis and y-axis names before passing them to ECharts', () => {
