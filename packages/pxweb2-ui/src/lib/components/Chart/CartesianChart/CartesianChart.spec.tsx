@@ -12,10 +12,10 @@ import {
 } from '../Utils/chartOptionBuilder';
 import {
   getChartCssVariables,
-  getAdaptiveYAxisInterval,
-  getAdaptiveYAxisMin,
+  getAdaptiveValueAxisInterval,
+  getAdaptiveValueAxisMin,
   checkMultipleUnits,
-  getYAxisBreak,
+  getValueAxisBreak,
 } from '../Utils/chartHelper';
 import {
   createRotatedAxisLabelConfig,
@@ -53,10 +53,10 @@ vi.mock('../Utils/chartOptionBuilder', async () => {
 
 vi.mock('../Utils/chartHelper', () => ({
   getChartCssVariables: vi.fn(),
-  getAdaptiveYAxisMin: vi.fn(),
-  getAdaptiveYAxisMax: vi.fn(),
-  getAdaptiveYAxisInterval: vi.fn(),
-  getYAxisBreak: vi.fn(),
+  getAdaptiveValueAxisMin: vi.fn(),
+  getAdaptiveValueAxisMax: vi.fn(),
+  getAdaptiveValueAxisInterval: vi.fn(),
+  getValueAxisBreak: vi.fn(),
   checkMultipleUnits: vi.fn(),
 }));
 
@@ -146,7 +146,11 @@ describe('CartesianChart', () => {
       axisColor: undefined,
       fontColor: undefined,
     });
-    vi.mocked(getYAxisBreak).mockReturnValue({ start: 0, end: 9.7, gap: '48' });
+    vi.mocked(getValueAxisBreak).mockReturnValue({
+      start: 0,
+      end: 9.7,
+      gap: '48',
+    });
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: null },
@@ -163,7 +167,7 @@ describe('CartesianChart', () => {
     expect(buildDatasetOption).toHaveBeenCalledWith(mockDataset);
     expect(buildSeriesOption).toHaveBeenCalledWith(mockDataset, 'bar', colors);
     expect(getChartCssVariables).not.toHaveBeenCalled();
-    expect(getYAxisBreak).not.toHaveBeenCalled();
+    expect(getValueAxisBreak).not.toHaveBeenCalled();
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
 
@@ -283,7 +287,7 @@ describe('CartesianChart', () => {
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
     expect(option.xAxis).toMatchObject({
       type: 'value',
-      min: getAdaptiveYAxisMin,
+      min: getAdaptiveValueAxisMin,
     });
   });
 
@@ -309,7 +313,7 @@ describe('CartesianChart', () => {
     renderChart();
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
-    expect(option.yAxis).toMatchObject({ min: getAdaptiveYAxisMin });
+    expect(option.yAxis).toMatchObject({ min: getAdaptiveValueAxisMin });
     expect(option.yAxis).not.toHaveProperty('breaks');
   });
 
@@ -321,12 +325,12 @@ describe('CartesianChart', () => {
         { name: '2021', men: 4190, women: 7090, total: 0 },
       ],
     });
-    vi.mocked(getAdaptiveYAxisInterval).mockReturnValueOnce(5000);
+    vi.mocked(getAdaptiveValueAxisInterval).mockReturnValueOnce(5000);
 
     renderChart({ seriesType: 'line', breakValueAxis: true });
 
     const option = vi.mocked(useEChartOption).mock.calls[0][0];
-    expect(getAdaptiveYAxisInterval).toHaveBeenCalledWith({
+    expect(getAdaptiveValueAxisInterval).toHaveBeenCalledWith({
       min: -1216,
       max: 7090,
     });

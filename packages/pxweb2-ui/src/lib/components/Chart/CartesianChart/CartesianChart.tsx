@@ -20,12 +20,12 @@ import {
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
-  getAdaptiveYAxisMin,
-  getAdaptiveYAxisMax,
-  getAdaptiveYAxisInterval,
+  getAdaptiveValueAxisMin,
+  getAdaptiveValueAxisMax,
+  getAdaptiveValueAxisInterval,
   getChartCssVariables,
   checkMultipleUnits,
-  getYAxisBreak,
+  getValueAxisBreak,
 } from '../Utils/chartHelper';
 import { formatChartTooltip } from '../Utils/chartTooltipHelper';
 import EmptyState from '../../EmptyState/EmptyState';
@@ -179,7 +179,7 @@ export function CartesianChart({
       return undefined;
     }
 
-    return getYAxisBreak(yAxisDataExtent);
+    return getValueAxisBreak(yAxisDataExtent);
   }, [breakValueAxis, yAxisDataExtent]);
 
   const yAxisInterval = useMemo(() => {
@@ -187,7 +187,7 @@ export function CartesianChart({
       return undefined;
     }
 
-    return getAdaptiveYAxisInterval(yAxisDataExtent);
+    return getAdaptiveValueAxisInterval(yAxisDataExtent);
   }, [yAxisBreak, yAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
@@ -239,13 +239,13 @@ export function CartesianChart({
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
-  const yAxisZeroBased = seriesType === 'bar';
-  const yAxisShouldBeZeroBased =
-    (yAxisZeroBased &&
+  const valueAxisZeroBased = seriesType === 'bar';
+  const valueAxisShouldBeZeroBased =
+    (valueAxisZeroBased &&
       yAxisDataExtent !== undefined &&
       yAxisDataExtent.min >= 0) ||
     yAxisBreak;
-  const yAxisMin = yAxisShouldBeZeroBased ? 0 : getAdaptiveYAxisMin;
+  const valueAxisMin = valueAxisShouldBeZeroBased ? 0 : getAdaptiveValueAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
@@ -321,8 +321,8 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
             },
             scale: false,
-            min: yAxisMin,
-            max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
+            min: valueAxisMin,
+            max: (value) => getAdaptiveValueAxisMax(value, valueAxisZeroBased),
             axisLine: { show: true },
             axisTick: { show: true },
           }
@@ -388,8 +388,8 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
             },
             scale: false,
-            min: yAxisMin,
-            max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
+            min: valueAxisMin,
+            max: (value) => getAdaptiveValueAxisMax(value, valueAxisZeroBased),
             interval: yAxisInterval,
             ...yAxisBreakOptions,
             axisLine: {
@@ -449,11 +449,11 @@ export function CartesianChart({
     horizontalChartPlotHeightPx,
     wrappedYAxisName,
     resolvedNumberFormatter,
-    yAxisMin,
+    valueAxisMin,
     yAxisInterval,
     yAxisBreak,
     isMediumOrSmallerScreen,
-    yAxisZeroBased,
+    valueAxisZeroBased,
     getTooltipSymbolSvg,
   ]);
 
