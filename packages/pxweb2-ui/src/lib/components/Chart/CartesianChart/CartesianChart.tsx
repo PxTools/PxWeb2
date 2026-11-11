@@ -609,14 +609,14 @@ export function LegendToggleButton({
 }: LegendToggleButtonProps) {
   return (
     <>
-      <div className={styles.divider}></div>
+      <div className={styles.legendButtonDivider}></div>
       <Button
         onClick={onClick}
         variant="secondary"
         size="medium"
         iconPosition="end"
         icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
-        className={cl(styles.buttonWidth)}
+        className={cl(styles.legendButton)}
       >
         {text}
       </Button>
