@@ -12,13 +12,19 @@ on:
         required: false
         default: false
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: write # Required by release-please to create releases and update the release PR.
+      issues: write # Required by release-please to update issue references.
+      pull-requests: write # Required by release-please to create and update release PRs.
     outputs:
       release_created: ${{ steps.release.outputs.release_created || steps.prerelease.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name || steps.prerelease.outputs.tag_name }}
@@ -27,6 +33,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Detect prerelease from version in package.json
         id: detect-prerelease
@@ -59,9 +67,9 @@ jobs:
     if: ${{ needs.release.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
-      attestations: write
+      contents: write # Required to upload the release archive.
+      id-token: write # Required to generate an artifact attestation.
+      attestations: write # Required to publish an artifact attestation.
 
     env:
       TAG_NAME: ${{ needs.release.outputs.tag_name }}
@@ -69,6 +77,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -81,13 +91,13 @@ jobs:
       - run: npm run build-artifact
 
       - name: Create zip file
-        run: pushd packages/pxweb2/dist && zip -r $OLDPWD/pxweb-${{ env.TAG_NAME }}.zip ./
+        run: pushd packages/pxweb2/dist && zip -r "$OLDPWD/pxweb-${TAG_NAME}.zip" ./
 
       - name: Upload release asset
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload ${{ env.TAG_NAME }} pxweb-${{ env.TAG_NAME }}.zip
+          gh release upload "$TAG_NAME" "pxweb-${TAG_NAME}.zip"
 
   docker-publish:
     needs: release
@@ -95,7 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      packages: write # Required to publish the container image to GitHub Container Registry.
 
     env:
       REGISTRY: ghcr.io
@@ -105,6 +115,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
@@ -144,7 +156,7 @@ jobs:
     if: ${{ needs.release.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required to publish the release after its assets are uploaded.
 
     env:
       TAG_NAME: ${{ needs.release.outputs.tag_name }}
@@ -152,9 +164,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release edit ${{ env.TAG_NAME }} --draft=false
+          gh release edit "$TAG_NAME" --draft=false
