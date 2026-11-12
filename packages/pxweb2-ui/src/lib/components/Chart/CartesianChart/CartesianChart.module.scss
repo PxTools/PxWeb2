@@ -1,0 +1,53 @@
+.buttonWidth {
+  width: 100%;
+}
+
+.divider {
+  height: 16px;
+}
+
+.tooltip {
+  box-sizing: border-box;
+  max-width: 370px;
+  overflow-wrap: anywhere;
+  font-family: 'PxWeb-font', sans-serif;
+}
+
+.tooltipContent {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tooltipTitle {
+  margin-bottom: 4px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tooltipMarker {
+  display: inline-flex;
+  align-items: center;
+  height: 1.1em;
+  flex: none;
+}
+
+.tooltipMarker svg {
+  width: 10px;
+  height: 10px;
+}
+
+.tooltipSeries {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.4em;
+}

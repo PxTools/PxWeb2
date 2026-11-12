@@ -136,12 +136,11 @@ export const NavigationDrawer = forwardRef<
           className={styles.backdrop}
         ></div>
       )}
-      <div
+      <section
         ref={drawerRef}
         className={cl(styles.navigationDrawer, styles.fadein, {
           [styles.skipToMainContentVisible]: skipToMainFocused,
         })}
-        role="region"
         aria-label={heading}
         tabIndex={-1}
       >
@@ -165,7 +164,7 @@ export const NavigationDrawer = forwardRef<
           </button>
         </div>
         {children}
-      </div>
+      </section>
     </>
   );
 });

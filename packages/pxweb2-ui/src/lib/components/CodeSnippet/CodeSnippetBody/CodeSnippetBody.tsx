@@ -41,7 +41,7 @@ export function CodeSnippetBody({
   wrapCode,
 }: CodeSnippetBodyProps) {
   const [hast, setHast] = useState<Root | null>(null);
-  const preRef = useRef<HTMLPreElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   // Load highlighter and generate HAST asynchronously
   useEffect(() => {
@@ -67,12 +67,13 @@ export function CodeSnippetBody({
 
   // Handle overflow detection and tabindex
   useEffect(() => {
-    if (!preRef.current) {
+    const preElement = wrapperRef.current?.querySelector('pre');
+    if (!preElement) {
       return;
     }
-    const preElement = preRef.current;
 
-    function updateTabindex() {
+    // An arrow callback preserves TypeScript's non-null narrowing of preElement.
+    const updateTabindex = () => {
       const hasOverflow = preElement.scrollHeight > preElement.clientHeight;
 
       // Update tabindex based on overflow
@@ -81,7 +82,7 @@ export function CodeSnippetBody({
       } else {
         preElement.removeAttribute('tabindex');
       }
-    }
+    };
 
     updateTabindex();
 
@@ -110,12 +111,7 @@ export function CodeSnippetBody({
 
   return (
     <div
-      ref={(el) => {
-        const preElement = el?.querySelector('pre');
-        if (preElement) {
-          preRef.current = preElement;
-        }
-      }}
+      ref={wrapperRef}
       className={cl(
         styles['code-snippet-body'],
         wrapCode && styles['wrap-code'],
