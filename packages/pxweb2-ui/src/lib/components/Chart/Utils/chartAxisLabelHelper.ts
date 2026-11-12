@@ -1,4 +1,4 @@
-// import type { ScreenSize } from '../../../types/screenSize';
+import type { ScreenSize } from '../../../types/screenSize';
 
 // Maximum vertical space, in pixels, allowed for rotated labels.
 const MAX_ROTATED_LABEL_HEIGHT = 265;
@@ -20,14 +20,15 @@ const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
 const X_AXIS_NAME_MAX_WIDTH_PX = 100;
 // Maximum pixel width before the y-axis name is wrapped onto another line.
 const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
-// const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
-//   xxlarge: 280,
-//   xlarge: 240,
-//   large: 200,
-//   medium: 160,
-//   small: 120,
-//   xsmall: 100,
-// };
+
+const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
+  xxlarge: 280,
+  xlarge: 240,
+  large: 200,
+  medium: 160,
+  small: 120,
+  xsmall: 100,
+};
 
 /**
  * Measures axis-name text width in pixels, falling back to an average-character estimate when canvas is unavailable.
@@ -306,110 +307,110 @@ export function createRotatedAxisLabelConfig(
   };
 }
 
-// function splitCategoryLabelWord(
-//   word: string,
-//   maxWidthPx: number,
-//   fontSizePx: number,
-// ): string[] {
-//   if (measureAxisNameText(word, fontSizePx) <= maxWidthPx) {
-//     return [word];
-//   }
+function splitCategoryLabelWord(
+  word: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string[] {
+  if (measureAxisNameText(word, fontSizePx) <= maxWidthPx) {
+    return [word];
+  }
 
-//   const chunks: string[] = [];
-//   let chunk = '';
-//   for (const character of Array.from(word)) {
-//     const candidate = `${chunk}${character}`;
-//     if (chunk && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
-//       chunks.push(chunk);
-//       chunk = character;
-//     } else {
-//       chunk = candidate;
-//     }
-//   }
-//   if (chunk) {
-//     chunks.push(chunk);
-//   }
-//   return chunks;
-// }
+  const chunks: string[] = [];
+  let chunk = '';
+  for (const character of Array.from(word)) {
+    const candidate = `${chunk}${character}`;
+    if (chunk && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+      chunks.push(chunk);
+      chunk = character;
+    } else {
+      chunk = candidate;
+    }
+  }
+  if (chunk) {
+    chunks.push(chunk);
+  }
+  return chunks;
+}
 
-// function appendCategoryLabelWord(
-//   word: string,
-//   lines: string[],
-//   line: string,
-//   maxWidthPx: number,
-//   fontSizePx: number,
-// ): string {
-//   const chunks = splitCategoryLabelWord(word, maxWidthPx, fontSizePx);
-//   if (chunks.length > 1) {
-//     if (line) {
-//       lines.push(line);
-//     }
-//     lines.push(...chunks.slice(0, -1));
-//     return chunks.at(-1) ?? '';
-//   }
+function appendCategoryLabelWord(
+  word: string,
+  lines: string[],
+  line: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string {
+  const chunks = splitCategoryLabelWord(word, maxWidthPx, fontSizePx);
+  if (chunks.length > 1) {
+    if (line) {
+      lines.push(line);
+    }
+    lines.push(...chunks.slice(0, -1));
+    return chunks.at(-1) ?? '';
+  }
 
-//   const candidate = line ? `${line} ${word}` : word;
-//   if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
-//     lines.push(line);
-//     return word;
-//   }
-//   return candidate;
-// }
+  const candidate = line ? `${line} ${word}` : word;
+  if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+    lines.push(line);
+    return word;
+  }
+  return candidate;
+}
 
-// /**
-//  * Creates wrapping and measurement settings for category labels on a horizontal bar chart.
-//  * @param maxWidthPx Maximum label-column width in pixels.
-//  * @param fontSizePx Label font size in pixels.
-//  * @param lineHeight Line height in pixels.
-//  * @returns A label formatter and functions for estimating the required width and height.
-//  */
-// export function createCategoryYAxisLabelConfig(
-//   screenSize: ScreenSize,
-//   fontSizePx: number,
-//   lineHeight: number,
-// ) {
-//   const maxWidthPx = CATEGORY_LABEL_MAX_WIDTH_PX[screenSize];
-//   const wrapLabel = (value: unknown): string => {
-//     const text =
-//       typeof value === 'string' || typeof value === 'number'
-//         ? `${value}`.trim().replace(/\s+/g, ' ')
-//         : '';
-//     if (!text || maxWidthPx <= 0 || fontSizePx <= 0) {
-//       return text;
-//     }
+/**
+ * Creates wrapping and measurement settings for category labels on a horizontal bar chart.
+ * @param maxWidthPx Maximum label-column width in pixels.
+ * @param fontSizePx Label font size in pixels.
+ * @param lineHeight Line height in pixels.
+ * @returns A label formatter and functions for estimating the required width and height.
+ */
+export function createCategoryYAxisLabelConfig(
+  screenSize: ScreenSize,
+  fontSizePx: number,
+  lineHeight: number,
+) {
+  const maxWidthPx = CATEGORY_LABEL_MAX_WIDTH_PX[screenSize];
+  const wrapLabel = (value: unknown): string => {
+    const text =
+      typeof value === 'string' || typeof value === 'number'
+        ? `${value}`.trim().replace(/\s+/g, ' ')
+        : '';
+    if (!text || maxWidthPx <= 0 || fontSizePx <= 0) {
+      return text;
+    }
 
-//     const lines: string[] = [];
-//     let line = '';
+    const lines: string[] = [];
+    let line = '';
 
-//     for (const word of text.split(' ')) {
-//       line = appendCategoryLabelWord(word, lines, line, maxWidthPx, fontSizePx);
-//     }
+    for (const word of text.split(' ')) {
+      line = appendCategoryLabelWord(word, lines, line, maxWidthPx, fontSizePx);
+    }
 
-//     if (line) {
-//       lines.push(line);
-//     }
-//     return lines.join('\n');
-//   };
+    if (line) {
+      lines.push(line);
+    }
+    return lines.join('\n');
+  };
 
-//   const getLines = (value: unknown) => wrapLabel(value).split('\n');
+  const getLines = (value: unknown) => wrapLabel(value).split('\n');
 
-//   return {
-//     formatter: wrapLabel,
-//     estimateWidth: (values: readonly unknown[]): number =>
-//       values.reduce<number>((maximumWidth, value) => {
-//         const width = Math.max(
-//           0,
-//           ...getLines(value).map((line) =>
-//             measureAxisNameText(line, fontSizePx),
-//           ),
-//         );
-//         return Math.max(maximumWidth, width);
-//       }, 0),
-//     estimateHeight: (values: readonly unknown[]): number =>
-//       values.reduce<number>(
-//         (maximumHeight, value) =>
-//           Math.max(maximumHeight, getLines(value).length * lineHeight),
-//         0,
-//       ),
-//   };
-// }
+  return {
+    formatter: wrapLabel,
+    estimateWidth: (values: readonly unknown[]): number =>
+      values.reduce<number>((maximumWidth, value) => {
+        const width = Math.max(
+          0,
+          ...getLines(value).map((line) =>
+            measureAxisNameText(line, fontSizePx),
+          ),
+        );
+        return Math.max(maximumWidth, width);
+      }, 0),
+    estimateHeight: (values: readonly unknown[]): number =>
+      values.reduce<number>(
+        (maximumHeight, value) =>
+          Math.max(maximumHeight, getLines(value).length * lineHeight),
+        0,
+      ),
+  };
+}

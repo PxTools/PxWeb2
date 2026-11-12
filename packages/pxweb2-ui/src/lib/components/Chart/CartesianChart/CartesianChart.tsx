@@ -13,7 +13,7 @@ import { useEChartOption } from '../Utils/useEChartOption';
 import {
   getAxisFontSize,
   getAxisLineHeight,
-  // createCategoryYAxisLabelConfig,
+  createCategoryYAxisLabelConfig,
   getWrappedAxisNames,
   createRotatedAxisLabelConfig,
 } from '../Utils/chartAxisLabelHelper';
@@ -207,18 +207,22 @@ export function CartesianChart({
     [axisFontSize, axisLineHeight],
   );
   // When category labels are displayed on the Y-axis, we need to create a configuration for wrapping and measuring them.
-  // const categoryYAxisLabelConfig = useMemo(
-  //   () =>
-  //     createCategoryYAxisLabelConfig(screenSize, axisFontSize, axisLineHeight),
-  //   [axisFontSize, screenSize, axisLineHeight],
-  // );
+  const categoryYAxisLabelConfig = useMemo(
+    () =>
+      createCategoryYAxisLabelConfig(screenSize, axisFontSize, axisLineHeight),
+    [axisFontSize, screenSize, axisLineHeight],
+  );
   const categoryLabels = dataset.source.map((row) => row.name);
-  // const categoryLabelWidth =
-  //   categoryYAxisLabelConfig.estimateWidth(categoryLabels);
+  const categoryLabelWidth =
+    categoryYAxisLabelConfig.estimateWidth(categoryLabels);
+
+  const categoryLabelHeight = isHorizontal
+    ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
+    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
   // const categoryLabelHeight =
   //   categoryYAxisLabelConfig.estimateHeight(categoryLabels);
-  const categoryLabelHeight =
-    rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  // const categoryLabelHeight =
+  //   rotatedAxisLabelConfig.estimateHeight(categoryLabels);
   const xAxisLabelsHeight = isHorizontal
     ? 0
     : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
@@ -378,20 +382,21 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
             },
             axisLabel: {
-              // width: Math.max(1, categoryLabelWidth),
-              // lineHeight: axisLineHeight,
-              // overflow: 'break',
-              // align: 'right',
-              // formatter: categoryYAxisLabelConfig.formatter,
-              rotate: 45,
-              interval: 0,
-              align: 'right',
+              width: Math.max(1, categoryLabelWidth),
               lineHeight: axisLineHeight,
-              verticalAlign: 'bottom',
               overflow: 'break',
-              hideOverlap: true,
-              formatter: (value: string | number) =>
-                rotatedAxisLabelConfig.formatter(value),
+              align: 'right',
+              formatter: categoryYAxisLabelConfig.formatter,
+
+              // rotate: 45,
+              // interval: 0,
+              // align: 'right',
+              // lineHeight: axisLineHeight,
+              // verticalAlign: 'bottom',
+              // overflow: 'break',
+              // hideOverlap: true,
+              // formatter: (value: string | number) =>
+              //   rotatedAxisLabelConfig.formatter(value),
             },
             axisLine: { show: true, onZero: false },
             axisTick: { show: true, alignWithLabel: true },
@@ -462,9 +467,9 @@ export function CartesianChart({
     wrappedCategoryAxisName,
     wrappedValueAxisName,
     axisLineHeight,
-    rotatedAxisLabelConfig.formatter,
-    // categoryYAxisLabelConfig,
-    // categoryLabelWidth,
+    rotatedAxisLabelConfig,
+    categoryYAxisLabelConfig,
+    categoryLabelWidth,
     horizontalChartPlotHeightPx,
     resolvedNumberFormatter,
     valueAxisMin,

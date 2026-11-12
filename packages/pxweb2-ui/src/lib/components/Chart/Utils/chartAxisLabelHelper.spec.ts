@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  // createCategoryYAxisLabelConfig,
+  createCategoryYAxisLabelConfig,
   createRotatedAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
@@ -77,35 +77,35 @@ describe('getWrappedAxisNames', () => {
   });
 });
 
-// describe('createCategoryYAxisLabelConfig', () => {
-//   it('wraps labels to the configured width and estimates their rendered width', () => {
-//     const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
-//     const label = 'A long category label';
-//     const formattedLabel = config.formatter(label);
+describe('createCategoryYAxisLabelConfig', () => {
+  it('wraps labels to the configured width and estimates their rendered width', () => {
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
+    const label = 'A long category label';
+    const formattedLabel = config.formatter(label);
 
-//     expect(formattedLabel).toContain('\n');
-//     expect(formattedLabel.replaceAll('\n', ' ')).toBe(label);
-//     expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
-//   });
+    expect(formattedLabel).toContain('\n');
+    expect(formattedLabel.replaceAll('\n', ' ')).toBe(label);
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
+  });
 
-//   it('breaks long unspaced labels to fit the responsive width cap', () => {
-//     const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
-//     const label = 'A'.repeat(100);
-//     const formattedLabel = config.formatter(label);
+  it('breaks long unspaced labels to fit the responsive width cap', () => {
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
+    const label = 'A'.repeat(100);
+    const formattedLabel = config.formatter(label);
 
-//     expect(formattedLabel).toContain('\n');
-//     expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
-//     expect(config.estimateHeight([label])).toBe(
-//       formattedLabel.split('\n').length * 20,
-//     );
-//   });
+    expect(formattedLabel).toContain('\n');
+    expect(config.estimateWidth([label])).toBeLessThanOrEqual(100);
+    expect(config.estimateHeight([label])).toBe(
+      formattedLabel.split('\n').length * 20,
+    );
+  });
 
-//   it('preserves surrounding words when splitting a long word', () => {
-//     const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
+  it('preserves surrounding words when splitting a long word', () => {
+    const config = createCategoryYAxisLabelConfig('xsmall', 16, 20);
 
-//     expect(config.formatter('hi abcdefgh lo')).toBe('hi abcdefgh\nlo');
-//   });
-// });
+    expect(config.formatter('hi abcdefgh lo')).toBe('hi abcdefgh\nlo');
+  });
+});
 
 describe('createRotatedXAxisLabelConfig', () => {
   it('leaves labels unwrapped when their rotated extent fits the height budget', () => {
