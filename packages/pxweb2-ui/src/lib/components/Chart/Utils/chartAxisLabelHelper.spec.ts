@@ -5,6 +5,7 @@ import {
   createRotatedAxisLabelConfig,
   getAxisFontSize,
   getAxisLineHeight,
+  getWrappedAxisNames,
   wrapAxisName,
 } from './chartAxisLabelHelper';
 
@@ -49,6 +50,30 @@ describe('wrapAxisName', () => {
 
   it('returns empty text for an empty name', () => {
     expect(wrapAxisName('  ', 50, 16)).toBe('');
+  });
+});
+
+describe('getWrappedAxisNames', () => {
+  it('uses the x-axis width for categories and y-axis width for values in vertical charts', () => {
+    const name = 'alpha beta gamma delta';
+
+    expect(getWrappedAxisNames(name, name, false, 10)).toEqual({
+      wrappedCategoryAxisName: 'alpha beta gamma\ndelta',
+      wrappedValueAxisName: name,
+    });
+  });
+
+  it('swaps the widths for horizontal charts and respects the font size', () => {
+    const name = 'alpha beta gamma delta';
+
+    expect(getWrappedAxisNames(name, name, true, 10)).toEqual({
+      wrappedCategoryAxisName: name,
+      wrappedValueAxisName: 'alpha beta gamma\ndelta',
+    });
+    expect(getWrappedAxisNames(name, name, true, 20)).toEqual({
+      wrappedCategoryAxisName: 'alpha beta gamma\ndelta',
+      wrappedValueAxisName: 'alpha\nbeta\ngamma\ndelta',
+    });
   });
 });
 

@@ -14,7 +14,7 @@ import {
   getAxisFontSize,
   getAxisLineHeight,
   // createCategoryYAxisLabelConfig,
-  wrapAxisName,
+  getWrappedAxisNames,
   createRotatedAxisLabelConfig,
 } from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
@@ -37,10 +37,6 @@ import type { ScreenSize } from '../../../types/screenSize';
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 // Pixel padding above the plot area.
 const TOP_CHART_PADDING = 36;
-// Maximum pixel width before the x-axis name is wrapped onto another line.
-const X_AXIS_NAME_MAX_WIDTH_PX = 100;
-// Maximum pixel width before the y-axis name is wrapped onto another line.
-const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -107,7 +103,7 @@ export function CartesianChart({
     screenSize === 'xsmall';
   const isSmallScreen = screenSize === 'small' || screenSize === 'xsmall';
 
-  const xAxisName = useMemo(() => {
+  const categoryAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
   }, [pxtable]);
 
@@ -193,14 +189,18 @@ export function CartesianChart({
   const pixelsPerRem = useResponsivePixelsPerRem();
   const axisFontSize = getAxisFontSize(pixelsPerRem);
   const axisLineHeight = getAxisLineHeight(axisFontSize);
-  const wrappedXAxisName = useMemo(
-    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisFontSize),
-    [xAxisName, axisFontSize],
+
+  const { wrappedCategoryAxisName, wrappedValueAxisName } = useMemo(
+    () =>
+      getWrappedAxisNames(
+        categoryAxisName,
+        dataset.unit,
+        isHorizontal,
+        axisFontSize,
+      ),
+    [categoryAxisName, dataset.unit, isHorizontal, axisFontSize],
   );
-  const wrappedYAxisName = useMemo(
-    () => wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisFontSize),
-    [dataset.unit, axisFontSize],
-  );
+
   // Create a configuration for rotated axis labels.
   const rotatedAxisLabelConfig = useMemo(
     () => createRotatedAxisLabelConfig(axisFontSize, axisLineHeight),
@@ -312,7 +312,7 @@ export function CartesianChart({
       xAxis: isHorizontal
         ? {
             type: 'value' as const,
-            name: wrappedYAxisName,
+            name: wrappedValueAxisName,
             axisLabel: {
               hideOverlap: true,
               formatter: (value: string | number) =>
@@ -329,7 +329,7 @@ export function CartesianChart({
           }
         : {
             type: 'category' as const,
-            name: wrappedXAxisName,
+            name: wrappedCategoryAxisName,
             nameLocation: 'end',
             // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
             nameMoveOverlap: true,
@@ -355,7 +355,7 @@ export function CartesianChart({
       yAxis: isHorizontal
         ? {
             type: 'category' as const,
-            name: wrappedXAxisName,
+            name: wrappedCategoryAxisName,
             inverse: true,
             nameLocation: 'start',
             nameTextStyle: {
@@ -380,7 +380,7 @@ export function CartesianChart({
             axisTick: { show: true, alignWithLabel: true },
           }
         : {
-            name: wrappedYAxisName,
+            name: wrappedValueAxisName,
             axisLabel: {
               formatter: (value: string | number) =>
                 resolvedNumberFormatter(Number(value)),
@@ -442,13 +442,13 @@ export function CartesianChart({
     chartTitle,
     chartSourcePart1,
     staticTitle,
-    wrappedXAxisName,
+    wrappedCategoryAxisName,
+    wrappedValueAxisName,
     axisLineHeight,
     rotatedAxisLabelConfig.formatter,
     // categoryYAxisLabelConfig,
     // categoryLabelWidth,
     horizontalChartPlotHeightPx,
-    wrappedYAxisName,
     resolvedNumberFormatter,
     valueAxisMin,
     yAxisInterval,

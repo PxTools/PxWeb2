@@ -16,6 +16,10 @@ const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
 // Font family used to measure axis-name text with canvas.
 const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
+// Maximum pixel width before the x-axis name is wrapped onto another line.
+const X_AXIS_NAME_MAX_WIDTH_PX = 100;
+// Maximum pixel width before the y-axis name is wrapped onto another line.
+const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 // const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
 //   xxlarge: 280,
 //   xlarge: 240,
@@ -92,6 +96,41 @@ export function wrapAxisName(
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Wraps the category and value axis names for the chart orientation and font size.
+ * @param categoryAxisName The category axis name.
+ * @param valueAxisName The value axis name.
+ * @param isHorizontal Whether the chart is horizontal.
+ * @param fontSizePx The font size, in pixels, used to measure the text.
+ * @returns The wrapped category and value axis names.
+ */
+export function getWrappedAxisNames(
+  categoryAxisName: string,
+  valueAxisName: string,
+  isHorizontal: boolean,
+  fontSizePx: number,
+) {
+  const categoryAxisNameWidth = isHorizontal
+    ? Y_AXIS_NAME_MAX_WIDTH_PX
+    : X_AXIS_NAME_MAX_WIDTH_PX;
+  const valueAxisNameWidth = isHorizontal
+    ? X_AXIS_NAME_MAX_WIDTH_PX
+    : Y_AXIS_NAME_MAX_WIDTH_PX;
+
+  return {
+    wrappedCategoryAxisName: wrapAxisName(
+      categoryAxisName,
+      categoryAxisNameWidth,
+      fontSizePx,
+    ),
+    wrappedValueAxisName: wrapAxisName(
+      valueAxisName,
+      valueAxisNameWidth,
+      fontSizePx,
+    ),
+  };
 }
 
 /**
