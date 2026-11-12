@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.15.0](https://github.com/PxTools/PxWeb2/compare/v2.14.0...v2.15.0) (2026-11-12)
+
+
+### :sparkles: Features
+
+* Add number formatting support to CartesianChart ([#1588](https://github.com/PxTools/PxWeb2/issues/1588)) ([4b3cee4](https://github.com/PxTools/PxWeb2/commit/4b3cee4e154d4160c9cb9e296619794966bd359e))
+
+
+### :bug: Bug Fixes
+
+* capitalize label for manual pivot ([#1570](https://github.com/PxTools/PxWeb2/issues/1570)) ([007fe44](https://github.com/PxTools/PxWeb2/commit/007fe44f509988b96bee3dd475f4b1eb2e6ecc0a))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps:** bump motion from 14.6.0 to 14.7.1 ([#1618](https://github.com/PxTools/PxWeb2/issues/1618)) ([2f459e1](https://github.com/PxTools/PxWeb2/commit/2f459e1bb43fe03bd9af0fb8af73fa68bf9dbf92))
+
+
+### :broom: Chores
+
+* update dependencies across packages ([#1630](https://github.com/PxTools/PxWeb2/issues/1630)) ([7e24713](https://github.com/PxTools/PxWeb2/commit/7e247139e43db5d68b28581c5d8b2f0c947181f5))
+
 ## [2.14.0](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.14.0) (2026-11-05)
 
 
