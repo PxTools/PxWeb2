@@ -70,15 +70,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
-          node-version: 24.22.1
-          cache: 'npm'
+          cache: true
+          require-lockfile: true
 
-      - run: npm ci
-
-      - run: npm run build-artifact
+      - run: pnpm run build-artifact
 
       - name: Create zip file
         run: pushd packages/pxweb2/dist && zip -r $OLDPWD/pxweb-${{ env.TAG_NAME }}.zip ./
