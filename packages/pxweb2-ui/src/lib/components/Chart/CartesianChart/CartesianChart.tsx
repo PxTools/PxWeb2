@@ -314,6 +314,7 @@ export function CartesianChart({
             type: 'value' as const,
             name: wrappedYAxisName,
             axisLabel: {
+              hideOverlap: true,
               formatter: (value: string | number) =>
                 resolvedNumberFormatter(Number(value)),
             },
