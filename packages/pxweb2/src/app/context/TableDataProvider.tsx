@@ -595,7 +595,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       const selectionMap = new Map(
         variablesSelection.selection.map((selection) => [
           selection.variableCode,
-          new Set(selection.valueCodes),
+          selection.valueCodes ?? [],
         ]),
       );
 
@@ -604,16 +604,17 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         (variable) => selectionMap.has(variable.id),
       );
 
-      // Filter out values in each variable that are not present in variablesSelection
+      // Display order follows the metadata-sorted selection, not the cache that retains removed values.
       pxTable.metadata.variables.forEach((variable) => {
-        const selectedValues = selectionMap.get(variable.id);
-        if (selectedValues) {
-          variable.values = variable.values.filter((value) =>
-            selectedValues.has(value.code),
-          );
-        } else {
-          variable.values = [];
-        }
+        const valuesByCode = new Map(
+          variable.values.map((value) => [value.code, value]),
+        );
+        variable.values = (selectionMap.get(variable.id) ?? []).flatMap(
+          (code) => {
+            const value = valuesByCode.get(code);
+            return value ? [value] : [];
+          },
+        );
       });
 
       return pxTable;
@@ -729,14 +730,9 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    *
    * @param pxTable - PxTable containing the data and metadata from the new API-call.
    * @param diffVariablesSelection - Variables selection containing only the variables and values not already loaded in the accumulated data.
-   * @param variablesSelection - Variables selection containing all variables and values selected by the user.
    */
   const mergeWithAccumulatedData = React.useCallback(
-    (
-      pxTable: PxTable,
-      diffVariablesSelection: VariablesSelection,
-      variablesSelection: VariablesSelection,
-    ): void => {
+    (pxTable: PxTable, diffVariablesSelection: VariablesSelection): void => {
       // Check that it is possible to merge the new data with the accumulated data. If more than one variable changed, it is not possible to merge.
       if (accumulatedData !== undefined) {
         // --- Merge metadata ---
@@ -762,11 +758,6 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
               existingVariable?.values.map((v) => v.code),
             );
 
-            // Find the variable in variablesSelection that we are going to merge new values from
-            const selection = variablesSelection.selection.find(
-              (sel) => sel.variableCode === diffSelection.variableCode,
-            );
-
             // Find the variable in pxTable (from the new API call) that we are going to merge new values from
             const updatedVariable = pxTable.metadata.variables.find(
               (variable) => variable.id === diffSelection.variableCode,
@@ -775,17 +766,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
             if (updatedVariable) {
               updatedVariable.forEach((value) => {
                 if (!existingValues.has(value.code)) {
-                  // It's a new value that we need to add to the existing variable!
-                  const newValue = structuredClone(value);
-
-                  // Values are assumed to be sorted in the right order in the VariablesProvider
-                  // Find the index where the new value should be inserted
-                  const valueIndex = selection?.valueCodes?.indexOf(value.code);
-                  if (valueIndex !== undefined && valueIndex !== -1) {
-                    existingVariable?.values.splice(valueIndex, 0, newValue);
-                  } else {
-                    existingVariable?.values.push(newValue);
-                  }
+                  existingVariable?.values.push(structuredClone(value));
+                  existingValues.add(value.code);
                 }
               });
             }
@@ -956,11 +938,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
       );
 
       // Merge pxTable with accumulatedData
-      mergeWithAccumulatedData(
-        pxTable,
-        notLoadedVarSelection,
-        variablesSelection,
-      );
+      mergeWithAccumulatedData(pxTable, notLoadedVarSelection);
       const pxTableMerged =
         createPxTableFromAccumulatedData(variablesSelection);
       if (pxTableMerged) {
