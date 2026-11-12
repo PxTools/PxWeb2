@@ -1,7 +1,7 @@
 // import type { ScreenSize } from '../../../types/screenSize';
 
-// Maximum vertical space, in pixels, allowed for rotated x-axis labels.
-const MAX_X_AXIS_EXTENT = 265;
+// Maximum vertical space, in pixels, allowed for rotated labels.
+const MAX_ROTATED_LABEL_HEIGHT = 265;
 // Space held back for the axis and surrounding chart layout.
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
 // Scales the x-axis label font size relative to the root pixel size.
@@ -221,7 +221,7 @@ export function createRotatedAxisLabelConfig(
   lineHeight: number,
 ) {
   const maxLineCount = Math.floor(
-    (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
+    (MAX_ROTATED_LABEL_HEIGHT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
   );
   const formatter = (
@@ -244,14 +244,14 @@ export function createRotatedAxisLabelConfig(
       estimatedTextWidth * Math.sin(LABEL_ROTATION_RADIANS) +
       lineHeight * Math.cos(LABEL_ROTATION_RADIANS) +
       AXIS_LABEL_LAYOUT_RESERVE;
-    if (unwrappedExtent <= MAX_X_AXIS_EXTENT) {
+    if (unwrappedExtent <= MAX_ROTATED_LABEL_HEIGHT) {
       return text;
     }
     let bestTruncatedLabel = '';
     let bestVisibleCharacterCount = -1;
     for (let lineCount = 2; lineCount <= maxLineCount; lineCount += 1) {
       const availableLineWidth =
-        (MAX_X_AXIS_EXTENT -
+        (MAX_ROTATED_LABEL_HEIGHT -
           AXIS_LABEL_LAYOUT_RESERVE -
           lineCount * lineHeight * Math.cos(LABEL_ROTATION_RADIANS)) /
         Math.sin(LABEL_ROTATION_RADIANS);
