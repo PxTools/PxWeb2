@@ -249,18 +249,12 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
 
   const initializeStubAndHeadingChart = React.useCallback(
     (pxTable: PxTable, isSavedQuery: boolean) => {
-      let stubOrderChart: string[] = [];
-      let headingOrderChart: string[] = [];
-
-      if (isSavedQuery) {
-        stubOrderChart = pxTable.stub.map((variable) => variable.id);
-        headingOrderChart = pxTable.heading.map((variable) => variable.id);
-      } else {
-        const { stubOrderChart: stub, headingOrderChart: heading } =
-          initStubAndHeadingChart(pxTable);
-        stubOrderChart = stub;
-        headingOrderChart = heading;
-      }
+      const { stubOrderChart, headingOrderChart } = isSavedQuery
+        ? {
+            stubOrderChart: pxTable.stub.map((variable) => variable.id),
+            headingOrderChart: pxTable.heading.map((variable) => variable.id),
+          }
+        : initStubAndHeadingChart(pxTable);
 
       setStubChart(stubOrderChart);
       setHeadingChart(headingOrderChart);
@@ -324,7 +318,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param dataViewMode - The current data view mode (e.g., mobile, desktop, chart).
    * @param lang - The current language code (e.g., 'en', 'no').
-   * @isSavedQuery - Indicates whether the table is being initialized from a saved query.
+  * @param isSavedQuery - Whether to preserve the incoming chart pivot.
    */
   const initializeStubAndHeading = React.useCallback(
     (
