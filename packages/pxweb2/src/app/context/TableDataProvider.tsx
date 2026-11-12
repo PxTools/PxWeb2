@@ -318,7 +318,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param dataViewMode - The current data view mode (e.g., mobile, desktop, chart).
    * @param lang - The current language code (e.g., 'en', 'no').
-  * @param isSavedQuery - Whether to preserve the incoming chart pivot.
+   * @param isSavedQuery - Whether to preserve the incoming chart pivot.
    */
   const initializeStubAndHeading = React.useCallback(
     (
