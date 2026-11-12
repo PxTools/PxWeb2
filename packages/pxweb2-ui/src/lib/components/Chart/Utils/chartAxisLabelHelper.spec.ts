@@ -125,6 +125,19 @@ describe('createRotatedXAxisLabelConfig', () => {
     expect(toString).not.toHaveBeenCalled();
   });
 
+  it('formats numeric labels before wrapping when a number formatter is provided', () => {
+    const config = createXAxisConfig(16);
+    const numberFormatter = vi.fn(() => '1'.repeat(150));
+
+    expect(config.formatter('1234.5', numberFormatter)).toBe(
+      config.formatter('1'.repeat(150)),
+    );
+    expect(config.formatter(1234.5, numberFormatter)).toContain('\n');
+    expect(numberFormatter).toHaveBeenCalledWith(1234.5);
+    expect(config.formatter('  ', numberFormatter)).toBe('');
+    expect(numberFormatter).toHaveBeenCalledTimes(2);
+  });
+
   it('wraps complete values only when their unwrapped extent exceeds the budget', () => {
     const config = createXAxisConfig(16);
     const label = 'A'.repeat(150);

@@ -224,13 +224,19 @@ export function createRotatedAxisLabelConfig(
     (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
   );
-  const formatter = (value: unknown): string => {
-    const text =
+  const formatter = (
+    value: unknown,
+    numberFormatter?: (value: number) => string,
+  ): string => {
+    let text =
       typeof value === 'string' || typeof value === 'number'
         ? `${value}`.trim()
         : '';
     if (!text) {
       return '';
+    }
+    if (numberFormatter) {
+      text = numberFormatter(Number(text));
     }
     const estimatedTextWidth =
       Array.from(text).length * fontSize * AVERAGE_CHARACTER_WIDTH_RATIO;

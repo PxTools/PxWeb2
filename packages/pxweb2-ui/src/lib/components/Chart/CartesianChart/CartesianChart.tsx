@@ -313,11 +313,26 @@ export function CartesianChart({
         ? {
             type: 'value' as const,
             name: wrappedValueAxisName,
-            axisLabel: {
-              hideOverlap: true,
-              formatter: (value: string | number) =>
-                resolvedNumberFormatter(Number(value)),
-            },
+            axisLabel: isSmallScreen
+              ? {
+                  rotate: 45,
+                  interval: 0,
+                  align: 'right',
+                  lineHeight: axisLineHeight,
+                  verticalAlign: 'top',
+                  overflow: 'break',
+                  hideOverlap: true,
+                  formatter: (value: string | number) =>
+                    rotatedAxisLabelConfig.formatter(
+                      value,
+                      resolvedNumberFormatter,
+                    ),
+                }
+              : {
+                  hideOverlap: true,
+                  formatter: (value: string | number) =>
+                    resolvedNumberFormatter(Number(value)),
+                },
             nameTextStyle: {
               lineHeight: axisLineHeight,
             },
@@ -344,7 +359,8 @@ export function CartesianChart({
               verticalAlign: 'top',
               overflow: 'break',
               hideOverlap: true,
-              formatter: rotatedAxisLabelConfig.formatter,
+              formatter: (value: string | number) =>
+                rotatedAxisLabelConfig.formatter(value),
             },
             axisLine: {
               show: true,
@@ -374,7 +390,8 @@ export function CartesianChart({
               verticalAlign: 'bottom',
               overflow: 'break',
               hideOverlap: true,
-              formatter: rotatedAxisLabelConfig.formatter,
+              formatter: (value: string | number) =>
+                rotatedAxisLabelConfig.formatter(value),
             },
             axisLine: { show: true, onZero: false },
             axisTick: { show: true, alignWithLabel: true },

@@ -466,6 +466,59 @@ describe('CartesianChart', () => {
     ).toBe('2024');
   });
 
+  it.each(['small', 'xsmall'] as const)(
+    'formats rotated horizontal value-axis labels on %s screens',
+    (screenSize) => {
+      const numberFormatter = vi.fn((value: number) => `formatted: ${value}`);
+      renderChart({ orientation: 'horizontal', screenSize, numberFormatter });
+
+      const option = vi.mocked(useEChartOption).mock.calls[0][0];
+      const xAxis = option.xAxis as echarts.XAXisComponentOption;
+      const yAxis = option.yAxis as echarts.YAXisComponentOption;
+      const xFormatter = xAxis.axisLabel?.formatter as (
+        value: string | number,
+        index: number,
+      ) => string;
+      const yFormatter = yAxis.axisLabel?.formatter as (
+        value: string | number,
+        index: number,
+      ) => string;
+
+      expect(xFormatter('1234.5', 1)).toBe('formatted: 1234.5');
+      expect(numberFormatter).toHaveBeenCalledWith(1234.5);
+      expect(yFormatter('2024', 1)).toBe('2024');
+      expect(numberFormatter).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('uses the table language for rotated horizontal value-axis labels', () => {
+    const language = 'de-DE';
+    const pxtable = { ...mockPxTable, metadata: { language } } as PxTable;
+    renderChart({ pxtable, orientation: 'horizontal', screenSize: 'small' });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const xAxis = option.xAxis as echarts.XAXisComponentOption;
+    const formatter = xAxis.axisLabel?.formatter as (
+      value: string | number,
+      index: number,
+    ) => string;
+    expect(formatter(1234.5, 1)).toBe(
+      new Intl.NumberFormat(language).format(1234.5),
+    );
+  });
+
+  it('keeps vertical category labels unchanged when ECharts supplies an index', () => {
+    renderChart({ numberFormatter: (value) => `formatted: ${value}` });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    const xAxis = option.xAxis as echarts.XAXisComponentOption;
+    const formatter = xAxis.axisLabel?.formatter as (
+      value: string | number,
+      index: number,
+    ) => string;
+    expect(formatter('2024', 1)).toBe('2024');
+  });
+
   it('formats horizontal value-axis labels using the table language by default', () => {
     const language = 'de-DE';
     const pxtable = {
