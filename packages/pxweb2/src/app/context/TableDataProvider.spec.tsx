@@ -237,7 +237,7 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     expect(addFormattingToPxTable).toHaveBeenCalledWith(mappedTable);
     expect(initStubAndHeadingDesktop).toHaveBeenCalledWith(mappedTable);
     expect(initStubAndHeadingMobile).toHaveBeenCalledWith(mappedTable);
-    expect(initStubAndHeadingChart).toHaveBeenCalledWith(mappedTable);
+    expect(initStubAndHeadingChart).not.toHaveBeenCalled();
 
     return latestData as PxTable;
   }
@@ -256,14 +256,14 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     expect(data.heading.map((v) => v.id)).toEqual([]);
   });
 
-  it('uses chart stub/heading order when mode is Chart', async () => {
+  it('preserves the incoming pivot when a saved query is shown as a chart', async () => {
     const data = await fetchDataForMode(DataViewModeType.Chart);
 
-    expect(data.stub.map((v) => v.id)).toEqual(['chartStub']);
-    expect(data.heading.map((v) => v.id)).toEqual(['chartHeading']);
+    expect(data.stub.map((v) => v.id)).toEqual(['desktopStub']);
+    expect(data.heading.map((v) => v.id)).toEqual(['desktopHeading']);
   });
 
-  it('recalculates chart stub/heading when selected value counts change', async () => {
+  it('preserves the incoming saved-query pivot when selected value counts change', async () => {
     const initialTable = createPxTable();
     initialTable.metadata.variables.find(
       (variable) => variable.id === 'chartStub',
@@ -304,26 +304,6 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     vi.mocked(mapJsonStat2Response)
       .mockReturnValueOnce(initialTable)
       .mockReturnValueOnce(updatedTable);
-    vi.mocked(initStubAndHeadingChart)
-      .mockReturnValueOnce({
-        stubOrderChart: ['chartHeading'],
-        headingOrderChart: [
-          'desktopStub',
-          'desktopHeading',
-          'mobileStub',
-          'chartStub',
-        ],
-      })
-      .mockReturnValueOnce({
-        stubOrderChart: ['chartStub'],
-        headingOrderChart: [
-          'desktopStub',
-          'desktopHeading',
-          'mobileStub',
-          'chartHeading',
-        ],
-      });
-
     const receivedTables: PxTable[] = [];
     render(
       <TableDataProvider>
@@ -344,15 +324,15 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     });
 
     expect(receivedTables[0].stub.map((variable) => variable.id)).toEqual([
-      'chartHeading',
+      'desktopStub',
     ]);
     expect(receivedTables[1].stub.map((variable) => variable.id)).toEqual([
-      'chartStub',
+      'desktopStub',
     ]);
-    expect(initStubAndHeadingChart).toHaveBeenCalledTimes(2);
+    expect(initStubAndHeadingChart).not.toHaveBeenCalled();
   });
 
-  it('keeps a newly added variable in the chart heading', async () => {
+  it('preserves the saved-query pivot and adds new variables to the chart heading', async () => {
     const initialTable = createPxTable();
     const updatedTable = createPxTable();
     updatedTable.metadata.variables.push({
@@ -379,27 +359,6 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     vi.mocked(mapJsonStat2Response)
       .mockReturnValueOnce(initialTable)
       .mockReturnValueOnce(updatedTable);
-    vi.mocked(initStubAndHeadingChart)
-      .mockReturnValueOnce({
-        stubOrderChart: ['chartStub'],
-        headingOrderChart: [
-          'desktopStub',
-          'desktopHeading',
-          'mobileStub',
-          'chartHeading',
-        ],
-      })
-      .mockReturnValueOnce({
-        stubOrderChart: ['chartStub'],
-        headingOrderChart: [
-          'desktopStub',
-          'desktopHeading',
-          'mobileStub',
-          'chartHeading',
-          'newVariable',
-        ],
-      });
-
     const receivedTables: PxTable[] = [];
     render(
       <TableDataProvider>
@@ -420,7 +379,7 @@ describe('TableDataProvider initializeStubAndHeading callbacks', () => {
     });
 
     expect(receivedTables[1].stub.map((variable) => variable.id)).toEqual([
-      'chartStub',
+      'desktopStub',
     ]);
     expect(receivedTables[1].heading.map((variable) => variable.id)).toContain(
       'newVariable',
