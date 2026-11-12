@@ -146,45 +146,45 @@ export function CartesianChart({
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
 
-  const yAxisValues = useMemo(() => {
+  const valueAxisValues = useMemo(() => {
     return dataset.source
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
       .filter((value): value is number => typeof value === 'number');
   }, [dataset]);
 
-  // Calculate the data extent for the Y-axis (min and max) based on the available values.
-  const yAxisDataExtent = useMemo(() => {
-    if (yAxisValues.length === 0) {
+  // Calculate the data extent for the value-axis (min and max) based on the available values.
+  const valueAxisDataExtent = useMemo(() => {
+    if (valueAxisValues.length === 0) {
       return undefined;
     }
 
-    let min = yAxisValues[0];
-    let max = yAxisValues[0];
+    let min = valueAxisValues[0];
+    let max = valueAxisValues[0];
 
-    for (let index = 1; index < yAxisValues.length; index += 1) {
-      const value = yAxisValues[index];
+    for (let index = 1; index < valueAxisValues.length; index += 1) {
+      const value = valueAxisValues[index];
       min = Math.min(min, value);
       max = Math.max(max, value);
     }
 
     return { min, max };
-  }, [yAxisValues]);
+  }, [valueAxisValues]);
 
-  const yAxisBreak = useMemo(() => {
-    if (!breakValueAxis || !yAxisDataExtent) {
+  const valueAxisBreak = useMemo(() => {
+    if (!breakValueAxis || !valueAxisDataExtent) {
       return undefined;
     }
 
-    return getValueAxisBreak(yAxisDataExtent);
-  }, [breakValueAxis, yAxisDataExtent]);
+    return getValueAxisBreak(valueAxisDataExtent);
+  }, [breakValueAxis, valueAxisDataExtent]);
 
-  const yAxisInterval = useMemo(() => {
-    if (!yAxisBreak || !yAxisDataExtent) {
+  const valueAxisInterval = useMemo(() => {
+    if (!valueAxisBreak || !valueAxisDataExtent) {
       return undefined;
     }
 
-    return getAdaptiveValueAxisInterval(yAxisDataExtent);
-  }, [yAxisBreak, yAxisDataExtent]);
+    return getAdaptiveValueAxisInterval(valueAxisDataExtent);
+  }, [valueAxisBreak, valueAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
   const axisFontSize = getAxisFontSize(pixelsPerRem);
@@ -242,9 +242,9 @@ export function CartesianChart({
   const valueAxisZeroBased = seriesType === 'bar';
   const valueAxisShouldBeZeroBased =
     (valueAxisZeroBased &&
-      yAxisDataExtent !== undefined &&
-      yAxisDataExtent.min >= 0) ||
-    yAxisBreak;
+      valueAxisDataExtent !== undefined &&
+      valueAxisDataExtent.min >= 0) ||
+    valueAxisBreak;
   const valueAxisMin = valueAxisShouldBeZeroBased ? 0 : getAdaptiveValueAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
@@ -273,9 +273,9 @@ export function CartesianChart({
         xAxisLabelsHeight -
         gridPadding;
 
-    const yAxisBreakOptions = yAxisBreak
+    const valueAxisBreakOptions = valueAxisBreak
       ? {
-          breaks: [yAxisBreak],
+          breaks: [valueAxisBreak],
           breakArea: { show: false },
         }
       : {};
@@ -391,8 +391,8 @@ export function CartesianChart({
             scale: false,
             min: valueAxisMin,
             max: (value) => getAdaptiveValueAxisMax(value, valueAxisZeroBased),
-            interval: yAxisInterval,
-            ...yAxisBreakOptions,
+            interval: valueAxisInterval,
+            ...valueAxisBreakOptions,
             axisLine: {
               show: true,
               breakLine: false,
@@ -451,8 +451,8 @@ export function CartesianChart({
     horizontalChartPlotHeightPx,
     resolvedNumberFormatter,
     valueAxisMin,
-    yAxisInterval,
-    yAxisBreak,
+    valueAxisInterval,
+    valueAxisBreak,
     isMediumOrSmallerScreen,
     valueAxisZeroBased,
     getTooltipSymbolSvg,
