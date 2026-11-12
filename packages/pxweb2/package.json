@@ -23,8 +23,8 @@
     "@pxweb2/pxweb2-ui": "workspace:^",
     "clsx": "^2.1.1",
     "lodash": "^4.18.1",
-    "motion": "^14.7.1",
-    "react-router": "^8.5.0"
+    "motion": "^14.9.0",
+    "react-router": "^8.5.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -32,7 +32,7 @@
     "@testing-library/user-event": "^14.6.8",
     "ajv": "^8.18.0",
     "concurrently": "^10.0.6",
-    "html-validate": "^11.17.0",
+    "html-validate": "^11.18.0",
     "playwright": "^1.64.1",
     "vite-plugin-babel": "^1.7.3",
     "vitest": "^5.0.1"
