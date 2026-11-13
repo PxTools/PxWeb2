@@ -559,6 +559,40 @@ describe('CartesianChart', () => {
     expect(chartDiv?.style.touchAction).toBe('pan-y');
   });
 
+  it.each([false, true])(
+    'cleans up chart listeners when disposed is %s',
+    (disposed) => {
+      const zrender = { on: vi.fn(), off: vi.fn() };
+      const chart = {
+        on: vi.fn(),
+        off: vi.fn(),
+        isDisposed: vi.fn(() => disposed),
+        getZr: () => zrender,
+      };
+      vi.mocked(useEChartOption).mockReturnValue({
+        divRef: { current: null },
+        chartRef: { current: chart as unknown as echarts.EChartsType },
+        estimatedLegendHeight: null,
+      });
+
+      const { unmount } = renderChart();
+      unmount();
+
+      if (disposed) {
+        expect(chart.off).not.toHaveBeenCalled();
+      } else {
+        expect(chart.off).toHaveBeenCalledTimes(3);
+        for (const [event, handler] of chart.on.mock.calls) {
+          expect(chart.off).toHaveBeenCalledWith(event, handler);
+        }
+      }
+      expect(zrender.off).toHaveBeenCalledWith(
+        'click',
+        zrender.on.mock.calls[0][1],
+      );
+    },
+  );
+
   it.each([
     {
       orientation: 'vertical' as const,
@@ -577,6 +611,7 @@ describe('CartesianChart', () => {
       const chart = {
         on: vi.fn(),
         off: vi.fn(),
+        isDisposed: vi.fn(() => false),
         getZr: () => zrender,
         convertFromPixel: vi.fn(() => 1.2),
         dispatchAction: vi.fn(),
@@ -622,7 +657,7 @@ describe('CartesianChart', () => {
   });
 
   it('formats tooltip text only for the hovered series', () => {
-    const chart = { on: vi.fn(), off: vi.fn() };
+    const chart = { on: vi.fn(), off: vi.fn(), isDisposed: vi.fn(() => false) };
     vi.mocked(useEChartOption).mockReturnValue({
       divRef: { current: null },
       chartRef: { current: chart as unknown as echarts.EChartsType },
@@ -663,7 +698,7 @@ describe('CartesianChart', () => {
   });
 
   it('uses formatted values in the tooltip', () => {
-    const chart = { on: vi.fn(), off: vi.fn() };
+    const chart = { on: vi.fn(), off: vi.fn(), isDisposed: vi.fn(() => false) };
     vi.mocked(mapPxTableToChartDataset).mockReturnValue({
       ...mockDataset,
       formattedValues: [{ men: '10', women: '12.35' }],

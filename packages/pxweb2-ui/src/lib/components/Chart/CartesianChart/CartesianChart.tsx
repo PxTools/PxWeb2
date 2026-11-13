@@ -579,10 +579,11 @@ export function CartesianChart({
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
-      // TODO: The chart.off calls produces console warnings. Fix this.
-      chart.off('mouseover', handleSeriesInteraction);
-      chart.off('click', handleSeriesInteraction);
-      chart.off('globalout', handleGlobalOut);
+      if (!chart.isDisposed()) {
+        chart.off('mouseover', handleSeriesInteraction);
+        chart.off('click', handleSeriesInteraction);
+        chart.off('globalout', handleGlobalOut);
+      }
       zrender?.off('click', handleChartClick);
     };
   }, [chartRef, option, dataset, isMediumOrSmallerScreen, isHorizontal]);
