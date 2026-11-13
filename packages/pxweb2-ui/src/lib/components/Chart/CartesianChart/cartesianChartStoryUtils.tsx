@@ -21,14 +21,16 @@ const getTranslations = (t: TFunction) => ({
   ),
 });
 
-export function createTranslatedChartStory(
-  ChartComponent: ComponentType<ChartProps>,
+export function createTranslatedChartStory<Props extends ChartProps>(
+  ChartComponent: ComponentType<Props>,
 ) {
-  return function TranslatedChartStory(
-    props: Omit<ChartProps, 'translations'>,
-  ) {
+  return function TranslatedChartStory(props: Omit<Props, 'translations'>) {
     const { t } = useTranslation();
-    return <ChartComponent {...props} translations={getTranslations(t)} />;
+    const chartProps = {
+      ...props,
+      translations: getTranslations(t),
+    } as unknown as Props;
+    return <ChartComponent {...chartProps} />;
   };
 }
 

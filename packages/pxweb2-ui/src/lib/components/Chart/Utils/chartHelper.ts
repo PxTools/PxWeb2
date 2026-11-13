@@ -117,15 +117,15 @@ function getAdaptiveSnapUnit(
 const Y_AXIS_BREAK_GAP = '13%';
 
 /**
- * Calculates a readable lower limit for the y-axis by adding a small margin
+ * Calculates a readable lower limit for the value-axis by adding a small margin
  * below the smallest data value and rounding down to a convenient step.
  * When all values are non-negative, the limit will not go below zero.
  *
  * @param value - The data range, with `min` as its lowest value and `max` as
  *   its highest value.
- * @returns The rounded lower limit to use for the y-axis.
+ * @returns The rounded lower limit to use for the value-axis.
  */
-export function getAdaptiveYAxisMin(value: {
+export function getAdaptiveValueAxisMin(value: {
   min: number;
   max: number;
 }): number {
@@ -145,16 +145,16 @@ export function getAdaptiveYAxisMin(value: {
 }
 
 /**
- * Calculates a readable upper limit for the y-axis by adding a small margin
+ * Calculates a readable upper limit for the value-axis by adding a small margin
  * above the largest data value and rounding it up to a convenient step.
  *
  * @param value - The data range, with `min` as its lowest value and `max` as
  *   its highest value.
  * @param zeroBased - Whether to calculate the range as starting at zero when
  *   all data values are non-negative.
- * @returns The rounded upper limit to use for the y-axis.
+ * @returns The rounded upper limit to use for the value-axis.
  */
-export function getAdaptiveYAxisMax(
+export function getAdaptiveValueAxisMax(
   value: {
     min: number;
     max: number;
@@ -178,14 +178,14 @@ export function getAdaptiveYAxisMax(
 }
 
 /**
- * Chooses a clean interval for y-axis tick marks based on the data range.
+ * Chooses a clean interval for value-axis tick marks based on the data range.
  * The interval is rounded to a convenient value so the axis is easier to read.
  *
  * @param value - The data range, with `min` as its lowest value and `max` as
  *   its highest value.
  * @returns The numeric distance between consecutive y-axis tick marks.
  */
-export function getAdaptiveYAxisInterval(value: {
+export function getAdaptiveValueAxisInterval(value: {
   min: number;
   max: number;
 }): number {
@@ -196,7 +196,7 @@ export function getAdaptiveYAxisInterval(value: {
 }
 
 /**
- * Creates a visual break on the y-axis when all values are positive and the
+ * Creates a visual break on the value-axis when all values are positive and the
  * adaptive axis minimum is above zero. The break skips the empty range between
  * zero and that minimum so the chart can focus on the data.
  *
@@ -205,7 +205,7 @@ export function getAdaptiveYAxisInterval(value: {
  * @returns The break range (`start` and `end`) and its visual gap size, or
  *   `undefined` when a break is not appropriate.
  */
-export function getYAxisBreak(value: {
+export function getValueAxisBreak(value: {
   min: number;
   max: number;
 }): { start: number; end: number; gap: string } | undefined {
@@ -215,7 +215,7 @@ export function getYAxisBreak(value: {
     return undefined;
   }
 
-  const adaptiveMin = getAdaptiveYAxisMin({
+  const adaptiveMin = getAdaptiveValueAxisMin({
     min: lowestValue,
     max: highestValue,
   });

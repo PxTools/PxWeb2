@@ -11,49 +11,32 @@ import {
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
-  createResponsiveXAxisLabelConfig,
-  wrapAxisName,
+  getAxisFontSize,
+  getAxisLineHeight,
+  createCategoryYAxisLabelConfig,
+  getWrappedAxisNames,
+  createRotatedAxisLabelConfig,
 } from '../Utils/chartAxisLabelHelper';
 import { useResponsivePixelsPerRem } from '../Utils/useResponsivePixelsPerRem';
 import { mapPxTableToChartDataset } from '../Utils/chartDataMapper';
 import {
-  getAdaptiveYAxisMin,
-  getAdaptiveYAxisMax,
-  getAdaptiveYAxisInterval,
+  getAdaptiveValueAxisMin,
+  getAdaptiveValueAxisMax,
+  getAdaptiveValueAxisInterval,
   getChartCssVariables,
   checkMultipleUnits,
-  getYAxisBreak,
+  getValueAxisBreak,
 } from '../Utils/chartHelper';
+import { formatChartTooltip } from '../Utils/chartTooltipHelper';
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { ScreenSize } from '../../../types/screenSize';
 
-// ECharts passes one of these objects to the tooltip formatter whenever the
-// user points at or clicks a chart value. The formatter uses this information
-// to decide what value and label to display.
-type TooltipParam = {
-  axisValueLabel?: string;
-  // Position of the selected row in the chart dataset.
-  dataIndex?: number;
-  // Position of the selected series in the dataset's series list.
-  seriesIndex: number;
-  seriesName: string;
-  // Raw chart values for the selected row, keyed by series name.
-  data?: Record<string, string | number | null>;
-  color?: string;
-};
-
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 // Pixel padding above the plot area.
 const TOP_CHART_PADDING = 36;
-// Base font size in rem, converted to pixels for axis-name wrapping.
-const CHART_FONT_SIZE_REM = 0.875;
-// Maximum pixel width before the x-axis name is wrapped onto another line.
-const X_AXIS_NAME_MAX_WIDTH_PX = 100;
-// Maximum pixel width before the y-axis name is wrapped onto another line.
-const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -63,6 +46,7 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   small: 400,
   xsmall: 300,
 };
+const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 72;
 
 export type ChartInstance = echarts.EChartsType;
 
@@ -86,6 +70,7 @@ export interface ChartProps {
 
 interface CartesianChartProps extends ChartProps {
   readonly seriesType: 'line' | 'bar';
+  readonly orientation?: 'vertical' | 'horizontal';
   readonly breakValueAxis?: boolean;
   readonly getTooltipSymbolSvg: (color: string, seriesIndex: number) => string;
 }
@@ -100,6 +85,7 @@ export function CartesianChart({
   onChartReady,
   screenSize = 'large',
   seriesType,
+  orientation = 'vertical',
   breakValueAxis = false,
   getTooltipSymbolSvg,
 }: CartesianChartProps) {
@@ -110,13 +96,14 @@ export function CartesianChart({
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
+  const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
     screenSize === 'medium' ||
     screenSize === 'small' ||
     screenSize === 'xsmall';
   const isSmallScreen = screenSize === 'small' || screenSize === 'xsmall';
 
-  const xAxisName = useMemo(() => {
+  const categoryAxisName = useMemo(() => {
     return pxtable.stub.map((variable) => variable.label).join(' / ');
   }, [pxtable]);
 
@@ -159,81 +146,119 @@ export function CartesianChart({
     ? memoizedLimitedLegendData
     : memoizedAllLegendData;
 
-  const yAxisValues = useMemo(() => {
+  const valueAxisValues = useMemo(() => {
     return dataset.source
       .flatMap((row) => dataset.series.map((series) => row[series.key]))
       .filter((value): value is number => typeof value === 'number');
   }, [dataset]);
 
-  // Calculate the data extent for the Y-axis (min and max) based on the available values.
-  const yAxisDataExtent = useMemo(() => {
-    if (yAxisValues.length === 0) {
+  // Calculate the data extent for the value-axis (min and max) based on the available values.
+  const valueAxisDataExtent = useMemo(() => {
+    if (valueAxisValues.length === 0) {
       return undefined;
     }
 
-    let min = yAxisValues[0];
-    let max = yAxisValues[0];
+    let min = valueAxisValues[0];
+    let max = valueAxisValues[0];
 
-    for (let index = 1; index < yAxisValues.length; index += 1) {
-      const value = yAxisValues[index];
+    for (let index = 1; index < valueAxisValues.length; index += 1) {
+      const value = valueAxisValues[index];
       min = Math.min(min, value);
       max = Math.max(max, value);
     }
 
     return { min, max };
-  }, [yAxisValues]);
+  }, [valueAxisValues]);
 
-  const yAxisBreak = useMemo(() => {
-    if (!breakValueAxis || !yAxisDataExtent) {
+  const valueAxisBreak = useMemo(() => {
+    if (!breakValueAxis || !valueAxisDataExtent) {
       return undefined;
     }
 
-    return getYAxisBreak(yAxisDataExtent);
-  }, [breakValueAxis, yAxisDataExtent]);
+    return getValueAxisBreak(valueAxisDataExtent);
+  }, [breakValueAxis, valueAxisDataExtent]);
 
-  const yAxisInterval = useMemo(() => {
-    if (!yAxisBreak || !yAxisDataExtent) {
+  const valueAxisInterval = useMemo(() => {
+    if (!valueAxisBreak || !valueAxisDataExtent) {
       return undefined;
     }
 
-    return getAdaptiveYAxisInterval(yAxisDataExtent);
-  }, [yAxisBreak, yAxisDataExtent]);
+    return getAdaptiveValueAxisInterval(valueAxisDataExtent);
+  }, [valueAxisBreak, valueAxisDataExtent]);
 
   const pixelsPerRem = useResponsivePixelsPerRem();
-  const axisNameFontSizePx = pixelsPerRem * CHART_FONT_SIZE_REM;
-  const wrappedXAxisName = useMemo(
-    () => wrapAxisName(xAxisName, X_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
-    [xAxisName, axisNameFontSizePx],
-  );
-  const wrappedYAxisName = useMemo(
+  const axisFontSize = getAxisFontSize(pixelsPerRem);
+  const axisLineHeight = getAxisLineHeight(axisFontSize);
+
+  const { wrappedCategoryAxisName, wrappedValueAxisName } = useMemo(
     () =>
-      wrapAxisName(dataset.unit, Y_AXIS_NAME_MAX_WIDTH_PX, axisNameFontSizePx),
-    [dataset.unit, axisNameFontSizePx],
+      getWrappedAxisNames(
+        categoryAxisName,
+        dataset.unit,
+        isHorizontal,
+        axisFontSize,
+      ),
+    [categoryAxisName, dataset.unit, isHorizontal, axisFontSize],
   );
-  const xAxisLabelConfig = useMemo(
-    () => createResponsiveXAxisLabelConfig(pixelsPerRem),
-    [pixelsPerRem],
+
+  // Create a configuration for rotated axis labels.
+  const rotatedAxisLabelConfig = useMemo(
+    () => createRotatedAxisLabelConfig(axisFontSize, axisLineHeight),
+    [axisFontSize, axisLineHeight],
   );
-  const xAxisLabelsHeight = xAxisLabelConfig.estimateHeight(
-    dataset.source.map((row) => row.name),
+  // When category labels are displayed on the Y-axis, we need to create a configuration for wrapping and measuring them.
+  const categoryYAxisLabelConfig = useMemo(
+    () =>
+      createCategoryYAxisLabelConfig(screenSize, axisFontSize, axisLineHeight),
+    [axisFontSize, screenSize, axisLineHeight],
   );
-  const chartPlotHeightRem = CHART_PLOT_HEIGHT_PX[screenSize] / pixelsPerRem;
+  const categoryLabels = dataset.source.map((row) => row.name);
+  const categoryLabelWidth =
+    categoryYAxisLabelConfig.estimateWidth(categoryLabels);
+
+  const categoryLabelHeight = isHorizontal
+    ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
+    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  // const categoryLabelHeight =
+  //   categoryYAxisLabelConfig.estimateHeight(categoryLabels);
+  // const categoryLabelHeight =
+  //   rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  const xAxisLabelsHeight = isHorizontal
+    ? 0
+    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  const horizontalRowHeight = Math.max(
+    MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
+    categoryLabelHeight + 8,
+  );
+  const horizontalChartPlotHeightPx = Math.max(
+    CHART_PLOT_HEIGHT_PX[screenSize],
+    dataset.source.length * horizontalRowHeight +
+      TOP_CHART_PADDING +
+      X_AXIS_LABEL_TO_LEGEND_GAP,
+  );
+  const chartPlotHeightRem =
+    (isHorizontal
+      ? horizontalChartPlotHeightPx
+      : CHART_PLOT_HEIGHT_PX[screenSize]) / pixelsPerRem;
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
-  const yAxisZeroBased = seriesType === 'bar';
-  const yAxisShouldBeZeroBased =
-    (yAxisZeroBased &&
-      yAxisDataExtent !== undefined &&
-      yAxisDataExtent.min >= 0) ||
-    yAxisBreak;
-  const yAxisMin = yAxisShouldBeZeroBased ? 0 : getAdaptiveYAxisMin;
+  const valueAxisZeroBased = seriesType === 'bar';
+  const valueAxisShouldBeZeroBased =
+    (valueAxisZeroBased &&
+      valueAxisDataExtent !== undefined &&
+      valueAxisDataExtent.min >= 0) ||
+    valueAxisBreak;
+  const valueAxisMin = valueAxisShouldBeZeroBased ? 0 : getAdaptiveValueAxisMin;
 
   const option = useMemo<echarts.EChartsOption>(() => {
     const fallbackLegendHeight = getFallbackLegendHeight(visibleLegendData);
     const series = buildSeriesOption(dataset, seriesType, resolvedColors).map(
-      (seriesOption) => ({
+      (seriesOption, index) => ({
         ...seriesOption,
+        encode: isHorizontal
+          ? { x: dataset.series[index].key, y: 'name' }
+          : { x: 'name', y: dataset.series[index].key },
         emphasis: isMediumOrSmallerScreen
           ? { disabled: true }
           : { focus: 'series' as const },
@@ -241,12 +266,23 @@ export function CartesianChart({
     ) as echarts.EChartsOption['series'];
 
     const gridPadding = isSmallScreen ? 24 : 0;
-    const gridHeight =
-      CHART_PLOT_HEIGHT_PX[screenSize] -
-      TOP_CHART_PADDING -
-      X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight -
-      gridPadding;
+    const gridHeight = isHorizontal
+      ? horizontalChartPlotHeightPx -
+        TOP_CHART_PADDING -
+        X_AXIS_LABEL_TO_LEGEND_GAP -
+        gridPadding
+      : CHART_PLOT_HEIGHT_PX[screenSize] -
+        TOP_CHART_PADDING -
+        X_AXIS_LABEL_TO_LEGEND_GAP +
+        xAxisLabelsHeight -
+        gridPadding;
+
+    const valueAxisBreakOptions = valueAxisBreak
+      ? {
+          breaks: [valueAxisBreak],
+          breakArea: { show: false },
+        }
+      : {};
 
     return {
       ...buildDatasetOption(dataset),
@@ -277,56 +313,114 @@ export function CartesianChart({
         },
       ],
 
-      xAxis: {
-        type: 'category' as const,
-        name: wrappedXAxisName,
-        nameLocation: 'end',
-        // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
-        nameMoveOverlap: true,
-        nameTextStyle: {
-          lineHeight: xAxisLabelConfig.lineHeight,
-        },
-        axisLabel: {
-          rotate: 45,
-          interval: 0,
-          align: 'right',
-          lineHeight: xAxisLabelConfig.lineHeight,
-          verticalAlign: 'top',
-          overflow: 'break',
-          hideOverlap: true,
-          formatter: xAxisLabelConfig.formatter,
-        },
-        axisLine: {
-          show: true,
-          onZero: false,
-        },
-        axisTick: { show: true, alignWithLabel: true },
-      },
-      yAxis: {
-        name: wrappedYAxisName,
-        axisLabel: {
-          formatter: (value: string | number) =>
-            resolvedNumberFormatter(Number(value)),
-        },
-        nameTextStyle: {
-          lineHeight: xAxisLabelConfig.lineHeight,
-        },
-        scale: false,
-        min: yAxisMin,
-        max: (value) => getAdaptiveYAxisMax(value, yAxisZeroBased),
-        interval: yAxisInterval,
-        ...(yAxisBreak
-          ? {
-              breaks: [yAxisBreak],
-              breakArea: { show: false },
-            }
-          : {}),
-        axisLine: {
-          show: true,
-          breakLine: false,
-        },
-        axisTick: { show: true },
-      },
+      xAxis: isHorizontal
+        ? {
+            type: 'value' as const,
+            name: wrappedValueAxisName,
+            axisLabel: isSmallScreen
+              ? {
+                  rotate: 45,
+                  interval: 0,
+                  align: 'right',
+                  lineHeight: axisLineHeight,
+                  verticalAlign: 'top',
+                  overflow: 'break',
+                  hideOverlap: true,
+                  formatter: (value: string | number) =>
+                    rotatedAxisLabelConfig.formatter(
+                      value,
+                      resolvedNumberFormatter,
+                    ),
+                }
+              : {
+                  hideOverlap: true,
+                  formatter: (value: string | number) =>
+                    resolvedNumberFormatter(Number(value)),
+                },
+            nameTextStyle: {
+              lineHeight: axisLineHeight,
+            },
+            scale: false,
+            min: valueAxisMin,
+            max: (value) => getAdaptiveValueAxisMax(value, valueAxisZeroBased),
+            axisLine: { show: true },
+            axisTick: { show: true },
+          }
+        : {
+            type: 'category' as const,
+            name: wrappedCategoryAxisName,
+            nameLocation: 'end',
+            // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
+            nameMoveOverlap: true,
+            nameTextStyle: {
+              lineHeight: axisLineHeight,
+            },
+            axisLabel: {
+              rotate: 45,
+              interval: 0,
+              align: 'right',
+              lineHeight: axisLineHeight,
+              verticalAlign: 'top',
+              overflow: 'break',
+              hideOverlap: true,
+              formatter: (value: string | number) =>
+                rotatedAxisLabelConfig.formatter(value),
+            },
+            axisLine: {
+              show: true,
+              onZero: false,
+            },
+            axisTick: { show: true, alignWithLabel: true },
+          },
+      yAxis: isHorizontal
+        ? {
+            type: 'category' as const,
+            name: wrappedCategoryAxisName,
+            inverse: true,
+            nameLocation: 'start',
+            nameTextStyle: {
+              lineHeight: axisLineHeight,
+            },
+            axisLabel: {
+              width: Math.max(1, categoryLabelWidth),
+              lineHeight: axisLineHeight,
+              overflow: 'break',
+              align: 'right',
+              formatter: categoryYAxisLabelConfig.formatter,
+
+              // rotate: 45,
+              // interval: 0,
+              // align: 'right',
+              // lineHeight: axisLineHeight,
+              // verticalAlign: 'bottom',
+              // overflow: 'break',
+              // hideOverlap: true,
+              // formatter: (value: string | number) =>
+              //   rotatedAxisLabelConfig.formatter(value),
+            },
+            axisLine: { show: true, onZero: false },
+            axisTick: { show: true, alignWithLabel: true },
+          }
+        : {
+            name: wrappedValueAxisName,
+            axisLabel: {
+              formatter: (value: string | number) =>
+                resolvedNumberFormatter(Number(value)),
+            },
+            nameTextStyle: {
+              lineHeight: axisLineHeight,
+            },
+            scale: false,
+            min: valueAxisMin,
+            max: (value) => getAdaptiveValueAxisMax(value, valueAxisZeroBased),
+            interval: valueAxisInterval,
+            ...valueAxisBreakOptions,
+            axisLine: {
+              show: true,
+              breakLine: false,
+            },
+            axisTick: { show: true },
+          },
       legend: {
         data: visibleLegendData,
         orient: 'horizontal',
@@ -341,77 +435,28 @@ export function CartesianChart({
         confine: true,
         appendToBody: true,
         className: styles.tooltip,
-        formatter: (params: unknown) => {
-          // ECharts can provide one tooltip item or an array of items.
-          // Convert both cases to an array so the code below handles them
-          // consistently.
-          const axisParams = (Array.isArray(params) ? params : [params]) as
-            TooltipParam[] | undefined;
-
-          // There is nothing to display when ECharts provides no data.
-          if (!axisParams || axisParams.length === 0) {
-            return '';
-          }
-
-          // On smaller screens, show the series selected by the user. If no
-          // series has been selected yet, use the first series from ECharts.
-          // On larger screens, the normal axis tooltip behavior is used.
-          const selectedSeriesIndex =
-            hoveredSeriesIndexRef.current ??
-            (isMediumOrSmallerScreen ? axisParams[0]?.seriesIndex : null);
-
-          // Without a series index, we cannot match the tooltip item to the
-          // chart's series metadata.
-          if (selectedSeriesIndex == null) {
-            return '';
-          }
-
-          // The first item contains the label for the current x-axis value.
-          const title = axisParams[0].axisValueLabel;
-
-          // Keep only tooltip items belonging to the selected series.
-          const hoveredParams = axisParams.filter(
-            (param) => param.seriesIndex === selectedSeriesIndex,
-          );
-          // Turn each selected tooltip item into one line of HTML.
-          const rows = hoveredParams
-            .map((param) => {
-              // Use the series index to find the matching series definition,
-              // including its key and display name.
-              const seriesMeta = dataset.series[param.seriesIndex];
-              const row = param.data;
-              const value = row?.[seriesMeta.key];
-
-              // Formatted values are stored separately from the raw chart
-              // values. Use the formatted value when available, otherwise
-              // fall back to the raw value supplied by ECharts.
-              const formattedValue =
-                (param.dataIndex == null
-                  ? undefined
-                  : dataset.formattedValues[param.dataIndex]?.[
-                      seriesMeta.key
-                    ]) ?? value;
-              const tooltipValue =
-                formattedValue == null ? '' : `${formattedValue}`;
-
-              // Repeat the available symbols when there are more series than
-              // symbols, and use a fallback color if ECharts provides none.
-              const color = param.color ?? '#666666';
-
-              return `<div class="${styles.tooltipRow}"><span class="${styles.tooltipMarker}">${getTooltipSymbolSvg(color, param.seriesIndex)}</span><span class="${styles.tooltipSeries}">${param.seriesName}: <strong>${tooltipValue}</strong></span></div>`;
-            })
-            .join('');
-
-          // Add the x-axis title above the generated value rows and return the
-          // complete HTML string that ECharts will render as the tooltip.
-          return `<div class="${styles.tooltipContent}"><div class="${styles.tooltipTitle}">${title}</div>${rows}</div>`;
-        },
+        formatter: (params: unknown) =>
+          formatChartTooltip(
+            params,
+            dataset,
+            hoveredSeriesIndexRef.current,
+            isMediumOrSmallerScreen,
+            {
+              tooltipContent: styles.tooltipContent,
+              tooltipMarker: styles.tooltipMarker,
+              tooltipRow: styles.tooltipRow,
+              tooltipSeries: styles.tooltipSeries,
+              tooltipTitle: styles.tooltipTitle,
+            },
+            getTooltipSymbolSvg,
+          ),
       },
     };
   }, [
     visibleLegendData,
     dataset,
     seriesType,
+    isHorizontal,
     resolvedColors,
     screenSize,
     xAxisLabelsHeight,
@@ -419,16 +464,19 @@ export function CartesianChart({
     chartTitle,
     chartSourcePart1,
     staticTitle,
-    wrappedXAxisName,
-    xAxisLabelConfig.lineHeight,
-    xAxisLabelConfig.formatter,
-    wrappedYAxisName,
+    wrappedCategoryAxisName,
+    wrappedValueAxisName,
+    axisLineHeight,
+    rotatedAxisLabelConfig,
+    categoryYAxisLabelConfig,
+    categoryLabelWidth,
+    horizontalChartPlotHeightPx,
     resolvedNumberFormatter,
-    yAxisMin,
-    yAxisInterval,
-    yAxisBreak,
+    valueAxisMin,
+    valueAxisInterval,
+    valueAxisBreak,
     isMediumOrSmallerScreen,
-    yAxisZeroBased,
+    valueAxisZeroBased,
     getTooltipSymbolSvg,
   ]);
 
@@ -485,16 +533,18 @@ export function CartesianChart({
     };
 
     // On smaller screens, a click on the chart should show the tooltip for
-    // the closest data row. ECharts gives us a pixel position, so we first
-    // convert it to an x-axis position and then to a valid row index.
+    // the closest data row. Convert the pointer coordinate along the category
+    // axis to a valid row index.
     const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
       if (!isMediumOrSmallerScreen || dataset.source.length === 0) {
         return;
       }
 
+      const axisFinder = isHorizontal ? { yAxisIndex: 0 } : { xAxisIndex: 0 };
+      const pointerCoordinate = isHorizontal ? event.offsetY : event.offsetX;
       const axisCoordinate = chart.convertFromPixel(
-        { xAxisIndex: 0 },
-        event.offsetX,
+        axisFinder,
+        pointerCoordinate,
       );
 
       if (typeof axisCoordinate !== 'number' || Number.isNaN(axisCoordinate)) {
@@ -529,13 +579,14 @@ export function CartesianChart({
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
-      // TODO: The chart.off calls produces console warnings. Fix this.
-      chart.off('mouseover', handleSeriesInteraction);
-      chart.off('click', handleSeriesInteraction);
-      chart.off('globalout', handleGlobalOut);
+      if (!chart.isDisposed()) {
+        chart.off('mouseover', handleSeriesInteraction);
+        chart.off('click', handleSeriesInteraction);
+        chart.off('globalout', handleGlobalOut);
+      }
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
+  }, [chartRef, option, dataset, isMediumOrSmallerScreen, isHorizontal]);
 
   return (
     <>
@@ -584,14 +635,14 @@ export function LegendToggleButton({
 }: LegendToggleButtonProps) {
   return (
     <>
-      <div className={styles.divider}></div>
+      <div className={styles.legendButtonDivider}></div>
       <Button
         onClick={onClick}
         variant="secondary"
         size="medium"
         iconPosition="end"
         icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
-        className={cl(styles.buttonWidth)}
+        className={cl(styles.legendButton)}
       >
         {text}
       </Button>

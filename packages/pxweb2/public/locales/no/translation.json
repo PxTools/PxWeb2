@@ -189,6 +189,9 @@
         },
         "barchart": {
           "title": "Søylediagram"
+        },
+        "horizontal_barchart": {
+          "title": "Liggende Søylediagram"
         }
       },
       "edit": {
