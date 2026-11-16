@@ -384,7 +384,6 @@ export function CartesianChart({
             axisLabel: {
               width: Math.max(1, categoryLabelWidth),
               lineHeight: axisLineHeight,
-              overflow: 'break',
               align: 'right',
               formatter: categoryYAxisLabelConfig.formatter,
 
