@@ -28,6 +28,7 @@ import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { ScreenSize } from '../../../types/screenSize';
+import type { EChartsDataset } from '../Utils/chartTypes';
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information
@@ -43,6 +44,89 @@ type TooltipParam = {
   data?: Record<string, string | number | null>;
   color?: string;
 };
+
+type PointerPosition = {
+  offsetX: number;
+  offsetY: number;
+};
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function isIsolatedLinePoint(
+  value: unknown,
+  previousValue: unknown,
+  nextValue: unknown,
+): value is number {
+  return (
+    isFiniteNumber(value) &&
+    !isFiniteNumber(previousValue) &&
+    !isFiniteNumber(nextValue)
+  );
+}
+
+function getLegendSelection(chart: echarts.EChartsType): unknown {
+  const legendOption = chart.getOption().legend;
+  const legend = Array.isArray(legendOption) ? legendOption[0] : legendOption;
+
+  return legend && typeof legend === 'object' && 'selected' in legend
+    ? legend.selected
+    : undefined;
+}
+
+function isSeriesHidden(selected: unknown, seriesName: string): boolean {
+  return Boolean(
+    selected &&
+    typeof selected === 'object' &&
+    Reflect.get(selected, seriesName) === false,
+  );
+}
+
+function findClosestIsolatedLineSeries(
+  chart: echarts.EChartsType,
+  dataset: EChartsDataset,
+  dataIndex: number,
+  row: EChartsDataset['source'][number],
+  event: PointerPosition,
+): number | undefined {
+  let selected: unknown;
+  let legendLoaded = false;
+  let closestSeriesIndex: number | undefined;
+  let closestDistanceSquared = 8 * 8;
+
+  for (const [seriesIndex, series] of dataset.series.entries()) {
+    const value = row[series.key];
+    const previousValue = dataset.source[dataIndex - 1]?.[series.key];
+    const nextValue = dataset.source[dataIndex + 1]?.[series.key];
+    if (!isIsolatedLinePoint(value, previousValue, nextValue)) {
+      continue;
+    }
+
+    const point = chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [
+      dataIndex,
+      value,
+    ]);
+    const distanceSquared =
+      (point[0] - event.offsetX) ** 2 + (point[1] - event.offsetY) ** 2;
+    if (distanceSquared > closestDistanceSquared) {
+      continue;
+    }
+
+    if (!legendLoaded) {
+      selected = getLegendSelection(chart);
+      legendLoaded = true;
+    }
+    if (isSeriesHidden(selected, series.name)) {
+      continue;
+    }
+
+    closestDistanceSquared = distanceSquared;
+    closestSeriesIndex = seriesIndex;
+  }
+
+  return closestSeriesIndex;
+}
 
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
@@ -500,10 +584,7 @@ export function CartesianChart({
     };
 
     // Isolated values have neither a visible marker nor a line to hit.
-    const handleIsolatedLinePoint = (event: {
-      offsetX: number;
-      offsetY: number;
-    }) => {
+    const handleIsolatedLinePoint = (event: PointerPosition) => {
       const axisCoordinate = chart.convertFromPixel(
         { xAxisIndex: 0 },
         event.offsetX,
@@ -521,66 +602,26 @@ export function CartesianChart({
         return;
       }
 
-      let selected: unknown;
-      let legendLoaded = false;
-      let closestSeriesIndex: number | undefined;
-      let closestDistanceSquared = 8 * 8;
-
-      dataset.series.forEach((series, seriesIndex) => {
-        const value = row[series.key];
-        const previousValue = dataset.source[dataIndex - 1]?.[series.key];
-        const nextValue = dataset.source[dataIndex + 1]?.[series.key];
-        if (
-          typeof value !== 'number' ||
-          !Number.isFinite(value) ||
-          (typeof previousValue === 'number' &&
-            Number.isFinite(previousValue)) ||
-          (typeof nextValue === 'number' && Number.isFinite(nextValue))
-        ) {
-          return;
-        }
-
-        const point = chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [
-          dataIndex,
-          value,
-        ]);
-        const distanceSquared =
-          (point[0] - event.offsetX) ** 2 + (point[1] - event.offsetY) ** 2;
-        if (distanceSquared <= closestDistanceSquared) {
-          if (!legendLoaded) {
-            const legendOption = chart.getOption().legend;
-            const legend = Array.isArray(legendOption)
-              ? legendOption[0]
-              : legendOption;
-            selected =
-              legend && typeof legend === 'object' && 'selected' in legend
-                ? legend.selected
-                : undefined;
-            legendLoaded = true;
-          }
-          if (
-            selected &&
-            typeof selected === 'object' &&
-            Reflect.get(selected, series.name) === false
-          ) {
-            return;
-          }
-          closestDistanceSquared = distanceSquared;
-          closestSeriesIndex = seriesIndex;
-        }
-      });
-
-      if (closestSeriesIndex !== undefined) {
-        if (hoveredSeriesIndexRef.current !== closestSeriesIndex) {
-          hoveredSeriesIndexRef.current = closestSeriesIndex;
-          chart.dispatchAction({ type: 'hideTip' });
-        }
-        chart.dispatchAction({
-          type: 'showTip',
-          seriesIndex: closestSeriesIndex,
-          dataIndex,
-        });
+      const closestSeriesIndex = findClosestIsolatedLineSeries(
+        chart,
+        dataset,
+        dataIndex,
+        row,
+        event,
+      );
+      if (closestSeriesIndex === undefined) {
+        return;
       }
+
+      if (hoveredSeriesIndexRef.current !== closestSeriesIndex) {
+        hoveredSeriesIndexRef.current = closestSeriesIndex;
+        chart.dispatchAction({ type: 'hideTip' });
+      }
+      chart.dispatchAction({
+        type: 'showTip',
+        seriesIndex: closestSeriesIndex,
+        dataIndex,
+      });
     };
 
     // On smaller screens, a click on the chart should show the tooltip for

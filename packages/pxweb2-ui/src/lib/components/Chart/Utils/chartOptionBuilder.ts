@@ -66,6 +66,8 @@ export function buildSeriesOption(
 
     if (type === 'line') {
       let lastDataIndex = dataset.source.length - 1;
+      // Show one symbol per line, on its latest valid data point. Search backward so trailing
+      // missing or non-numeric values don't prevent that symbol from being shown.
       while (lastDataIndex >= 0) {
         const value = dataset.source[lastDataIndex][series.key];
         if (typeof value === 'number' && Number.isFinite(value)) {
@@ -78,11 +80,13 @@ export function buildSeriesOption(
         ...baseSeries,
         type: 'line',
         symbol: LINE_SERIES_SYMBOLS[index % LINE_SERIES_SYMBOLS.length],
+        // Use size 8 for the latest valid point's marker and size 0 to hide markers on the rest.
         symbolSize: (_value, params) =>
           params.dataIndex === lastDataIndex ? 8 : 0,
         showAllSymbol: true,
+        // Enable events on the line path so the tooltip can track the hovered series.
         triggerEvent: 'line',
-        emphasis: { scale: false },
+        emphasis: { scale: 1.5 },
       };
     }
 
