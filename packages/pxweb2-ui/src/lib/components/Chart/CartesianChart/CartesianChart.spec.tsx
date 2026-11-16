@@ -254,6 +254,24 @@ describe('CartesianChart', () => {
     );
   });
 
+  it('uses the responsive pixel font size for the horizontal value-axis name', () => {
+    const previousFontSize = document.documentElement.style.fontSize;
+    document.documentElement.style.fontSize = '20px';
+
+    try {
+      renderChart({ orientation: 'horizontal', screenSize: 'small' });
+
+      const option = vi.mocked(useEChartOption).mock.calls[0][0];
+      expect(option.xAxis).toMatchObject({
+        nameTextStyle: {
+          fontSize: getAxisFontSize(20),
+        },
+      });
+    } finally {
+      document.documentElement.style.fontSize = previousFontSize;
+    }
+  });
+
   it('grows horizontal chart height to fit category rows without rotated-label height', () => {
     vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
       ...mockDataset,

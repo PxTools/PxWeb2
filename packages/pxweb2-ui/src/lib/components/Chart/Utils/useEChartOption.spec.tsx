@@ -133,7 +133,7 @@ describe('useEChartOption', () => {
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
     const option: EChartsOption = {
-      xAxis: [{ nameTextStyle: { color: '#00ff00' } }],
+      xAxis: [{ nameTextStyle: { color: '#00ff00', fontSize: 17.5 } }],
       yAxis: { nameTextStyle: { color: '#ff0000' } },
     };
 
@@ -145,6 +145,7 @@ describe('useEChartOption', () => {
           expect.objectContaining({
             nameTextStyle: expect.objectContaining({
               color: '#00ff00',
+              fontSize: 17.5,
               align: 'left',
             }),
           }),

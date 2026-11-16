@@ -339,6 +339,7 @@ export function CartesianChart({
                     resolvedNumberFormatter(Number(value)),
                 },
             nameTextStyle: {
+              fontSize: axisFontSize,
               lineHeight: axisLineHeight,
             },
             scale: false,
@@ -466,6 +467,7 @@ export function CartesianChart({
     staticTitle,
     wrappedCategoryAxisName,
     wrappedValueAxisName,
+    axisFontSize,
     axisLineHeight,
     rotatedAxisLabelConfig,
     categoryYAxisLabelConfig,
