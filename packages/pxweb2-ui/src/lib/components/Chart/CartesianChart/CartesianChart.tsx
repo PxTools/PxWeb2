@@ -320,6 +320,7 @@ export function CartesianChart({
             name: wrappedValueAxisName,
             axisLabel: isSmallScreen
               ? {
+                  fontSize: axisFontSize,
                   rotate: 45,
                   interval: 0,
                   align: 'right',
@@ -334,6 +335,7 @@ export function CartesianChart({
                     ),
                 }
               : {
+                  fontSize: axisFontSize,
                   hideOverlap: true,
                   formatter: (value: string | number) =>
                     resolvedNumberFormatter(Number(value)),
@@ -359,6 +361,7 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
             },
             axisLabel: {
+              fontSize: axisFontSize,
               rotate: 45,
               interval: 0,
               align: 'right',
@@ -386,6 +389,7 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
             },
             axisLabel: {
+              fontSize: axisFontSize,
               width: Math.max(1, categoryLabelWidth),
               lineHeight: axisLineHeight,
               align: 'right',
@@ -407,6 +411,7 @@ export function CartesianChart({
         : {
             name: wrappedValueAxisName,
             axisLabel: {
+              fontSize: axisFontSize,
               formatter: (value: string | number) =>
                 resolvedNumberFormatter(Number(value)),
             },

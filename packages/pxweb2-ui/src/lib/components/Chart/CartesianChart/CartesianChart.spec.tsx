@@ -272,6 +272,30 @@ describe('CartesianChart', () => {
     }
   });
 
+  it.each([
+    ['vertical', 'bar', 'small'],
+    ['vertical', 'line', 'small'],
+    ['horizontal', 'bar', 'small'],
+    ['horizontal', 'bar', 'large'],
+  ] as const)(
+    'uses responsive pixel label sizes for %s %s charts on %s screens',
+    (orientation, seriesType, screenSize) => {
+      const previousFontSize = document.documentElement.style.fontSize;
+      document.documentElement.style.fontSize = '20px';
+
+      try {
+        renderChart({ orientation, seriesType, screenSize });
+
+        const option = vi.mocked(useEChartOption).mock.calls[0][0];
+        const axisLabel = { fontSize: getAxisFontSize(20) };
+        expect(option.xAxis).toMatchObject({ axisLabel });
+        expect(option.yAxis).toMatchObject({ axisLabel });
+      } finally {
+        document.documentElement.style.fontSize = previousFontSize;
+      }
+    },
+  );
+
   it('grows horizontal chart height to fit category rows without rotated-label height', () => {
     vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
       ...mockDataset,
