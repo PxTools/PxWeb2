@@ -355,6 +355,7 @@ export function CartesianChart({
             // Keeps the axis name clear of the rotated labels instead of using a hardcoded nameGap.
             nameMoveOverlap: true,
             nameTextStyle: {
+              fontSize: axisFontSize,
               lineHeight: axisLineHeight,
             },
             axisLabel: {
@@ -381,6 +382,7 @@ export function CartesianChart({
             inverse: true,
             nameLocation: 'start',
             nameTextStyle: {
+              fontSize: axisFontSize,
               lineHeight: axisLineHeight,
             },
             axisLabel: {
@@ -409,6 +411,7 @@ export function CartesianChart({
                 resolvedNumberFormatter(Number(value)),
             },
             nameTextStyle: {
+              fontSize: axisFontSize,
               lineHeight: axisLineHeight,
             },
             scale: false,
