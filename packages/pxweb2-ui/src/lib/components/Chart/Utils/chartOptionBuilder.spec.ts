@@ -55,7 +55,7 @@ describe('buildSeriesOption', () => {
         symbolSize: expect.any(Function),
         showAllSymbol: true,
         triggerEvent: 'line',
-        emphasis: { scale: false },
+        emphasis: { scale: 1.5 },
       },
       {
         name: 'Women',
@@ -65,7 +65,7 @@ describe('buildSeriesOption', () => {
         symbolSize: expect.any(Function),
         showAllSymbol: true,
         triggerEvent: 'line',
-        emphasis: { scale: false },
+        emphasis: { scale: 1.5 },
       },
     ]);
   });
