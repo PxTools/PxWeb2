@@ -242,13 +242,13 @@ describe('CartesianChart', () => {
       axisLabel: {
         width: expect.any(Number),
         lineHeight: expect.any(Number),
-        overflow: 'break',
         align: 'right',
         formatter: expect.any(Function),
       },
     });
     const horizontalYAxis = option.yAxis as echarts.YAXisComponentOption;
     expect(horizontalYAxis.axisLabel).not.toHaveProperty('rotate');
+    expect(horizontalYAxis.axisLabel).not.toHaveProperty('overflow');
     expect(horizontalYAxis.axisLabel?.lineHeight).toBe(
       horizontalYAxis.nameTextStyle?.lineHeight,
     );
