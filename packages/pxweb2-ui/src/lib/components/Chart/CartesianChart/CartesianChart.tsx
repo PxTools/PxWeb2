@@ -234,9 +234,12 @@ export function CartesianChart({
     const series = buildSeriesOption(dataset, seriesType, resolvedColors).map(
       (seriesOption) => ({
         ...seriesOption,
-        emphasis: isMediumOrSmallerScreen
-          ? { disabled: true }
-          : { focus: 'series' as const },
+        emphasis: {
+          ...seriesOption.emphasis,
+          ...(isMediumOrSmallerScreen
+            ? { disabled: true }
+            : { focus: 'series' as const }),
+        },
       }),
     ) as echarts.EChartsOption['series'];
 
@@ -469,12 +472,24 @@ export function CartesianChart({
     const handleSeriesInteraction = (params: {
       componentType?: string;
       seriesIndex?: number;
+      event?: { offsetX: number; offsetY: number };
     }) => {
       if (
         params.componentType === 'series' &&
         typeof params.seriesIndex === 'number'
       ) {
+        const seriesChanged =
+          hoveredSeriesIndexRef.current !== params.seriesIndex;
         hoveredSeriesIndexRef.current = params.seriesIndex;
+        if (seriesType === 'line' && seriesChanged && params.event) {
+          // ECharts can cache the axis tooltip before the hovered line changes.
+          chart.dispatchAction({ type: 'hideTip' });
+          chart.dispatchAction({
+            type: 'showTip',
+            x: params.event.offsetX,
+            y: params.event.offsetY,
+          });
+        }
       }
     };
 
@@ -482,6 +497,90 @@ export function CartesianChart({
     // a series again.
     const handleGlobalOut = () => {
       hoveredSeriesIndexRef.current = null;
+    };
+
+    // Isolated values have neither a visible marker nor a line to hit.
+    const handleIsolatedLinePoint = (event: {
+      offsetX: number;
+      offsetY: number;
+    }) => {
+      const axisCoordinate = chart.convertFromPixel(
+        { xAxisIndex: 0 },
+        event.offsetX,
+      );
+      if (
+        typeof axisCoordinate !== 'number' ||
+        !Number.isFinite(axisCoordinate)
+      ) {
+        return;
+      }
+
+      const dataIndex = Math.round(axisCoordinate);
+      const row = dataset.source[dataIndex];
+      if (!row) {
+        return;
+      }
+
+      let selected: unknown;
+      let legendLoaded = false;
+      let closestSeriesIndex: number | undefined;
+      let closestDistanceSquared = 8 * 8;
+
+      dataset.series.forEach((series, seriesIndex) => {
+        const value = row[series.key];
+        const previousValue = dataset.source[dataIndex - 1]?.[series.key];
+        const nextValue = dataset.source[dataIndex + 1]?.[series.key];
+        if (
+          typeof value !== 'number' ||
+          !Number.isFinite(value) ||
+          (typeof previousValue === 'number' &&
+            Number.isFinite(previousValue)) ||
+          (typeof nextValue === 'number' && Number.isFinite(nextValue))
+        ) {
+          return;
+        }
+
+        const point = chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [
+          dataIndex,
+          value,
+        ]);
+        const distanceSquared =
+          (point[0] - event.offsetX) ** 2 + (point[1] - event.offsetY) ** 2;
+        if (distanceSquared <= closestDistanceSquared) {
+          if (!legendLoaded) {
+            const legendOption = chart.getOption().legend;
+            const legend = Array.isArray(legendOption)
+              ? legendOption[0]
+              : legendOption;
+            selected =
+              legend && typeof legend === 'object' && 'selected' in legend
+                ? legend.selected
+                : undefined;
+            legendLoaded = true;
+          }
+          if (
+            selected &&
+            typeof selected === 'object' &&
+            Reflect.get(selected, series.name) === false
+          ) {
+            return;
+          }
+          closestDistanceSquared = distanceSquared;
+          closestSeriesIndex = seriesIndex;
+        }
+      });
+
+      if (closestSeriesIndex !== undefined) {
+        if (hoveredSeriesIndexRef.current !== closestSeriesIndex) {
+          hoveredSeriesIndexRef.current = closestSeriesIndex;
+          chart.dispatchAction({ type: 'hideTip' });
+        }
+        chart.dispatchAction({
+          type: 'showTip',
+          seriesIndex: closestSeriesIndex,
+          dataIndex,
+        });
+      }
     };
 
     // On smaller screens, a click on the chart should show the tooltip for
@@ -520,22 +619,36 @@ export function CartesianChart({
     };
 
     // Register the handlers with ECharts and its lower-level rendering layer.
+    if (seriesType === 'line') {
+      chart.on('mousemove', handleSeriesInteraction);
+    }
     chart.on('mouseover', handleSeriesInteraction);
     chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
     const zrender = chart.getZr?.();
+    if (seriesType === 'line') {
+      zrender?.on('mousemove', handleIsolatedLinePoint);
+      zrender?.on('click', handleIsolatedLinePoint);
+    }
     zrender?.on('click', handleChartClick);
 
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
       // TODO: The chart.off calls produces console warnings. Fix this.
+      if (seriesType === 'line') {
+        chart.off('mousemove', handleSeriesInteraction);
+      }
       chart.off('mouseover', handleSeriesInteraction);
       chart.off('click', handleSeriesInteraction);
       chart.off('globalout', handleGlobalOut);
+      if (seriesType === 'line') {
+        zrender?.off('mousemove', handleIsolatedLinePoint);
+        zrender?.off('click', handleIsolatedLinePoint);
+      }
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen]);
+  }, [chartRef, option, dataset, isMediumOrSmallerScreen, seriesType]);
 
   return (
     <>

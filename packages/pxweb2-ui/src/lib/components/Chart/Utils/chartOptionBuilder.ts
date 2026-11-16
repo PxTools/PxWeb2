@@ -59,22 +59,36 @@ export function buildSeriesOption(
   colors?: string[],
 ): echarts.SeriesOption[] {
   return dataset.series.map((series, index) => {
-    const baseSeries: echarts.SeriesOption = {
+    const baseSeries = {
       name: series.name,
-      type,
       color: colors ? colors[index % colors.length] : undefined,
     };
 
     if (type === 'line') {
+      let lastDataIndex = dataset.source.length - 1;
+      while (lastDataIndex >= 0) {
+        const value = dataset.source[lastDataIndex][series.key];
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          break;
+        }
+        lastDataIndex -= 1;
+      }
+
       return {
         ...baseSeries,
+        type: 'line',
         symbol: LINE_SERIES_SYMBOLS[index % LINE_SERIES_SYMBOLS.length],
-        symbolSize: 8,
+        symbolSize: (_value, params) =>
+          params.dataIndex === lastDataIndex ? 8 : 0,
+        showAllSymbol: true,
+        triggerEvent: 'line',
+        emphasis: { scale: false },
       };
     }
 
     return {
       ...baseSeries,
+      type: 'bar',
       barMaxWidth: 100,
     };
   });

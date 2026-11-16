@@ -184,6 +184,16 @@ const manySeriesPxTable = createChartPxTable(
   },
 );
 
+const manyPointsPxTable = createChartPxTable(
+  Array.from({ length: 100 }, (_, index) => `${1925 + index}`),
+  [
+    { code: 'A', label: 'Region A' },
+    { code: 'B', label: 'Region B' },
+  ],
+  (_year, seriesCode, yearIndex) =>
+    100 + yearIndex + (seriesCode === 'B' ? 50 : 0),
+);
+
 const longLegendLabelsPxTable = createChartPxTable(
   ['2020', '2021', '2022', '2023'],
   [
@@ -241,6 +251,7 @@ export const chartStoryArgs = {
     args: { pxtable: defaultPxTable, colors: [] },
   },
   ManySeries: { args: { pxtable: manySeriesPxTable } },
+  ManyPoints: { args: { pxtable: manyPointsPxTable } },
   SparseData: {
     args: { pxtable: sparseDataPxTable, colors: ['#24a148', '#8a3ffc'] },
   },
