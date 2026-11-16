@@ -265,7 +265,8 @@ export function CartesianChart({
       }),
     ) as echarts.EChartsOption['series'];
 
-    const gridPadding = isMediumOrSmallerScreen ? 24 : 0;
+    // const gridPadding = isMediumOrSmallerScreen ? 24 : 0;
+    const gridPadding = 0;
     const gridHeight = isHorizontal
       ? horizontalChartPlotHeightPx -
         TOP_CHART_PADDING -
