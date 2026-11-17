@@ -219,10 +219,6 @@ export function CartesianChart({
   const categoryLabelHeight = isHorizontal
     ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
     : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
-  // const categoryLabelHeight =
-  //   categoryYAxisLabelConfig.estimateHeight(categoryLabels);
-  // const categoryLabelHeight =
-  //   rotatedAxisLabelConfig.estimateHeight(categoryLabels);
   const xAxisLabelsHeight = isHorizontal
     ? 0
     : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
@@ -265,18 +261,14 @@ export function CartesianChart({
       }),
     ) as echarts.EChartsOption['series'];
 
-    // const gridPadding = isMediumOrSmallerScreen ? 24 : 0;
-    const gridPadding = 0;
     const gridHeight = isHorizontal
       ? horizontalChartPlotHeightPx -
         TOP_CHART_PADDING -
-        X_AXIS_LABEL_TO_LEGEND_GAP -
-        gridPadding
+        X_AXIS_LABEL_TO_LEGEND_GAP
       : CHART_PLOT_HEIGHT_PX[screenSize] -
         TOP_CHART_PADDING -
         X_AXIS_LABEL_TO_LEGEND_GAP +
-        xAxisLabelsHeight -
-        gridPadding;
+        xAxisLabelsHeight;
 
     const valueAxisBreakOptions = valueAxisBreak
       ? {
@@ -291,8 +283,8 @@ export function CartesianChart({
         top: TOP_CHART_PADDING,
         height: gridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
-        left: gridPadding,
-        right: gridPadding,
+        left: 0,
+        right: 0,
         //'same' keeps axis labels inside the grid rect
         outerBoundsMode: 'same',
         // 'all' keeps the axis names inside the grid rect
@@ -394,16 +386,6 @@ export function CartesianChart({
               lineHeight: axisLineHeight,
               align: 'right',
               formatter: categoryYAxisLabelConfig.formatter,
-
-              // rotate: 45,
-              // interval: 0,
-              // align: 'right',
-              // lineHeight: axisLineHeight,
-              // verticalAlign: 'bottom',
-              // overflow: 'break',
-              // hideOverlap: true,
-              // formatter: (value: string | number) =>
-              //   rotatedAxisLabelConfig.formatter(value),
             },
             axisLine: { show: true, onZero: false },
             axisTick: { show: true, alignWithLabel: true },
