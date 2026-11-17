@@ -31,7 +31,6 @@ import type { PxTable } from '../../../shared-types/pxTable';
 import type { ScreenSize } from '../../../types/screenSize';
 import type { EChartsDataset } from '../Utils/chartTypes';
 
-
 // --- MOVE TO TOOLTIP-HELPER START ---
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
@@ -133,7 +132,6 @@ function findClosestIsolatedLineSeries(
 }
 
 // --- MOVE TO TOOLTIP-HELPER END ---
-
 
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
