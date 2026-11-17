@@ -8,6 +8,7 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
+import { createActiveLineMarker } from '../Utils/chartActiveLineMarker';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -29,6 +30,9 @@ import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { ScreenSize } from '../../../types/screenSize';
 import type { EChartsDataset } from '../Utils/chartTypes';
+
+
+// --- MOVE TO TOOLTIP-HELPER START ---
 
 // ECharts passes one of these objects to the tooltip formatter whenever the
 // user points at or clicks a chart value. The formatter uses this information
@@ -128,6 +132,9 @@ function findClosestIsolatedLineSeries(
   return closestSeriesIndex;
 }
 
+// --- MOVE TO TOOLTIP-HELPER END ---
+
+
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
 // Pixel padding above the plot area.
@@ -193,6 +200,9 @@ export function CartesianChart({
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
+  const activeLineMarkerRef = useRef<
+    ReturnType<typeof createActiveLineMarker> | undefined
+  >(undefined);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
   const isMediumOrSmallerScreen =
     screenSize === 'medium' ||
@@ -437,6 +447,7 @@ export function CartesianChart({
 
           // There is nothing to display when ECharts provides no data.
           if (!axisParams || axisParams.length === 0) {
+            activeLineMarkerRef.current?.clear();
             return '';
           }
 
@@ -450,6 +461,7 @@ export function CartesianChart({
           // Without a series index, we cannot match the tooltip item to the
           // chart's series metadata.
           if (selectedSeriesIndex == null) {
+            activeLineMarkerRef.current?.clear();
             return '';
           }
 
@@ -460,6 +472,7 @@ export function CartesianChart({
           const hoveredParams = axisParams.filter(
             (param) => param.seriesIndex === selectedSeriesIndex,
           );
+          activeLineMarkerRef.current?.update(hoveredParams[0]);
           // Turn each selected tooltip item into one line of HTML.
           const rows = hoveredParams
             .map((param) => {
@@ -551,6 +564,18 @@ export function CartesianChart({
       return;
     }
 
+    const zrender = chart.getZr?.();
+    const activeLineMarker =
+      seriesType === 'line'
+        ? createActiveLineMarker(chart, dataset, getTooltipSymbolSvg)
+        : undefined;
+    activeLineMarkerRef.current = activeLineMarker;
+    if (activeLineMarker) {
+      chart.on('hideTip', activeLineMarker.clear);
+      chart.on('finished', activeLineMarker.reposition);
+      chart.on('legendselectchanged', activeLineMarker.clear);
+    }
+
     // Remember the series the user is interacting with so the tooltip can
     // show only that series on smaller screens.
     const handleSeriesInteraction = (params: {
@@ -581,6 +606,7 @@ export function CartesianChart({
     // a series again.
     const handleGlobalOut = () => {
       hoveredSeriesIndexRef.current = null;
+      activeLineMarker?.clear();
     };
 
     // Isolated values have neither a visible marker nor a line to hit.
@@ -666,7 +692,6 @@ export function CartesianChart({
     chart.on('mouseover', handleSeriesInteraction);
     chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
-    const zrender = chart.getZr?.();
     if (seriesType === 'line') {
       zrender?.on('mousemove', handleIsolatedLinePoint);
       zrender?.on('click', handleIsolatedLinePoint);
@@ -677,6 +702,13 @@ export function CartesianChart({
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
       // TODO: The chart.off calls produces console warnings. Fix this.
+      if (activeLineMarker) {
+        activeLineMarkerRef.current = undefined;
+        activeLineMarker.dispose();
+        chart.off('hideTip', activeLineMarker.clear);
+        chart.off('finished', activeLineMarker.reposition);
+        chart.off('legendselectchanged', activeLineMarker.clear);
+      }
       if (seriesType === 'line') {
         chart.off('mousemove', handleSeriesInteraction);
       }
@@ -689,7 +721,14 @@ export function CartesianChart({
       }
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen, seriesType]);
+  }, [
+    chartRef,
+    option,
+    dataset,
+    isMediumOrSmallerScreen,
+    seriesType,
+    getTooltipSymbolSvg,
+  ]);
 
   return (
     <>

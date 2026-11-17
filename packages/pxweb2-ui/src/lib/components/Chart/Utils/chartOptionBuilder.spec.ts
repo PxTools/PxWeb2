@@ -3,6 +3,7 @@ import * as echarts from 'echarts/index.js';
 import env from 'zrender/lib/core/env.js';
 
 import { buildDatasetOption, buildSeriesOption } from './chartOptionBuilder';
+import { createActiveLineMarker } from './chartActiveLineMarker';
 import type { EChartsDataset } from './chartTypes';
 
 const mockDataset: EChartsDataset = {
@@ -118,6 +119,7 @@ describe('buildSeriesOption', () => {
   });
 
   it('shows tooltips on unmarked points when hovering either line', () => {
+    vi.useFakeTimers();
     // ECharts disables tooltips for jsdom's default Node.js user agent.
     const wasNode = env.node;
     env.node = false;
@@ -142,6 +144,14 @@ describe('buildSeriesOption', () => {
       };
       let selectedSeries: number | undefined;
       let tooltipText = '';
+      const marker = createActiveLineMarker(
+        chart,
+        dataset,
+        (color) =>
+          `<svg xmlns="http://www.w3.org/2000/svg"><circle fill="${color}"/></svg>`,
+      );
+      chart.on('hideTip', marker.clear);
+      chart.on('finished', marker.reposition);
       chart.setOption({
         ...buildDatasetOption(dataset),
         animation: false,
@@ -166,6 +176,15 @@ describe('buildSeriesOption', () => {
             const items = Array.isArray(params) ? params : [params];
             const item = items.find(
               (value) => value.seriesIndex === selectedSeries,
+            );
+            marker.update(
+              item?.seriesIndex == null
+                ? undefined
+                : {
+                    seriesIndex: item.seriesIndex,
+                    dataIndex: item.dataIndex,
+                    color: '#123456',
+                  },
             );
             tooltipText = item ? `${item.seriesName}:${item.dataIndex}` : '';
             return tooltipText;
@@ -203,15 +222,20 @@ describe('buildSeriesOption', () => {
       };
 
       moveTo(0, 20);
+      vi.advanceTimersByTime(20);
       expect(tooltipText).toBe('Men:5');
+      expect(container.querySelector('svg')?.outerHTML).toContain('%23123456');
       moveTo(1, 80);
+      vi.advanceTimersByTime(20);
       expect(tooltipText).toBe('Women:5');
       chart.getZr().refreshImmediately();
       expect(container.querySelector('svg')?.outerHTML).not.toContain('NaN');
+      marker.dispose();
     } finally {
       chart.dispose();
       canvasContext.mockRestore();
       env.node = wasNode;
+      vi.useRealTimers();
     }
   });
 
