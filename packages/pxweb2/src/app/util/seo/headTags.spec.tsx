@@ -1,3 +1,4 @@
+/// <reference types="vitest/jsdom" />
 import { render } from '@testing-library/react';
 import { vi, expect, Mock } from 'vitest';
 import { useLocation, useMatch } from 'react-router';
@@ -114,23 +115,14 @@ const mockConfigs: Record<string, Config> = {
 };
 
 // --- Helpers ---
-const originalLocation = window.location;
-function mockWindowOrigin(origin: string) {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { ...originalLocation, origin } as Location,
-  });
-}
+const originalUrl = window.location.href;
 
 beforeEach(() => {
-  mockWindowOrigin('https://mytesturlpxweb.io');
+  jsdom.reconfigure({ url: 'https://mytesturlpxweb.io' });
 });
 
 afterEach(() => {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: originalLocation,
-  });
+  jsdom.reconfigure({ url: originalUrl });
 });
 
 // --- Tests ---
