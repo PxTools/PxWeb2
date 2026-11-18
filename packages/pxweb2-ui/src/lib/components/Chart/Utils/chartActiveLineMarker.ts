@@ -1,5 +1,6 @@
 import type * as echarts from 'echarts';
 
+import { getLineSymbol } from './chartSymbols';
 import type { EChartsDataset } from './chartTypes';
 
 export const ACTIVE_LINE_MARKER_ID = 'pxweb-active-line-marker';
@@ -16,7 +17,6 @@ export function createActiveLineMarker(
     'convertToPixel' | 'isDisposed' | 'setOption'
   >,
   dataset: EChartsDataset,
-  getTooltipSymbolSvg: (color: string, seriesIndex: number) => string,
 ) {
   let activePoint: ActiveLinePoint | undefined;
   let frame: number | undefined;
@@ -61,20 +61,17 @@ export function createActiveLineMarker(
     if (key === renderedKey) {
       return;
     }
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">${getTooltipSymbolSvg(color, activePoint.seriesIndex)}</svg>`;
     chart.setOption(
       {
         graphic: [
           {
             id: ACTIVE_LINE_MARKER_ID,
-            type: 'image',
+            ...getLineSymbol(activePoint.seriesIndex),
             $action: 'replace',
             x: x - 5,
             y: y - 5,
             style: {
-              image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
-              width: 10,
-              height: 10,
+              fill: color,
             },
             silent: true,
             z: 100,

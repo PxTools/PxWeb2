@@ -9,6 +9,7 @@ import {
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
 import { createActiveLineMarker } from '../Utils/chartActiveLineMarker';
+import { getBarLegendSymbol } from '../Utils/chartSymbols';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -424,6 +425,7 @@ export function CartesianChart({
       },
       legend: {
         data: visibleLegendData,
+        ...(seriesType === 'bar' ? { icon: getBarLegendSymbol() } : {}),
         orient: 'horizontal',
         textStyle: {
           overflow: 'break',
@@ -565,7 +567,7 @@ export function CartesianChart({
     const zrender = chart.getZr?.();
     const activeLineMarker =
       seriesType === 'line'
-        ? createActiveLineMarker(chart, dataset, getTooltipSymbolSvg)
+        ? createActiveLineMarker(chart, dataset)
         : undefined;
     activeLineMarkerRef.current = activeLineMarker;
     if (activeLineMarker) {

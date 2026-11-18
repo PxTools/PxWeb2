@@ -1,18 +1,7 @@
 import type * as echarts from 'echarts';
 
+import { getLineSeriesSymbol } from './chartSymbols';
 import type { EChartsDataset } from './chartTypes';
-
-type LineSeriesSymbol =
-  'circle' | 'rect' | 'triangle' | 'diamond' | 'pin' | 'arrow';
-
-export const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
-  'circle',
-  'rect',
-  'triangle',
-  'diamond',
-  'pin',
-  'arrow',
-];
 
 export function buildDatasetOption(
   dataset: EChartsDataset,
@@ -79,7 +68,8 @@ export function buildSeriesOption(
       return {
         ...baseSeries,
         type: 'line',
-        symbol: LINE_SERIES_SYMBOLS[index % LINE_SERIES_SYMBOLS.length],
+        symbol: getLineSeriesSymbol(index),
+        symbolKeepAspect: true,
         // Use size 8 for the latest valid point's marker and size 0 to hide markers on the rest.
         symbolSize: (_value, params) =>
           params.dataIndex === lastDataIndex ? 8 : 0,

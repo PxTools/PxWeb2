@@ -52,7 +52,8 @@ describe('buildSeriesOption', () => {
         name: 'Men',
         type: 'line',
         color: undefined,
-        symbol: 'circle',
+        symbol: expect.stringMatching(/^path:\/\//),
+        symbolKeepAspect: true,
         symbolSize: expect.any(Function),
         showAllSymbol: true,
         triggerEvent: 'line',
@@ -62,7 +63,8 @@ describe('buildSeriesOption', () => {
         name: 'Women',
         type: 'line',
         color: undefined,
-        symbol: 'rect',
+        symbol: expect.stringMatching(/^path:\/\//),
+        symbolKeepAspect: true,
         symbolSize: expect.any(Function),
         showAllSymbol: true,
         triggerEvent: 'line',
@@ -144,12 +146,7 @@ describe('buildSeriesOption', () => {
       };
       let selectedSeries: number | undefined;
       let tooltipText = '';
-      const marker = createActiveLineMarker(
-        chart,
-        dataset,
-        (color) =>
-          `<svg xmlns="http://www.w3.org/2000/svg"><circle fill="${color}"/></svg>`,
-      );
+      const marker = createActiveLineMarker(chart, dataset);
       chart.on('hideTip', marker.clear);
       chart.on('finished', marker.reposition);
       chart.setOption({
@@ -224,7 +221,7 @@ describe('buildSeriesOption', () => {
       moveTo(0, 20);
       vi.advanceTimersByTime(20);
       expect(tooltipText).toBe('Men:5');
-      expect(container.querySelector('svg')?.outerHTML).toContain('%23123456');
+      expect(container.querySelector('svg')?.outerHTML).toContain('#123456');
       moveTo(1, 80);
       vi.advanceTimersByTime(20);
       expect(tooltipText).toBe('Women:5');

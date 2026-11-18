@@ -161,6 +161,7 @@ describe('CartesianChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
+      icon: expect.stringMatching(/^path:\/\//),
       orient: 'horizontal',
       textStyle: { overflow: 'break' },
     });
@@ -499,11 +500,11 @@ describe('CartesianChart', () => {
       expect.objectContaining({
         graphic: [
           expect.objectContaining({
-            type: 'image',
+            type: 'circle',
             x: -4,
             y: 45,
             style: expect.objectContaining({
-              image: expect.stringContaining('%3Ccircle%20fill%3D%22%23123456'),
+              fill: '#123456',
             }),
           }),
         ],
@@ -521,10 +522,11 @@ describe('CartesianChart', () => {
       expect.objectContaining({
         graphic: [
           expect.objectContaining({
+            type: 'rect',
             x: -4,
             y: 75,
             style: expect.objectContaining({
-              image: expect.stringContaining('%3Crect%20fill%3D%22%23abcdef'),
+              fill: '#abcdef',
             }),
           }),
         ],
