@@ -30,7 +30,7 @@ export function createActiveLineMarker(
       return;
     }
 
-    if (!activePoint || activePoint.dataIndex == null) {
+    if (activePoint?.dataIndex == null) {
       if (renderedKey !== undefined) {
         chart.setOption(
           { graphic: [{ id: ACTIVE_LINE_MARKER_ID, $action: 'remove' }] },
@@ -91,9 +91,7 @@ export function createActiveLineMarker(
 
   // setOption cannot run during ECharts' tooltip rendering/update cycle.
   const schedule = () => {
-    if (frame === undefined) {
-      frame = requestAnimationFrame(render);
-    }
+    frame ??= requestAnimationFrame(render);
   };
 
   const clear = () => {

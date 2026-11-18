@@ -109,7 +109,7 @@ function getSymbolPath(symbol: SymbolShape): string {
       return `M${x + r} ${y}H${x + width - r}A${r} ${r} 0 0 1 ${x + width} ${y + r}V${y + height - r}A${r} ${r} 0 0 1 ${x + width - r} ${y + height}H${x + r}A${r} ${r} 0 0 1 ${x} ${y + height - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}z`;
     }
     case 'polygon':
-      return `M${symbol.shape.points.map(([x, y]) => `${x} ${y}`).join('L')}z`;
+      return `M${symbol.shape.points.map(([x, y]) => [x, y].join(' ')).join('L')}z`;
   }
 }
 
@@ -123,7 +123,8 @@ function getTooltipSymbolSvg(symbol: SymbolShape, color: string): string {
     }
     case 'rect': {
       const { x, y, width, height, r } = symbol.shape;
-      shape = `<rect x="${x}" y="${y}" width="${width}" height="${height}"${r ? ` rx="${r}"` : ''} fill="${color}" />`;
+      const radius = r ? ` rx="${r}"` : '';
+      shape = `<rect x="${x}" y="${y}" width="${width}" height="${height}"${radius} fill="${color}" />`;
       break;
     }
     case 'polygon':
