@@ -73,6 +73,28 @@ describe('active line marker', () => {
       expect(withMarker).not.toContain('<image');
       expect(withMarker).not.toContain('data:image');
 
+      const expectCenteredAndScaled = (shape: Element) => {
+        const transform = shape.getAttribute('transform');
+        const values = transform
+          ?.match(/^matrix\(([^)]+)\)$/)?.[1]
+          .split(/[\s,]+/)
+          .map(Number);
+        expect(values).toHaveLength(6);
+        if (!values || values.length !== 6) {
+          throw new Error(`Unexpected marker transform: ${transform}`);
+        }
+        const [x, y] = chart.convertToPixel(
+          { xAxisIndex: 0, yAxisIndex: 0 },
+          [1, 20],
+        );
+        expect(values[0]).toBe(1.5);
+        expect(values[1]).toBe(0);
+        expect(values[2]).toBe(0);
+        expect(values[3]).toBe(1.5);
+        expect(values[4] + 5 * values[0]).toBeCloseTo(x, 1);
+        expect(values[5] + 5 * values[3]).toBeCloseTo(y, 1);
+      };
+
       const shapes: string[] = [];
       for (
         let seriesIndex = 0;
@@ -87,6 +109,7 @@ describe('active line marker', () => {
         if (!activeShape) {
           throw new Error(`Missing active marker for series ${seriesIndex}`);
         }
+        expectCenteredAndScaled(activeShape);
         const tooltip = new DOMParser().parseFromString(
           getLineTooltipSymbolSvg('#abcdef', seriesIndex),
           'image/svg+xml',
@@ -145,7 +168,16 @@ describe('active line marker', () => {
       chart.resize({ width: 800, height: 400 });
       marker.reposition();
       vi.advanceTimersByTime(20);
-      expect(chart.renderToSVGString()).toContain('#abcdef');
+      const resizedSvg = chart.renderToSVGString();
+      const resizedDocument = new DOMParser().parseFromString(
+        resizedSvg,
+        'image/svg+xml',
+      );
+      const resizedMarker = resizedDocument.querySelector('[fill="#abcdef"]');
+      expect(resizedMarker).not.toBeNull();
+      if (resizedMarker) {
+        expectCenteredAndScaled(resizedMarker);
+      }
 
       marker.clear();
       vi.advanceTimersByTime(20);

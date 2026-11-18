@@ -501,8 +501,10 @@ describe('CartesianChart', () => {
         graphic: [
           expect.objectContaining({
             type: 'circle',
-            x: -4,
-            y: 45,
+            x: -6.5,
+            y: 42.5,
+            scaleX: 1.5,
+            scaleY: 1.5,
             style: expect.objectContaining({
               fill: '#123456',
             }),
@@ -523,8 +525,8 @@ describe('CartesianChart', () => {
         graphic: [
           expect.objectContaining({
             type: 'rect',
-            x: -4,
-            y: 75,
+            x: -6.5,
+            y: 72.5,
             style: expect.objectContaining({
               fill: '#abcdef',
             }),
@@ -538,7 +540,7 @@ describe('CartesianChart', () => {
     vi.advanceTimersByTime(20);
     expect(chart.setOption).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        graphic: [expect.objectContaining({ x: 6, y: 115 })],
+        graphic: [expect.objectContaining({ x: 3.5, y: 112.5 })],
       }),
       { silent: true },
     );
@@ -550,7 +552,7 @@ describe('CartesianChart', () => {
     vi.advanceTimersByTime(20);
     expect(chart.setOption).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        graphic: [expect.objectContaining({ x: 25, y: 35 })],
+        graphic: [expect.objectContaining({ x: 22.5, y: 32.5 })],
       }),
       { silent: true },
     );

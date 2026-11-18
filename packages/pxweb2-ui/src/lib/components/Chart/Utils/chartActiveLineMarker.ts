@@ -4,6 +4,8 @@ import { getLineSymbol } from './chartSymbols';
 import type { EChartsDataset } from './chartTypes';
 
 export const ACTIVE_LINE_MARKER_ID = 'pxweb-active-line-marker';
+const ACTIVE_MARKER_SCALE = 1.5;
+const SYMBOL_CENTER = 5;
 
 interface ActiveLinePoint {
   seriesIndex: number;
@@ -68,8 +70,10 @@ export function createActiveLineMarker(
             id: ACTIVE_LINE_MARKER_ID,
             ...getLineSymbol(activePoint.seriesIndex),
             $action: 'replace',
-            x: x - 5,
-            y: y - 5,
+            x: x - SYMBOL_CENTER * ACTIVE_MARKER_SCALE,
+            y: y - SYMBOL_CENTER * ACTIVE_MARKER_SCALE,
+            scaleX: ACTIVE_MARKER_SCALE,
+            scaleY: ACTIVE_MARKER_SCALE,
             style: {
               fill: color,
             },
