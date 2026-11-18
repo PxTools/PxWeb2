@@ -6,7 +6,7 @@ import Presentation from './Presentation';
 import classes from './Presentation.module.scss';
 import type { PxTable } from '@pxweb2/pxweb2-ui';
 
-const { table } = vi.hoisted(() => ({
+const { table, mockLineChart, mockBarChart, mockT } = vi.hoisted(() => ({
   table: {
     metadata: {
       id: '1',
@@ -33,6 +33,28 @@ const { table } = vi.hoisted(() => ({
     stub: [],
     heading: [],
   } satisfies PxTable,
+  mockLineChart: vi.fn(
+    (props: { numberFormatter: (value: number) => string }) => {
+      void props.numberFormatter;
+      return null;
+    },
+  ),
+  mockBarChart: vi.fn(
+    (props: { numberFormatter: (value: number) => string }) => {
+      void props.numberFormatter;
+      return null;
+    },
+  ),
+  mockT: vi.fn((key: string, options?: { value: string }) =>
+    options ? `${key}:${options.value}` : key,
+  ),
+}));
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: mockT, i18n: { language: 'en' } }),
+}));
+vi.mock('../../util/config/getConfig', () => ({
+  getConfig: () => ({ features: { chartEnabled: true } }),
 }));
 
 vi.mock('../../context/useApp', () => ({
@@ -49,6 +71,7 @@ vi.mock('../../context/useTableData', () => {
     setIsFadingTable: vi.fn(),
     fetchTableData: vi.fn(),
     pivotToDesktop: vi.fn(),
+    pivotToChart: vi.fn(),
     setChart: vi.fn(),
   };
   return { default: () => tableData };
@@ -72,8 +95,8 @@ vi.mock('../ContentTop/ContentTop', () => ({
 }));
 vi.mock('@pxweb2/pxweb2-ui', () => ({
   Table: () => <table aria-label="Test table" />,
-  LineChart: () => null,
-  BarChart: () => null,
+  LineChart: mockLineChart,
+  BarChart: mockBarChart,
   EmptyState: () => null,
   LocalAlert: () => null,
 }));
@@ -112,6 +135,7 @@ function renderPresentation(
     clientWidth: 500,
     scrollLeft: 0,
   },
+  initialEntry = '/',
 ) {
   // jsdom has no layout; provide dimensions before the mount effect runs.
   vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(
@@ -125,7 +149,7 @@ function renderPresentation(
   );
 
   const result = render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <Presentation
         selectedTabId="1"
         isExpanded={false}
@@ -146,7 +170,15 @@ function renderPresentation(
     );
   }
 
-  expect(result.getByRole('table', { name: 'Test table' })).toBeInTheDocument();
+  if (initialEntry === '/') {
+    expect(
+      result.getByRole('table', { name: 'Test table' }),
+    ).toBeInTheDocument();
+  } else {
+    expect(
+      result.container.querySelector('table[aria-label="Test table"]'),
+    ).toBeInTheDocument();
+  }
 
   return { ...result, tableContainer, gradientContainer };
 }
@@ -154,12 +186,34 @@ function renderPresentation(
 describe('Presentation', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    mockLineChart.mockClear();
+    mockBarChart.mockClear();
+    mockT.mockClear();
   });
 
   it('renders the table and gradient containers', () => {
     const { tableContainer, gradientContainer } = renderPresentation();
     expect(tableContainer).toBeInTheDocument();
     expect(gradientContainer).toBeInTheDocument();
+  });
+
+  it.each([
+    { view: 'linechart', chart: mockLineChart },
+    { view: 'barchart', chart: mockBarChart },
+  ])('passes translated number formatting to the $view', ({ view, chart }) => {
+    renderPresentation(undefined, `/?view=${view}`);
+
+    const chartProps = chart.mock.calls[0]?.[0];
+    expect(chartProps).toBeDefined();
+    if (!chartProps) {
+      throw new Error('The selected chart was not rendered');
+    }
+    const numberFormatter = chartProps.numberFormatter;
+
+    expect(numberFormatter(1234.5)).toBe('number.simple_number:1234.5');
+    expect(mockT).toHaveBeenCalledWith('number.simple_number', {
+      value: '1234.5',
+    });
   });
 
   describe('Presentation gradient handling', () => {

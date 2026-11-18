@@ -2,8 +2,9 @@ import React from 'react';
 import { render, cleanup, act } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-
 import type { TFunction } from 'i18next';
+import { BrowserRouter } from 'react-router';
+
 import useFilterUrlSync from './useFilterUrlSync';
 import {
   ActionType,
@@ -154,7 +155,9 @@ describe('mergeFilterIntoQuery', () => {
     const state = baseState();
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     expect(dispatch).not.toHaveBeenCalledWith(
@@ -167,7 +170,9 @@ describe('mergeFilterIntoQuery', () => {
     let state = baseState();
     const dispatch = vi.fn();
 
-    const { rerender } = render(<Harness state={state} dispatch={dispatch} />);
+    const { rerender } = render(<Harness state={state} dispatch={dispatch} />, {
+      wrapper: BrowserRouter,
+    });
 
     state = {
       ...state,
@@ -191,7 +196,9 @@ describe('mergeFilterIntoQuery', () => {
     ];
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     expect(window.location.search).toBe(
@@ -207,7 +214,9 @@ describe('mergeFilterIntoQuery', () => {
     ];
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     expect(window.location.search).toBe('?from=1990&to=2000');
@@ -222,7 +231,9 @@ describe('mergeFilterIntoQuery', () => {
     ];
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     expect(window.location.search).toBe('?timeUnit=Annual&to=2001');
@@ -245,7 +256,9 @@ describe('parseParamsToFilters', () => {
     window.history.replaceState({}, '', '/?from=1990&to=2000');
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     const calls = dispatch.mock.calls.map((args) => args[0]);
@@ -274,7 +287,9 @@ describe('parseParamsToFilters', () => {
     window.history.replaceState({}, '', '/?timeUnit=Annual,Monthly');
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     const add = dispatch.mock.calls
@@ -296,7 +311,9 @@ describe('parseParamsToFilters', () => {
     window.history.replaceState({}, '', '/?variable=age,sex');
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     const add = dispatch.mock.calls
@@ -315,7 +332,9 @@ describe('parseParamsToFilters', () => {
     window.history.replaceState({}, '', '/?subject=UF,BE');
 
     await act(async () => {
-      render(<Harness state={state} dispatch={dispatch} />);
+      render(<Harness state={state} dispatch={dispatch} />, {
+        wrapper: BrowserRouter,
+      });
     });
 
     const add = dispatch.mock.calls

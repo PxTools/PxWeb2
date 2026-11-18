@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+// @vitest-environment node
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   checkMultipleUnits,
@@ -49,6 +50,10 @@ function createTableWithContentUnits(
 }
 
 describe('getChartCssVariables', () => {
+  beforeEach(() => {
+    vi.stubGlobal('window', {});
+  });
+
   afterEach(() => {
     vi.unstubAllGlobals();
   });
