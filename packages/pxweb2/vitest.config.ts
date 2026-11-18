@@ -11,6 +11,7 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: 'jsdom',
+      pool: 'vmThreads',
       include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
       setupFiles: './test/setupTests',
 

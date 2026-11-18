@@ -69,8 +69,18 @@ describe('buildSeriesOption', () => {
     ]);
 
     expect(series).toEqual([
-      { name: 'Men', type: 'bar', color: '#111111' },
-      { name: 'Women', type: 'bar', color: '#222222' },
+      {
+        name: 'Men',
+        type: 'bar',
+        color: '#111111',
+        barMaxWidth: 100,
+      },
+      {
+        name: 'Women',
+        type: 'bar',
+        color: '#222222',
+        barMaxWidth: 100,
+      },
     ]);
   });
 
@@ -92,9 +102,24 @@ describe('buildSeriesOption', () => {
     ]);
 
     expect(series).toEqual([
-      { name: 'Men', type: 'bar', color: '#aaaaaa' },
-      { name: 'Women', type: 'bar', color: '#aaaaaa' },
-      { name: 'Total', type: 'bar', color: '#aaaaaa' },
+      {
+        name: 'Men',
+        type: 'bar',
+        color: '#aaaaaa',
+        barMaxWidth: 100,
+      },
+      {
+        name: 'Women',
+        type: 'bar',
+        color: '#aaaaaa',
+        barMaxWidth: 100,
+      },
+      {
+        name: 'Total',
+        type: 'bar',
+        color: '#aaaaaa',
+        barMaxWidth: 100,
+      },
     ]);
   });
 });

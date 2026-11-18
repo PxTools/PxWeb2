@@ -1,5 +1,6 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useMemo } from 'react';
 import type { TFunction } from 'i18next';
+import { useNavigate } from 'react-router';
 
 import { ActionType } from '../../pages/StartPage/StartPageTypes';
 import type {
@@ -229,7 +230,6 @@ function parseParamsToFilters(
 
   const subjectParam = params.get('subject');
   if (subjectParam) {
-    let addedAnySubject = false;
     subjectParam
       .split(',')
       .map((s) => s.trim())
@@ -244,12 +244,6 @@ function parseParamsToFilters(
             label: node.label,
             index,
           });
-          addedAnySubject = true;
-        }
-        if (!addedAnySubject) {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('subject');
-          window.history.replaceState({}, '', url);
         }
       });
   }
@@ -326,7 +320,7 @@ function parseParamsToFilters(
  * Keeps URL query parameters and internal filter state in sync:
  *
  * - Reads query parameters on initial load and applies filters
- * - Updates URL when filters change
+ * - Updates URL through the router when filters change, keeping links in sync
  * - Re-applies filters on browser navigation (back/forward)
  */
 export default function useFilterUrlSync(
@@ -334,6 +328,7 @@ export default function useFilterUrlSync(
   dispatch: (action: ReducerActionTypes) => void,
   t: TFunction,
 ) {
+  const navigate = useNavigate();
   const hydratedRef = useRef(false);
   const lastAppliedQueryRef = useRef<string | null>(null);
 
@@ -347,22 +342,34 @@ export default function useFilterUrlSync(
     [state.availableFilters.timeUnits],
   );
 
+  const replaceFilterUrl = useCallback(
+    (filters: Filter[]) => {
+      const current = window.location.search.replace(/^\?/, '');
+      const built = buildParamsFromFilters(filters, t).toString();
+      if (built !== current) {
+        const url =
+          window.location.pathname +
+          (built ? `?${built}` : '') +
+          window.location.hash;
+
+        // URL syncing does not await navigation completion; void makes that explicit.
+        void navigate(url, { replace: true });
+      }
+    },
+    [navigate, t],
+  );
+
   // Update the browser URL whenever activeFilters change.
   // Guard against overwriting incoming query parameters before hydration.
   useEffect(() => {
-    const current = window.location.search.replace(/^\?/, '');
-    const built = buildParamsFromFilters(state.activeFilters, t).toString();
-    const hasIncoming = current.length > 0;
+    const hasIncoming = window.location.search.length > 0;
 
     if (!hydratedRef.current && hasIncoming) {
       return;
     }
 
-    if (built !== current) {
-      const url = window.location.pathname + (built ? `?${built}` : '');
-      window.history.replaceState(null, '', url);
-    }
-  }, [state.activeFilters, t]);
+    replaceFilterUrl(state.activeFilters);
+  }, [state.activeFilters, replaceFilterUrl]);
 
   // Initialize filters from the current URL query once tables and subjectTree are available.
   // Do not re-run on every activeFilters change.
@@ -410,10 +417,11 @@ export default function useFilterUrlSync(
     if (filters.length) {
       dispatch({ type: ActionType.ADD_FILTER, payload: filters });
     }
+    replaceFilterUrl(filters);
 
     hydratedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subjectIndex, t, availableTimeUnits, dispatch]);
+  }, [subjectIndex, t, availableTimeUnits, dispatch, replaceFilterUrl]);
 
   // Handle back/forward navigation
   // Sync filters from URL whenever the user navigates with back/forward buttons.
@@ -438,6 +446,7 @@ export default function useFilterUrlSync(
       if (filters.length) {
         dispatch({ type: ActionType.ADD_FILTER, payload: filters });
       }
+      replaceFilterUrl(filters);
 
       const paramsAfter = new URLSearchParams(window.location.search);
       lastAppliedQueryRef.current = paramsAfter.toString();
@@ -451,6 +460,7 @@ export default function useFilterUrlSync(
     t,
     subjectIndex,
     availableTimeUnits,
+    replaceFilterUrl,
     state.availableTables,
     state.originalSubjectTree,
   ]);

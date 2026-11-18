@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { CodeSnippetBody } from './CodeSnippetBody';
 
-vi.mock('../highlighter', () => ({
+vi.mock('./highlighter', () => ({
   getHighlighter: () =>
     Promise.resolve({
       codeToHast: (code: string) => ({

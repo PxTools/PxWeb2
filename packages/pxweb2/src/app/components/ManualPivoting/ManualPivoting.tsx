@@ -193,6 +193,9 @@ export function ManualPivot({
     });
   };
 
+  const capitalizeLabel = (label: string): string =>
+    label.charAt(0).toUpperCase() + label.slice(1);
+
   /** Returns the nearest drop zone containing or close to a pointer position. */
   const getGroupAtPoint = (x: number, y: number): VariableGroup | null => {
     const hitPadding = 20;
@@ -445,12 +448,13 @@ export function ManualPivot({
     const groupItems = getItemsForGroup(group);
     const itemIndex = groupItems.findIndex((item) => item.id === itemId);
     const itemLabel = getItemById(itemId)?.label;
-    if (itemLabel && itemIndex !== -1) {
+    const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
+    if (capitalizedItemLabel && itemIndex !== -1) {
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_moved',
           {
-            item: itemLabel,
+            item: capitalizedItemLabel,
             position: itemIndex + 1,
             group: getGroupLabel(group),
           },
@@ -473,11 +477,13 @@ export function ManualPivot({
     keyboardDraggedItemIdRef.current = variableId;
 
     const itemLabel = getItemById(variableId)?.label;
-    if (itemLabel) {
+    const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
+
+    if (capitalizedItemLabel) {
       setLiveAnnouncement(
         t(
           'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_selected',
-          { item: itemLabel },
+          { item: capitalizedItemLabel },
         ),
       );
     }
@@ -568,12 +574,13 @@ export function ManualPivot({
 
     if (draggedItemId && sourceGroup) {
       const itemLabel = getItemById(draggedItemId)?.label;
+      const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
       const groupLabel = getGroupLabel(sourceGroup);
-      if (itemLabel) {
+      if (capitalizedItemLabel) {
         setLiveAnnouncement(
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.item_dropped',
-            { item: itemLabel, group: groupLabel },
+            { item: capitalizedItemLabel, group: groupLabel },
           ),
         );
       }
@@ -596,11 +603,12 @@ export function ManualPivot({
 
     if (draggedItemId) {
       const itemLabel = getItemById(draggedItemId)?.label;
-      if (itemLabel) {
+      const capitalizedItemLabel = itemLabel ? capitalizeLabel(itemLabel) : '';
+      if (capitalizedItemLabel) {
         setLiveAnnouncement(
           t(
             'presentation_page.side_menu.edit.customize.manual_pivoting.manual_pivoting_modal.move_cancelled',
-            { item: itemLabel },
+            { item: capitalizedItemLabel },
           ),
         );
       }
@@ -937,7 +945,7 @@ export function ManualPivot({
             onKeyDown={(event) => handleItemKeyDown(event, group, variable.id)}
           >
             <DataItem
-              label={variable.label}
+              label={capitalizeLabel(variable.label)}
               isDragging={
                 isDraggedItem || keyboardDraggedItemId === variable.id
               }
