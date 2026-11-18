@@ -601,7 +601,7 @@ describe('sortSubjectTreeAlpha', () => {
 });
 
 describe('sortSubjectTree comparator by depth', () => {
-  it('uses label comparator at depth 1 (top-level)', () => {
+  it('uses sortCode comparator at depth 1 (top-level)', () => {
     const subjects = [
       { id: 'b', label: 'Bravo', sortCode: '001' },
       { id: 'a', label: 'Alpha', sortCode: '999' },
@@ -609,7 +609,7 @@ describe('sortSubjectTree comparator by depth', () => {
     ];
 
     const sorted = sortSubjectTree(subjects);
-    expect(sorted.map((n) => n.label)).toEqual(['Alpha', 'Bravo', 'Charlie']); // label asc
+    expect(sorted.map((n) => n.label)).toEqual(['Charlie', 'Bravo', 'Alpha']); // sortCode asc
   });
 
   it('uses label comparator up to depth 3', () => {
@@ -713,7 +713,7 @@ describe('sortSubjectTree comparator by depth', () => {
     expect(lvl5.map((n) => n.label)).toEqual(['Bravo', 'Charlie', 'Alpha']); // tie-break by label
   });
 
-  it('keeps original order deeper than level 5 (depth 6+)', () => {
+  it('uses sortCode comparator deeper than level 5 (depth 6+)', () => {
     const level6Children = [
       { id: 'c1', label: 'Bravo', sortCode: '001' },
       { id: 'c2', label: 'Alpha', sortCode: '0' },
@@ -750,7 +750,7 @@ describe('sortSubjectTree comparator by depth', () => {
     const sorted = sortSubjectTree(subjects);
     const lvl6 =
       sorted[0].children![0].children![0].children![0].children![0].children!;
-    expect(lvl6.map((n) => n.label)).toEqual(['Bravo', 'Alpha', 'Charlie']); // insertion order preserved
+    expect(lvl6.map((n) => n.label)).toEqual(['Alpha', 'Bravo', 'Charlie']); // sortCode asc
   });
 });
 
