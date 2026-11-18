@@ -248,8 +248,8 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   const initializeStubAndHeadingChart = React.useCallback(
-    (pxTable: PxTable, isSavedQuery: boolean) => {
-      const { stubOrderChart, headingOrderChart } = isSavedQuery
+    (pxTable: PxTable, preserveChartPivot: boolean) => {
+      const { stubOrderChart, headingOrderChart } = preserveChartPivot
         ? {
             stubOrderChart: pxTable.stub.map((variable) => variable.id),
             headingOrderChart: pxTable.heading.map((variable) => variable.id),
@@ -278,7 +278,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (
       pxTable: PxTable,
       dataViewMode: DataViewModeType,
-      isSavedQuery: boolean,
+      preserveChartPivot: boolean,
     ) => {
       const { stubOrderDesktop, headingOrderDesktop } =
         initializeStubAndHeadingDesktop(pxTable);
@@ -287,7 +287,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
         initializeStubAndHeadingMobile(pxTable);
 
       const { stubOrderChart, headingOrderChart } =
-        initializeStubAndHeadingChart(pxTable, isSavedQuery);
+        initializeStubAndHeadingChart(pxTable, preserveChartPivot);
 
       const activeOrders = getOrdersForMode(
         {
@@ -318,24 +318,24 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
    * @param pxTable - PxTable containing the data and metadata for display in table.
    * @param dataViewMode - The current data view mode (e.g., mobile, desktop, chart).
    * @param lang - The current language code (e.g., 'en', 'no').
-   * @param isSavedQuery - Whether to preserve the incoming chart pivot.
+   * @param preserveChartPivot - Whether to preserve the incoming chart pivot.
    */
   const initializeStubAndHeading = React.useCallback(
     (
       pxTable: PxTable,
       dataViewMode: DataViewModeType,
       lang: string,
-      isSavedQuery: boolean = false,
+      preserveChartPivot: boolean = false,
     ) => {
       if (isNewTableOrLanguage(accumulatedData, pxTable, lang)) {
-        initializeOrdersForNewTable(pxTable, dataViewMode, isSavedQuery);
+        initializeOrdersForNewTable(pxTable, dataViewMode, preserveChartPivot);
         return;
       }
 
       // Variable changes can make the chart axis or series order stale; refresh it only in chart mode.
       const chartOrders =
         dataViewMode === DataViewModeType.Chart
-          ? initializeStubAndHeadingChart(pxTable, isSavedQuery)
+          ? initializeStubAndHeadingChart(pxTable, preserveChartPivot)
           : undefined;
       const orders = reconcileVariableOrders(
         pxTable,
