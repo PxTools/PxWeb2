@@ -151,8 +151,8 @@ export function getBarTooltipSymbolSvg(color: string) {
   return getTooltipSymbolSvg(BAR_SYMBOL, color);
 }
 
-// Selects the marker shape for a line series based on its index, converts that shape to an SVG path, 
-// and prefixes it with path:// so ECharts treats it as a custom symbol. 
+// Selects the marker shape for a line series based on its index, converts that shape to an SVG path,
+// and prefixes it with path:// so ECharts treats it as a custom symbol.
 export function getLineSeriesSymbol(seriesIndex: number) {
   return `path://${getSymbolPath(getLineSymbol(seriesIndex))}`;
 }
