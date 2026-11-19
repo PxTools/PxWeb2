@@ -199,6 +199,9 @@ export function CartesianChart({
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
+  // The tooltip formatter updates or clears this marker, which is created only
+  // after ECharts is ready. A ref lets the formatter access the current marker
+  // without triggering a React render.
   const activeLineMarkerRef = useRef<
     ReturnType<typeof createActiveLineMarker> | undefined
   >(undefined);
