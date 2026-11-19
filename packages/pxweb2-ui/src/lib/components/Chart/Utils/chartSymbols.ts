@@ -48,9 +48,13 @@ const PIN_POINTS = [
   [5.429, 1.042],
 ];
 
+// Symbols used for line series in the chart.
 const LINE_SYMBOLS: SymbolShape[] = [
+  // Filled circle.
   { type: 'circle', shape: { cx: 5, cy: 5, r: 4 } },
+  // Square.
   { type: 'rect', shape: { x: 1, y: 1, width: 8, height: 8 } },
+  // Up-pointing triangle.
   {
     type: 'polygon',
     shape: {
@@ -61,6 +65,7 @@ const LINE_SYMBOLS: SymbolShape[] = [
       ],
     },
   },
+  // Diamond (a square turned on one corner).
   {
     type: 'polygon',
     shape: {
@@ -72,7 +77,9 @@ const LINE_SYMBOLS: SymbolShape[] = [
       ],
     },
   },
+  // Map pin.
   { type: 'polygon', shape: { points: PIN_POINTS } },
+  // Arrowhead with a V-shaped notch at its base.
   {
     type: 'polygon',
     shape: {
@@ -86,6 +93,7 @@ const LINE_SYMBOLS: SymbolShape[] = [
   },
 ];
 
+// Symbol used for bar series in the chart.
 const BAR_SYMBOL: SymbolShape = {
   type: 'rect',
   shape: { x: 1, y: 1, width: 8, height: 8, r: 2 },
@@ -95,6 +103,7 @@ export function getLineSymbol(seriesIndex: number): SymbolShape {
   return LINE_SYMBOLS[seriesIndex % LINE_SYMBOLS.length];
 }
 
+// Converts a symbol definition into the SVG path string ECharts uses to draw it.
 function getSymbolPath(symbol: SymbolShape): string {
   switch (symbol.type) {
     case 'circle': {
@@ -142,10 +151,14 @@ export function getBarTooltipSymbolSvg(color: string) {
   return getTooltipSymbolSvg(BAR_SYMBOL, color);
 }
 
+// Selects the marker shape for a line series based on its index, converts that shape to an SVG path, 
+// and prefixes it with path:// so ECharts treats it as a custom symbol. 
 export function getLineSeriesSymbol(seriesIndex: number) {
   return `path://${getSymbolPath(getLineSymbol(seriesIndex))}`;
 }
 
+// Selects the marker shape for the bar series, converts it to an SVG path,
+// and prefixes it with path:// so ECharts treats it as a custom symbol.
 export function getBarLegendSymbol() {
   return `path://${getSymbolPath(BAR_SYMBOL)}`;
 }
