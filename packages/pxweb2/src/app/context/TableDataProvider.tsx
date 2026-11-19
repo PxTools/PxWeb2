@@ -248,7 +248,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
   );
 
   const initializeStubAndHeadingChart = React.useCallback(
-    (pxTable: PxTable, preserveChartPivot: boolean) => {
+    (pxTable: PxTable, preserveChartPivot: boolean = false) => {
       const { stubOrderChart, headingOrderChart } = preserveChartPivot
         ? {
             stubOrderChart: pxTable.stub.map((variable) => variable.id),
@@ -278,7 +278,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (
       pxTable: PxTable,
       dataViewMode: DataViewModeType,
-      preserveChartPivot: boolean,
+      preserveChartPivot: boolean = false,
     ) => {
       const { stubOrderDesktop, headingOrderDesktop } =
         initializeStubAndHeadingDesktop(pxTable);
@@ -890,7 +890,7 @@ const TableDataProvider: React.FC<TableDataProviderProps> = ({ children }) => {
     (pxTable: PxTable) => {
       if (checkIfChartNeedsReInitialize(pxTable)) {
         const { stubOrderChart, headingOrderChart } =
-          initializeStubAndHeadingChart(pxTable, false);
+          initializeStubAndHeadingChart(pxTable);
 
         pivotTable(pxTable, stubOrderChart, headingOrderChart);
       } else {
