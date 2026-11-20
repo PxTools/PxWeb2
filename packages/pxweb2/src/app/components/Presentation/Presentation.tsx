@@ -161,6 +161,32 @@ function PresentationView({
               />
             </div>
           </Activity>
+          <Activity
+            mode={viewMode === 'horizontalbarchart' ? 'visible' : 'hidden'}
+          >
+            <div
+              className={cl(classes.chartContainer, {
+                [classes.fadeChart]: isFadingTable,
+              })}
+            >
+              <BarChart
+                pxtable={pxtable}
+                staticTitle={staticTitle}
+                onChartReady={setChart}
+                screenSize={screenSize}
+                orientation="horizontal"
+                numberFormatter={(value) =>
+                  t('number.simple_number', { value: `${value}` })
+                }
+                translations={{
+                  showMore: showMoreText,
+                  showLess: showLessText,
+                  emptyStateTitle: lineChartEmptyStateTitle,
+                  emptyStateDescription: lineChartEmptyStateDescription,
+                }}
+              />
+            </div>
+          </Activity>
         </>
       )}
     </>
@@ -261,7 +287,7 @@ export function Presentation({
       } else {
         tableData.pivotToDesktop();
       }
-    } else if (viewMode === 'linechart') {
+    } else {
       tableData.pivotToChart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

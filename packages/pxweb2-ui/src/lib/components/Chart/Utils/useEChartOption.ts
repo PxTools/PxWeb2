@@ -75,7 +75,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
           },
         },
         nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
-        axisLabel: { ...axis.axisLabel, ...textStyle },
+        axisLabel: {
+          ...axis.axisLabel,
+          ...textStyle,
+          fontSize: axis.axisLabel?.fontSize ?? textStyle.fontSize,
+        },
       }))
     : {
         ...option.xAxis,
@@ -94,6 +98,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
         axisLabel: {
           ...option.xAxis?.axisLabel,
           ...textStyle,
+          fontSize: option.xAxis?.axisLabel?.fontSize ?? textStyle.fontSize,
         },
       };
   const yAxis = Array.isArray(option.yAxis)
@@ -103,7 +108,11 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
           ...axis.axisLine,
           lineStyle: { ...axis.axisLine?.lineStyle, ...axisColor },
         },
-        axisLabel: { ...axis.axisLabel, ...textStyle },
+        axisLabel: {
+          ...axis.axisLabel,
+          ...textStyle,
+          fontSize: axis.axisLabel?.fontSize ?? textStyle.fontSize,
+        },
         nameTextStyle: { ...textStyle, align: 'left', ...axis.nameTextStyle },
       }))
     : {
@@ -123,6 +132,7 @@ function applyStyling(option: echarts.EChartsOption): echarts.EChartsOption {
         axisLabel: {
           ...option.yAxis?.axisLabel,
           ...textStyle,
+          fontSize: option.yAxis?.axisLabel?.fontSize ?? textStyle.fontSize,
         },
       };
   const legend = Array.isArray(option.legend)

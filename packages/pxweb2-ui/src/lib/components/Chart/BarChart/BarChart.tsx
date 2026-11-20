@@ -7,14 +7,21 @@ import { getBarTooltipSymbolSvg } from '../Utils/chartSymbols';
 export {
   LegendToggleButton,
   type ChartInstance,
-  type ChartProps as BarChartProps,
 } from '../CartesianChart/CartesianChart';
 
-export function BarChart(props: ChartProps) {
+export interface BarChartProps extends ChartProps {
+  readonly orientation?: 'vertical' | 'horizontal';
+}
+
+export function BarChart({
+  orientation = 'vertical',
+  ...props
+}: BarChartProps) {
   return (
     <CartesianChart
       {...props}
       seriesType="bar"
+      orientation={orientation}
       getTooltipSymbolSvg={getBarTooltipSymbolSvg}
     />
   );

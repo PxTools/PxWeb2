@@ -1,5 +1,7 @@
-// Maximum vertical space, in pixels, allowed for rotated x-axis labels.
-const MAX_X_AXIS_EXTENT = 265;
+import type { ScreenSize } from '../../../types/screenSize';
+
+// Maximum vertical space, in pixels, allowed for rotated labels.
+const MAX_ROTATED_LABEL_HEIGHT = 265;
 // Space held back for the axis and surrounding chart layout.
 const AXIS_LABEL_LAYOUT_RESERVE = 32;
 // Scales the x-axis label font size relative to the root pixel size.
@@ -14,6 +16,19 @@ const AVERAGE_CHARACTER_WIDTH_RATIO = 0.55;
 const LABEL_ROTATION_RADIANS = Math.PI / 4;
 // Font family used to measure axis-name text with canvas.
 const AXIS_NAME_FONT_FAMILY = 'PxWeb-font, sans-serif';
+// Maximum pixel width before the x-axis name is wrapped onto another line.
+const X_AXIS_NAME_MAX_WIDTH_PX = 100;
+// Maximum pixel width before the y-axis name is wrapped onto another line.
+const Y_AXIS_NAME_MAX_WIDTH_PX = 200;
+
+const CATEGORY_LABEL_MAX_WIDTH_PX: Record<ScreenSize, number> = {
+  xxlarge: 280,
+  xlarge: 240,
+  large: 200,
+  medium: 160,
+  small: 120,
+  xsmall: 100,
+};
 
 /**
  * Measures axis-name text width in pixels, falling back to an average-character estimate when canvas is unavailable.
@@ -85,6 +100,41 @@ export function wrapAxisName(
 }
 
 /**
+ * Wraps the category and value axis names for the chart orientation and font size.
+ * @param categoryAxisName The category axis name.
+ * @param valueAxisName The value axis name.
+ * @param isHorizontal Whether the chart is horizontal.
+ * @param fontSizePx The font size, in pixels, used to measure the text.
+ * @returns The wrapped category and value axis names.
+ */
+export function getWrappedAxisNames(
+  categoryAxisName: string,
+  valueAxisName: string,
+  isHorizontal: boolean,
+  fontSizePx: number,
+) {
+  const categoryAxisNameWidth = isHorizontal
+    ? Y_AXIS_NAME_MAX_WIDTH_PX
+    : X_AXIS_NAME_MAX_WIDTH_PX;
+  const valueAxisNameWidth = isHorizontal
+    ? X_AXIS_NAME_MAX_WIDTH_PX
+    : Y_AXIS_NAME_MAX_WIDTH_PX;
+
+  return {
+    wrappedCategoryAxisName: wrapAxisName(
+      categoryAxisName,
+      categoryAxisNameWidth,
+      fontSizePx,
+    ),
+    wrappedValueAxisName: wrapAxisName(
+      valueAxisName,
+      valueAxisNameWidth,
+      fontSizePx,
+    ),
+  };
+}
+
+/**
  * Splits a word into chunks containing at most the specified number of Unicode characters.
  * @param word The word to split.
  * @param maxCharacters The maximum number of characters allowed in each chunk.
@@ -149,30 +199,45 @@ function truncateWrappedText(
   return visibleLines.join('\n');
 }
 
-/**
- * Creates font, formatting, and height-estimation settings for rotated x-axis labels.
- * The formatter wraps or truncates labels to keep them within the configured vertical extent.
- * @param pixelsPerRem The root font size in pixels, used to scale label font and line height.
- * @returns The label line height, a label formatter, and a function that estimates the required label height.
- */
-export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
-  const fontSize = pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
-  // Same calculation for line heightas in legend labels for consistency
-  const lineHeight = Math.max(
+export function getAxisFontSize(pixelsPerRem: number) {
+  return pixelsPerRem * AXIS_LABEL_FONT_SIZE_RATIO;
+}
+
+export function getAxisLineHeight(fontSize: number) {
+  return Math.max(
     AXIS_LABEL_MIN_LINE_HEIGHT,
     Math.ceil(fontSize * AXIS_LABEL_LINE_HEIGHT_RATIO),
   );
+}
+
+/**
+ * Creates formatting, and height-estimation settings for rotated axis labels.
+ * The formatter wraps or truncates labels to keep them within the configured vertical extent.
+ * @param fontSize The label font size in pixels.
+ * @param lineHeight The label line height in pixels.
+ * @returns An object containing a label formatter, and a function estimating the required label height in pixels.
+ */
+export function createRotatedAxisLabelConfig(
+  fontSize: number,
+  lineHeight: number,
+) {
   const maxLineCount = Math.floor(
-    (MAX_X_AXIS_EXTENT - AXIS_LABEL_LAYOUT_RESERVE) /
+    (MAX_ROTATED_LABEL_HEIGHT - AXIS_LABEL_LAYOUT_RESERVE) /
       (lineHeight * Math.cos(LABEL_ROTATION_RADIANS)),
   );
-  const formatter = (value: unknown): string => {
-    const text =
+  const formatter = (
+    value: unknown,
+    numberFormatter?: (value: number) => string,
+  ): string => {
+    let text =
       typeof value === 'string' || typeof value === 'number'
         ? `${value}`.trim()
         : '';
     if (!text) {
       return '';
+    }
+    if (numberFormatter) {
+      text = numberFormatter(Number(text));
     }
     const estimatedTextWidth =
       Array.from(text).length * fontSize * AVERAGE_CHARACTER_WIDTH_RATIO;
@@ -180,14 +245,14 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
       estimatedTextWidth * Math.sin(LABEL_ROTATION_RADIANS) +
       lineHeight * Math.cos(LABEL_ROTATION_RADIANS) +
       AXIS_LABEL_LAYOUT_RESERVE;
-    if (unwrappedExtent <= MAX_X_AXIS_EXTENT) {
+    if (unwrappedExtent <= MAX_ROTATED_LABEL_HEIGHT) {
       return text;
     }
     let bestTruncatedLabel = '';
     let bestVisibleCharacterCount = -1;
     for (let lineCount = 2; lineCount <= maxLineCount; lineCount += 1) {
       const availableLineWidth =
-        (MAX_X_AXIS_EXTENT -
+        (MAX_ROTATED_LABEL_HEIGHT -
           AXIS_LABEL_LAYOUT_RESERVE -
           lineCount * lineHeight * Math.cos(LABEL_ROTATION_RADIANS)) /
         Math.sin(LABEL_ROTATION_RADIANS);
@@ -219,7 +284,6 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
   };
 
   return {
-    lineHeight,
     formatter,
     estimateHeight: (values: readonly unknown[]): number => {
       return values.reduce<number>((maximumHeight, value) => {
@@ -240,5 +304,113 @@ export function createResponsiveXAxisLabelConfig(pixelsPerRem: number) {
         return Math.max(maximumHeight, height);
       }, 0);
     },
+  };
+}
+
+function splitCategoryLabelWord(
+  word: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string[] {
+  if (measureAxisNameText(word, fontSizePx) <= maxWidthPx) {
+    return [word];
+  }
+
+  const chunks: string[] = [];
+  let chunk = '';
+  for (const character of Array.from(word)) {
+    const candidate = `${chunk}${character}`;
+    if (chunk && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+      chunks.push(chunk);
+      chunk = character;
+    } else {
+      chunk = candidate;
+    }
+  }
+  if (chunk) {
+    chunks.push(chunk);
+  }
+  return chunks;
+}
+
+function appendCategoryLabelWord(
+  word: string,
+  lines: string[],
+  line: string,
+  maxWidthPx: number,
+  fontSizePx: number,
+): string {
+  const chunks = splitCategoryLabelWord(word, maxWidthPx, fontSizePx);
+  if (chunks.length > 1) {
+    if (line) {
+      lines.push(line);
+    }
+    lines.push(...chunks.slice(0, -1));
+    return chunks.at(-1) ?? '';
+  }
+
+  const candidate = line ? `${line} ${word}` : word;
+  if (line && measureAxisNameText(candidate, fontSizePx) > maxWidthPx) {
+    lines.push(line);
+    return word;
+  }
+  return candidate;
+}
+
+/**
+ * Creates wrapping and measurement settings for category labels on a horizontal bar chart.
+ * @param maxWidthPx Maximum label-column width in pixels.
+ * @param fontSizePx Label font size in pixels.
+ * @param lineHeight Line height in pixels.
+ * @returns A label formatter and functions for estimating the required width and height.
+ */
+export function createCategoryYAxisLabelConfig(
+  screenSize: ScreenSize,
+  fontSizePx: number,
+  lineHeight: number,
+) {
+  const maxWidthPx = CATEGORY_LABEL_MAX_WIDTH_PX[screenSize];
+  const wrapLabel = (value: unknown): string => {
+    const text =
+      typeof value === 'string' || typeof value === 'number'
+        ? `${value}`.trim().replace(/\s+/g, ' ')
+        : '';
+    if (!text || maxWidthPx <= 0 || fontSizePx <= 0) {
+      return text;
+    }
+
+    const lines: string[] = [];
+    let line = '';
+
+    for (const word of text.split(' ')) {
+      line = appendCategoryLabelWord(word, lines, line, maxWidthPx, fontSizePx);
+    }
+
+    if (line) {
+      lines.push(line);
+    }
+    return lines.join('\n');
+  };
+
+  const getLines = (value: unknown) => wrapLabel(value).split('\n');
+
+  return {
+    formatter: wrapLabel,
+    estimateWidth: (values: readonly unknown[]): number =>
+      values.reduce<number>((maximumWidth, value) => {
+        const width = Math.max(
+          0,
+          ...getLines(value).map((line) =>
+            measureAxisNameText(line, fontSizePx),
+          ),
+        );
+        return Math.max(maximumWidth, width);
+      }, 0),
+    estimateHeight: (values: readonly unknown[]): number =>
+      values.reduce<number>(
+        (maximumHeight, value) =>
+          Math.max(maximumHeight, getLines(value).length * lineHeight),
+        0,
+      ),
   };
 }
