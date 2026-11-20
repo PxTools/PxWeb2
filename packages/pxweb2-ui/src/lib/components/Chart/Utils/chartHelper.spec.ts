@@ -3,11 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   checkMultipleUnits,
-  getAdaptiveYAxisMax,
-  getAdaptiveYAxisInterval,
-  getAdaptiveYAxisMin,
+  getAdaptiveValueAxisMax,
+  getAdaptiveValueAxisInterval,
+  getAdaptiveValueAxisMin,
   getChartCssVariables,
-  getYAxisBreak,
+  getValueAxisBreak,
 } from './chartHelper';
 import type { PxTable } from '../../../shared-types/pxTable';
 import type { Variable } from '../../../shared-types/variable';
@@ -120,55 +120,55 @@ describe('getChartCssVariables', () => {
   });
 });
 
-describe('getAdaptiveYAxisMin', () => {
+describe('getAdaptiveValueAxisMin', () => {
   it('clamps to zero when the source range is non-negative', () => {
-    expect(getAdaptiveYAxisMin({ min: 0, max: 1 })).toBe(0);
+    expect(getAdaptiveValueAxisMin({ min: 0, max: 1 })).toBe(0);
   });
 
   it('rounds down to a clean snap value for positive ranges', () => {
-    expect(getAdaptiveYAxisMin({ min: 100, max: 200 })).toBe(50);
+    expect(getAdaptiveValueAxisMin({ min: 100, max: 200 })).toBe(50);
   });
 
   it('keeps negative ranges negative and rounds down', () => {
-    expect(getAdaptiveYAxisMin({ min: -120, max: 80 })).toBe(-200);
+    expect(getAdaptiveValueAxisMin({ min: -120, max: 80 })).toBe(-200);
   });
 });
 
-describe('getAdaptiveYAxisMax', () => {
+describe('getAdaptiveValueAxisMax', () => {
   it('rounds up to a clean snap value for positive ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, false)).toBe(250);
+    expect(getAdaptiveValueAxisMax({ min: 100, max: 200 }, false)).toBe(250);
   });
 
   it('uses zero as the minimum for non-negative ranges when zero-based', () => {
-    expect(getAdaptiveYAxisMax({ min: 100, max: 200 }, true)).toBe(250);
+    expect(getAdaptiveValueAxisMax({ min: 100, max: 200 }, true)).toBe(250);
   });
 
   it('keeps negative minima when zero-based', () => {
-    expect(getAdaptiveYAxisMax({ min: -10, max: 12 }, true)).toBe(15);
+    expect(getAdaptiveValueAxisMax({ min: -10, max: 12 }, true)).toBe(15);
   });
 
   it('adds headroom and rounds up for small decimal ranges', () => {
-    expect(getAdaptiveYAxisMax({ min: 0, max: 1 }, false)).toBe(1.5);
+    expect(getAdaptiveValueAxisMax({ min: 0, max: 1 }, false)).toBe(1.5);
   });
 
   it('works when min and max are equal', () => {
-    expect(getAdaptiveYAxisMax({ min: 5, max: 5 }, false)).toBe(5.5);
+    expect(getAdaptiveValueAxisMax({ min: 5, max: 5 }, false)).toBe(5.5);
   });
 });
 
-describe('getAdaptiveYAxisInterval', () => {
+describe('getAdaptiveValueAxisInterval', () => {
   it('uses the same snap unit that adaptive min and max use', () => {
-    expect(getAdaptiveYAxisInterval({ min: 100, max: 200 })).toBe(50);
+    expect(getAdaptiveValueAxisInterval({ min: 100, max: 200 })).toBe(50);
   });
 
   it('uses a regular interval for ranges containing negative values', () => {
-    expect(getAdaptiveYAxisInterval({ min: -1216, max: 7090 })).toBe(5000);
+    expect(getAdaptiveValueAxisInterval({ min: -1216, max: 7090 })).toBe(5000);
   });
 });
 
-describe('getYAxisBreak', () => {
+describe('getValueAxisBreak', () => {
   it('creates a break with a small fixed visual gap up to the adaptive y-axis minimum', () => {
-    expect(getYAxisBreak({ min: 100, max: 200 })).toEqual({
+    expect(getValueAxisBreak({ min: 100, max: 200 })).toEqual({
       start: 0,
       end: 50,
       gap: '13%',
@@ -176,7 +176,7 @@ describe('getYAxisBreak', () => {
   });
 
   it('keeps a visible gap for narrow positive ranges', () => {
-    expect(getYAxisBreak({ min: 123.85, max: 125.56 })).toEqual({
+    expect(getValueAxisBreak({ min: 123.85, max: 125.56 })).toEqual({
       start: 0,
       end: 123,
       gap: '13%',
@@ -184,12 +184,12 @@ describe('getYAxisBreak', () => {
   });
 
   it('does not create a break when the adaptive y-axis minimum is already zero', () => {
-    expect(getYAxisBreak({ min: 100, max: 900 })).toBeUndefined();
+    expect(getValueAxisBreak({ min: 100, max: 900 })).toBeUndefined();
   });
 
   it('does not create a break when zero or negative values are present', () => {
-    expect(getYAxisBreak({ min: 0, max: 100 })).toBeUndefined();
-    expect(getYAxisBreak({ min: -10, max: 100 })).toBeUndefined();
+    expect(getValueAxisBreak({ min: 0, max: 100 })).toBeUndefined();
+    expect(getValueAxisBreak({ min: -10, max: 100 })).toBeUndefined();
   });
 });
 

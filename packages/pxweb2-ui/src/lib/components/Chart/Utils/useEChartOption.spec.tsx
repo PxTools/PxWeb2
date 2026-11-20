@@ -133,7 +133,7 @@ describe('useEChartOption', () => {
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
     const option: EChartsOption = {
-      xAxis: [{ nameTextStyle: { color: '#00ff00' } }],
+      xAxis: [{ nameTextStyle: { color: '#00ff00', fontSize: 17.5 } }],
       yAxis: { nameTextStyle: { color: '#ff0000' } },
     };
 
@@ -145,6 +145,7 @@ describe('useEChartOption', () => {
           expect.objectContaining({
             nameTextStyle: expect.objectContaining({
               color: '#00ff00',
+              fontSize: 17.5,
               align: 'left',
             }),
           }),
@@ -159,6 +160,36 @@ describe('useEChartOption', () => {
       { replaceMerge: ['legend'] },
     );
   });
+
+  it.each([false, true])(
+    'preserves supplied label font sizes for single and array axes (array: %s)',
+    (useArrays) => {
+      const chartMock = createChartMock();
+      vi.mocked(echarts.init).mockReturnValue(chartMock);
+      const xAxis = { axisLabel: { fontSize: 17.5 } };
+      const yAxis = { axisLabel: { fontSize: 21 } };
+      const option: EChartsOption = {
+        xAxis: useArrays ? [xAxis] : xAxis,
+        yAxis: useArrays ? [yAxis] : yAxis,
+      };
+
+      render(<HookHost option={option} />);
+
+      const expectedXAxis = expect.objectContaining({
+        axisLabel: expect.objectContaining({ fontSize: 17.5 }),
+      });
+      const expectedYAxis = expect.objectContaining({
+        axisLabel: expect.objectContaining({ fontSize: 21 }),
+      });
+      expect(chartMock.setOption).toHaveBeenCalledWith(
+        expect.objectContaining({
+          xAxis: useArrays ? [expectedXAxis] : expectedXAxis,
+          yAxis: useArrays ? [expectedYAxis] : expectedYAxis,
+        }),
+        { replaceMerge: ['legend'] },
+      );
+    },
+  );
 
   it('applies wrapped title style when option has a single title object', () => {
     const chartMock = createChartMock(400);
