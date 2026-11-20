@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.15.0](https://github.com/PxTools/PxWeb2/compare/v2.14.0...v2.15.0) (2026-11-20)
+
+
+### :sparkles: Features
+
+* Add number formatting support to CartesianChart ([#1588](https://github.com/PxTools/PxWeb2/issues/1588)) ([4b3cee4](https://github.com/PxTools/PxWeb2/commit/4b3cee4e154d4160c9cb9e296619794966bd359e))
+* Horizontal barchart ([#1620](https://github.com/PxTools/PxWeb2/issues/1620)) ([28c6e2f](https://github.com/PxTools/PxWeb2/commit/28c6e2f2dbe4037279bd4b664ba71634999a6525))
+* Show saved query as graph if it was created as one  ([#1576](https://github.com/PxTools/PxWeb2/issues/1576)) ([99ef256](https://github.com/PxTools/PxWeb2/commit/99ef256aae254c6cacc319dce48609afe8afae4b))
+
+
+### :bug: Bug Fixes
+
+* capitalize label for manual pivot ([#1570](https://github.com/PxTools/PxWeb2/issues/1570)) ([007fe44](https://github.com/PxTools/PxWeb2/commit/007fe44f509988b96bee3dd475f4b1eb2e6ecc0a))
+* manual pivot increase drop area ([#1613](https://github.com/PxTools/PxWeb2/issues/1613)) ([a1fdf51](https://github.com/PxTools/PxWeb2/commit/a1fdf5174c4db394793913d57d981989699c108e))
+* remove unused features configuration from PxWeb2 settings ([#1643](https://github.com/PxTools/PxWeb2/issues/1643)) ([899917d](https://github.com/PxTools/PxWeb2/commit/899917d1c6baf3fd2c2591d131d6e102719d3fad))
+* sort subjecttree on sortcode for all levels.  ([#1590](https://github.com/PxTools/PxWeb2/issues/1590)) ([45adf33](https://github.com/PxTools/PxWeb2/commit/45adf33eaae048a441d40fb4ccdc0cd79a58d781))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps:** bump motion from 14.6.0 to 14.7.1 ([#1618](https://github.com/PxTools/PxWeb2/issues/1618)) ([2f459e1](https://github.com/PxTools/PxWeb2/commit/2f459e1bb43fe03bd9af0fb8af73fa68bf9dbf92))
+
+
+### :broom: Chores
+
+* update dependencies 20261119 ([#1642](https://github.com/PxTools/PxWeb2/issues/1642)) ([7cfa08c](https://github.com/PxTools/PxWeb2/commit/7cfa08ceb36f194db001a72d3dad755cbea535eb))
+* update dependencies across packages ([#1630](https://github.com/PxTools/PxWeb2/issues/1630)) ([7e24713](https://github.com/PxTools/PxWeb2/commit/7e247139e43db5d68b28581c5d8b2f0c947181f5))
+
 ## [2.14.0](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.14.0) (2026-11-05)
 
 
