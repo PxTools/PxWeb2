@@ -8,7 +8,6 @@ import Heading from '../Typography/Heading/Heading';
 import { Icon, IconProps } from '../Icon/Icon';
 import Button from '../Button/Button';
 import BodyShort from '../Typography/BodyShort/BodyShort';
-import MarkdownRenderer from '../MarkdownRenderer/MarkdownRenderer';
 import { getIconDirection } from '../../util/util';
 
 export interface LocalAlertProps {
@@ -53,12 +52,12 @@ export function LocalAlert({
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
 
-  const renderChildren = (content: string | React.ReactNode) => {
-    if (typeof content === 'string') {
-      return <MarkdownRenderer mdText={content} />;
-    }
-    return content;
-  };
+  // const renderChildren = (content: string | React.ReactNode) => {
+  //   if (typeof content === 'string') {
+  //     return <MarkdownRenderer mdText={content} />;
+  //   }
+  //   return content;
+  // };
 
   const handleClose = () => {
     setIsVisible(false);
@@ -166,10 +165,10 @@ export function LocalAlert({
           })}
         >
           {size === 'small' ? (
-            <BodyShort size={bodySize}>{renderChildren(children)}</BodyShort>
+            <BodyShort size={bodySize}>{children}</BodyShort>
           ) : (
             <BodyLong as="div" size={bodySize}>
-              {renderChildren(children)}
+              {children}
             </BodyLong>
           )}
         </div>

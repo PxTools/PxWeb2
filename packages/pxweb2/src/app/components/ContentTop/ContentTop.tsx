@@ -10,6 +10,7 @@ import {
   Heading,
   PxTable,
   PathElement,
+  MarkdownRenderer,
 } from '@pxweb2/pxweb2-ui';
 import TableInformation from '../TableInformation/TableInformation';
 import { AccessibilityContext } from '../../context/AccessibilityProvider';
@@ -269,7 +270,7 @@ export function ContentTop({
               );
             }}
           >
-            {noteMessage.message}
+            <MarkdownRenderer mdText={noteMessage.message} />
           </LocalAlert>
         </div>
       )}
