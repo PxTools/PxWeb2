@@ -28,17 +28,15 @@ export function formatChartTooltip(
   getTooltipSymbolSvg: (color: string, seriesIndex: number) => string,
   onActivePointChange?: (point: TooltipParam | undefined) => void,
 ): string {
-  // ECharts can provide one tooltip item or an array of items.
-  // Convert both cases to an array so the code below handles them consistently.
-  const axisParams = (
-    params == null ? [] : Array.isArray(params) ? params : [params]
-  ) as TooltipParam[];
-
-  // There is nothing to display when ECharts provides no data.
-  if (axisParams.length === 0) {
+  if (params == null || (Array.isArray(params) && params.length === 0)) {
     onActivePointChange?.(undefined);
     return '';
   }
+
+  // ECharts can provide one tooltip item or an array of items.
+  const axisParams = (
+    Array.isArray(params) ? params : [params]
+  ) as TooltipParam[];
 
   // On smaller screens, default to the first series until the user selects one.
   const selectedSeriesIndex =
