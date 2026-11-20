@@ -25,6 +25,7 @@ export const CustomColors: Story = chartStoryArgs.CustomColors;
 export const EmptyColorsArrayUsesFallback: Story =
   chartStoryArgs.EmptyColorsArrayUsesFallback;
 export const ManySeries: Story = chartStoryArgs.ManySeries;
+export const ManyPoints: Story = chartStoryArgs.ManyPoints;
 export const SparseData: Story = chartStoryArgs.SparseData;
 export const ManySeriesOnLargeScreen: Story =
   chartStoryArgs.ManySeriesOnLargeScreen;

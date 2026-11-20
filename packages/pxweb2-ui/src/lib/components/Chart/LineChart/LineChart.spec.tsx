@@ -41,7 +41,7 @@ describe('LineChart', () => {
       '<rect x="1" y="1" width="8" height="8" fill="#ff0000" />',
     );
     expect(chartProps?.getTooltipSymbolSvg('#ff0000', 5)).toContain(
-      '<path d="M6.67 0 13.33 10 6.67 7.5 0 10Z" fill="#ff0000"',
+      '<polygon points="5,1.25 10,8.75 5,6.875 0,8.75" fill="#ff0000"',
     );
   });
 });

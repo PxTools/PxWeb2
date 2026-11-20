@@ -1,6 +1,7 @@
 import * as echarts from 'echarts';
 
 import { applyYAxisBreakMark } from '../Utils/useEChartOption';
+import { ACTIVE_LINE_MARKER_ID } from './chartActiveLineMarker';
 
 type ChartImageType = 'png' | 'svg';
 const LEGEND_BOTTOM_GAP_PX = 80;
@@ -71,6 +72,30 @@ async function createExportChart(
     exportChart = chart;
 
     const option = sourceChart.getOption();
+
+    // Remove the active line marker (svg symbol used for highlighting the active line) from the exported chart
+    if (Array.isArray(option.graphic)) {
+      option.graphic = option.graphic.map((graphic: unknown) => {
+        if (
+          !graphic ||
+          typeof graphic !== 'object' ||
+          !('elements' in graphic) ||
+          !Array.isArray(graphic.elements)
+        ) {
+          return graphic;
+        }
+        return {
+          ...graphic,
+          elements: graphic.elements.filter(
+            (element: unknown) =>
+              !element ||
+              typeof element !== 'object' ||
+              !('id' in element) ||
+              element.id !== ACTIVE_LINE_MARKER_ID,
+          ),
+        };
+      });
+    }
 
     const titles = [];
     if (Array.isArray(option.title)) {

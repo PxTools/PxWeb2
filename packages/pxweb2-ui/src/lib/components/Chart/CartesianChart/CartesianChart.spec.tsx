@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
 
@@ -123,6 +123,10 @@ function getTooltipFormatter(option: { tooltip?: unknown }) {
 }
 
 describe('CartesianChart', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -173,6 +177,7 @@ describe('CartesianChart', () => {
 
     expect(option.legend).toEqual({
       data: ['Men', 'Women', 'Total'],
+      icon: expect.stringMatching(/^path:\/\//),
       orient: 'horizontal',
       textStyle: { overflow: 'break' },
     });
@@ -410,6 +415,21 @@ describe('CartesianChart', () => {
       expect.objectContaining({ emphasis: { disabled: true } }),
       expect.objectContaining({ emphasis: { disabled: true } }),
       expect.objectContaining({ emphasis: { disabled: true } }),
+    ]);
+  });
+
+  it('preserves line marker scaling settings when configuring emphasis', () => {
+    vi.mocked(buildSeriesOption).mockReturnValue([
+      { type: 'line', name: 'Men', emphasis: { scale: false } },
+    ]);
+
+    renderChart({ seriesType: 'line' });
+
+    const option = vi.mocked(useEChartOption).mock.calls[0][0];
+    expect(option.series).toEqual([
+      expect.objectContaining({
+        emphasis: { focus: 'series', scale: false },
+      }),
     ]);
   });
 
@@ -689,14 +709,17 @@ describe('CartesianChart', () => {
     },
   );
 
-  it('returns empty tooltip text for empty params', () => {
-    renderChart();
+  it.each([{ params: [] }, { params: null }, { params: undefined }])(
+    'returns empty tooltip text for params $params',
+    ({ params }) => {
+      renderChart();
 
-    const option = vi.mocked(useEChartOption).mock.calls[0][0];
-    const formatter = getTooltipFormatter(option);
-    expect(formatter).toBeTypeOf('function');
-    expect(formatter?.([])).toBe('');
-  });
+      const option = vi.mocked(useEChartOption).mock.calls[0][0];
+      const formatter = getTooltipFormatter(option);
+      expect(formatter).toBeTypeOf('function');
+      expect(formatter?.(params)).toBe('');
+    },
+  );
 
   it('formats tooltip text only for the hovered series', () => {
     const chart = { on: vi.fn(), off: vi.fn(), isDisposed: vi.fn(() => false) };
@@ -737,6 +760,274 @@ describe('CartesianChart', () => {
     expect(html).toContain('Women: <strong>12</strong>');
     expect(html).not.toContain('Men: <strong>10</strong>');
     expect(html).toContain('<marker fill="#ff0000" />');
+  });
+
+  it('moves the active marker with the tooltip and removes it when hidden', () => {
+    vi.useFakeTimers();
+    const zrender = {
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+      getZr: vi.fn(() => zrender),
+      setOption: vi.fn(),
+      isDisposed: vi.fn(() => false),
+      convertToPixel: vi.fn((_finder, value: number[]) => [
+        value[0] * 10 + 1,
+        value[1] * 10,
+      ]),
+    };
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      source: [
+        { name: '2023', men: 5, women: 8 },
+        { name: '2024', men: 10, women: 12 },
+      ],
+    });
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
+    });
+    const { unmount } = renderChart({
+      seriesType: 'line',
+      screenSize: 'small',
+      getTooltipSymbolSvg: (color, index) =>
+        index === 0
+          ? `<svg><circle fill="${color}"/></svg>`
+          : `<svg><rect fill="${color}"/></svg>`,
+    });
+    const formatter = getTooltipFormatter(
+      vi.mocked(useEChartOption).mock.calls[0][0],
+    );
+    const params = [
+      {
+        axisValueLabel: '2023',
+        dataIndex: 0,
+        seriesIndex: 0,
+        seriesName: 'Men',
+        color: '#123456',
+        data: { men: 5, women: 8 },
+      },
+      {
+        axisValueLabel: '2023',
+        dataIndex: 0,
+        seriesIndex: 1,
+        seriesName: 'Women',
+        color: '#abcdef',
+        data: { men: 5, women: 8 },
+      },
+    ];
+
+    formatter?.(params);
+    expect(chart.setOption).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        graphic: [
+          expect.objectContaining({
+            type: 'circle',
+            x: -6.5,
+            y: 42.5,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            style: expect.objectContaining({
+              fill: '#123456',
+            }),
+          }),
+        ],
+      }),
+      { silent: true },
+    );
+
+    const mouseMove = chart.on.mock.calls.find(
+      ([name]) => name === 'mousemove',
+    )?.[1] as (params: { componentType: string; seriesIndex: number }) => void;
+    mouseMove({ componentType: 'series', seriesIndex: 1 });
+    formatter?.(params);
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        graphic: [
+          expect.objectContaining({
+            type: 'rect',
+            x: -6.5,
+            y: 72.5,
+            style: expect.objectContaining({
+              fill: '#abcdef',
+            }),
+          }),
+        ],
+      }),
+      { silent: true },
+    );
+
+    formatter?.([{ ...params[1], dataIndex: 1 }]);
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        graphic: [expect.objectContaining({ x: 3.5, y: 112.5 })],
+      }),
+      { silent: true },
+    );
+    chart.convertToPixel.mockReturnValue([30, 40]);
+    const finished = chart.on.mock.calls.find(
+      ([name]) => name === 'finished',
+    )?.[1] as () => void;
+    finished();
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        graphic: [expect.objectContaining({ x: 22.5, y: 32.5 })],
+      }),
+      { silent: true },
+    );
+
+    const hideTip = chart.on.mock.calls.find(
+      ([name]) => name === 'hideTip',
+    )?.[1] as () => void;
+    hideTip();
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      { graphic: [{ id: 'pxweb-active-line-marker', $action: 'remove' }] },
+      { silent: true },
+    );
+    chart.setOption.mockClear();
+    formatter?.(params);
+    hideTip();
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).not.toHaveBeenCalled();
+
+    formatter?.(params);
+    vi.advanceTimersByTime(20);
+    chart.setOption.mockClear();
+    formatter?.([params[0]]);
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).toHaveBeenLastCalledWith(
+      { graphic: [{ id: 'pxweb-active-line-marker', $action: 'remove' }] },
+      { silent: true },
+    );
+    chart.setOption.mockClear();
+
+    formatter?.([{ ...params[1], dataIndex: 99 }]);
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).not.toHaveBeenCalled();
+    formatter?.(params);
+    unmount();
+    vi.advanceTimersByTime(20);
+    expect(chart.setOption).not.toHaveBeenCalled();
+    expect(chart.off).toHaveBeenCalledWith('finished', finished);
+  });
+
+  it('refreshes the tooltip when hovering a different line at the same category', () => {
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+      dispatchAction: vi.fn(),
+      isDisposed: vi.fn(() => false),
+    };
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
+    });
+    const { unmount } = renderChart({ seriesType: 'line' });
+    const mouseMoveHandler = chart.on.mock.calls.find(
+      ([eventName]) => eventName === 'mousemove',
+    )?.[1] as (params: {
+      componentType: string;
+      seriesIndex: number;
+      event: { offsetX: number; offsetY: number };
+    }) => void;
+    const formatter = getTooltipFormatter(
+      vi.mocked(useEChartOption).mock.calls[0][0],
+    );
+    const params = [
+      {
+        axisValueLabel: '2024',
+        dataIndex: 0,
+        seriesIndex: 0,
+        seriesName: 'Men',
+        data: { men: 10, women: 12 },
+      },
+      {
+        axisValueLabel: '2024',
+        dataIndex: 0,
+        seriesIndex: 1,
+        seriesName: 'Women',
+        data: { men: 10, women: 12 },
+      },
+    ];
+    const event = { offsetX: 42, offsetY: 84 };
+
+    mouseMoveHandler({ componentType: 'series', seriesIndex: 0, event });
+    expect(formatter?.(params)).toContain('Men: <strong>10</strong>');
+    mouseMoveHandler({ componentType: 'series', seriesIndex: 1, event });
+    expect(formatter?.(params)).toContain('Women: <strong>12</strong>');
+    mouseMoveHandler({ componentType: 'series', seriesIndex: 1, event });
+    expect(chart.dispatchAction).toHaveBeenCalledTimes(4);
+    expect(chart.dispatchAction).toHaveBeenCalledWith({ type: 'hideTip' });
+    expect(chart.dispatchAction).toHaveBeenCalledWith({
+      type: 'showTip',
+      x: 42,
+      y: 84,
+    });
+
+    unmount();
+    expect(chart.off).toHaveBeenCalledWith('mousemove', mouseMoveHandler);
+  });
+
+  it('shows tooltips for unmarked isolated values without selecting hidden series', () => {
+    const zrender = { on: vi.fn(), off: vi.fn() };
+    const chart = {
+      on: vi.fn(),
+      off: vi.fn(),
+      isDisposed: vi.fn(() => false),
+      getZr: vi.fn(() => zrender),
+      getOption: vi.fn(() => ({
+        legend: [{ selected: { Men: false, Women: true } }],
+      })),
+      convertFromPixel: vi.fn(() => 1),
+      convertToPixel: vi.fn((_finder, value: number[]) =>
+        value[1] === 10 ? [42, 84] : [44, 84],
+      ),
+      dispatchAction: vi.fn(),
+    };
+    vi.mocked(mapPxTableToChartDataset).mockReturnValue({
+      ...mockDataset,
+      source: [
+        { name: '2021', men: null, women: null },
+        { name: '2022', men: 10, women: 12 },
+        { name: '2023', men: null, women: null },
+        { name: '2024', men: 20, women: 22 },
+      ],
+    });
+    vi.mocked(useEChartOption).mockReturnValue({
+      divRef: { current: null },
+      chartRef: { current: chart as unknown as echarts.EChartsType },
+      estimatedLegendHeight: null,
+    });
+
+    const { unmount } = renderChart({ seriesType: 'line' });
+    const handler = zrender.on.mock.calls.find(
+      ([eventName]) => eventName === 'mousemove',
+    )?.[1] as (event: { offsetX: number; offsetY: number }) => void;
+    handler({ offsetX: 42, offsetY: 84 });
+
+    expect(chart.dispatchAction).toHaveBeenCalledWith({
+      type: 'showTip',
+      seriesIndex: 1,
+      dataIndex: 1,
+    });
+    chart.dispatchAction.mockClear();
+    handler({ offsetX: 42, offsetY: 100 });
+    expect(chart.dispatchAction).not.toHaveBeenCalled();
+
+    unmount();
+    expect(zrender.off).toHaveBeenCalledWith('mousemove', handler);
+    expect(zrender.off).toHaveBeenCalledWith('click', handler);
   });
 
   it('uses formatted values in the tooltip', () => {
