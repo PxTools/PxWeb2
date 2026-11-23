@@ -456,7 +456,7 @@ export function CartesianChart({
               tooltipTitle: styles.tooltipTitle,
             },
             getTooltipSymbolSvg,
-            (point) => activeLineMarkerRef.current?.update(point),
+            (point) => activeLineMarkerRef.current?.update(point), // Update the active line marker with the currently hovered tooltip point
           ),
       },
     };

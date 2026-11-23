@@ -26,7 +26,7 @@ export function formatChartTooltip(
   isMediumOrSmallerScreen: boolean,
   styles: ChartTooltipStyles,
   getTooltipSymbolSvg: (color: string, seriesIndex: number) => string,
-  onActivePointChange?: (point: TooltipParam | undefined) => void,
+  onActivePointChange?: (point: TooltipParam | undefined) => void, // Callback for reporting which point is currently active in the tooltip
 ): string {
   if (params == null || (Array.isArray(params) && params.length === 0)) {
     onActivePointChange?.(undefined);
@@ -53,7 +53,7 @@ export function formatChartTooltip(
   const hoveredParams = axisParams.filter(
     (param) => param.seriesIndex === selectedSeriesIndex,
   );
-  onActivePointChange?.(hoveredParams[0]);
+  onActivePointChange?.(hoveredParams[0]); // Report the currently hovered point to the callback
   const rows = hoveredParams
     .map((param) => {
       const seriesMeta = dataset.series[param.seriesIndex];

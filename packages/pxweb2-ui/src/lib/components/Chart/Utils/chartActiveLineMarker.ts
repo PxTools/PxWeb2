@@ -143,5 +143,6 @@ export function createActiveLineMarker(
     }
   };
 
+  // Expose schedule function as reposition for external use which is a more semantically meaningful name
   return { update, clear, reposition: schedule, dispose };
 }
