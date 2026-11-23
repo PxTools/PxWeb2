@@ -35,8 +35,6 @@ import type { ScreenSize } from '../../../types/screenSize';
 
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
-// Pixel padding above the plot area.
-const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -240,9 +238,7 @@ export function CartesianChart({
     categoryLabelHeight + 8,
   );
   const horizontalMinimumHeightPx =
-    dataset.source.length * horizontalRowHeight +
-    TOP_CHART_PADDING +
-    X_AXIS_LABEL_TO_LEGEND_GAP;
+    dataset.source.length * horizontalRowHeight + X_AXIS_LABEL_TO_LEGEND_GAP;
   const fallbackPlotHeightPx = isHorizontal
     ? Math.max(CHART_PLOT_HEIGHT_PX[screenSize], horizontalMinimumHeightPx)
     : CHART_PLOT_HEIGHT_PX[screenSize];
@@ -256,10 +252,7 @@ export function CartesianChart({
   const chartPlotHeightRem = chartPlotHeightPx / pixelsPerRem;
   const gridHeight = Math.max(
     0,
-    chartPlotHeightPx -
-      TOP_CHART_PADDING -
-      X_AXIS_LABEL_TO_LEGEND_GAP +
-      xAxisLabelsHeight,
+    chartPlotHeightPx - X_AXIS_LABEL_TO_LEGEND_GAP + xAxisLabelsHeight,
   );
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
@@ -288,10 +281,7 @@ export function CartesianChart({
 
     const fallbackGridHeight = Math.max(
       0,
-      fallbackPlotHeightPx -
-        TOP_CHART_PADDING -
-        X_AXIS_LABEL_TO_LEGEND_GAP +
-        xAxisLabelsHeight,
+      fallbackPlotHeightPx - X_AXIS_LABEL_TO_LEGEND_GAP + xAxisLabelsHeight,
     );
 
     const valueAxisBreakOptions = valueAxisBreak
@@ -304,7 +294,7 @@ export function CartesianChart({
     return {
       ...buildDatasetOption(dataset),
       grid: {
-        top: TOP_CHART_PADDING,
+        top: 0,
         height: fallbackGridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: 0,

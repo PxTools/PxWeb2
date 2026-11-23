@@ -188,8 +188,8 @@ describe('CartesianChart', () => {
     expect(option.xAxis).toMatchObject({ axisLine: { onZero: false } });
     const labelHeight = getXAxisLabelHeight(['2024']);
     expect(option.grid).toEqual({
-      top: 36,
-      height: 476 + labelHeight,
+      top: 0,
+      height: 512 + labelHeight,
       bottom: 136,
       left: 0,
       right: 0,
@@ -329,7 +329,7 @@ describe('CartesianChart', () => {
 
     act(() => reportWidth?.(800));
     expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
-      450 - 36 - 16 + labelHeight,
+      450 - 16 + labelHeight,
     );
     expect(chartDiv.style.height).toBe(
       `${(450 + labelHeight + 16 + 120) / 16}rem`,
@@ -337,7 +337,7 @@ describe('CartesianChart', () => {
 
     act(() => reportWidth?.(600));
     expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
-      337.5 - 36 - 16 + labelHeight,
+      337.5 - 16 + labelHeight,
     );
     expect(chartDiv.style.height).toBe(
       `${(337.5 + labelHeight + 16 + 120) / 16}rem`,
