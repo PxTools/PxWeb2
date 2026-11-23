@@ -280,36 +280,53 @@ export function applyYAxisBreakMark(
 export function useEChartOption(
   option: echarts.EChartsOption,
   renderer: 'canvas' | 'svg' = 'svg',
+  enabled = true,
+  onWidthChange?: (width: number | null) => void,
+  gridHeight?: number,
 ) {
   // Ref to the chart container div and the ECharts instance.
   const divRef = useRef<HTMLDivElement | null>(null);
 
   // Ref to the ECharts instance.
   const chartRef = useRef<echarts.EChartsType | null>(null);
+  // Resize and font handlers must reuse the latest height without rebuilding the chart.
+  const gridHeightRef = useRef(gridHeight);
 
   // State stores the responsive legend estimate used to size the chart.
   const [estimatedLegendHeight, setEstimatedLegendHeight] = useState<
     number | null
   >(null);
 
-  // The legend estimate is used by LineChart to set the total chart height.
   useEffect(() => {
-    if (!divRef.current) {
+    if (!enabled || !divRef.current) {
+      onWidthChange?.(null);
       return;
     }
-
-    setEstimatedLegendHeight(null);
 
     const chartContainer = divRef.current;
     const chart = echarts.init(chartContainer, null, { renderer });
     chartRef.current = chart;
+    setEstimatedLegendHeight(null);
 
     const applyOption = () => {
       // Apply the new selection or legend state first. The legend can only be
       // measured after ECharts has rendered the updated option.
+      const currentGridHeight = gridHeightRef.current;
+      const grid = option.grid;
+      const sizedOption =
+        currentGridHeight === undefined
+          ? option
+          : {
+              ...option,
+              grid: Array.isArray(grid)
+                ? grid.map((item, index) =>
+                    index === 0 ? { ...item, height: currentGridHeight } : item,
+                  )
+                : { ...grid, height: currentGridHeight },
+            };
       applyOptionWithWrappedTitle(
         chart,
-        applyResponsiveLegend(chart, applyStyling(option)),
+        applyResponsiveLegend(chart, applyStyling(sizedOption)),
       );
 
       applyYAxisBreakMark(chart, option);
@@ -331,11 +348,30 @@ export function useEChartOption(
     applyOption();
     legendLayout.update();
 
+    const updateWidth = () => {
+      const width = chartContainer.clientWidth;
+      if (width > 0) {
+        onWidthChange?.(width);
+      }
+    };
+    let resizeFrame: number | null = null;
+    const handleResize = () => {
+      if (resizeFrame !== null) {
+        return;
+      }
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = null;
+        updateWidth();
+        legendLayout.handleResize();
+      });
+    };
+    updateWidth();
+
     // Observe the chart container for size changes using the ResizeObserver API.
     const resizeObserver =
       typeof ResizeObserver === 'undefined'
         ? null
-        : new ResizeObserver(legendLayout.handleResize);
+        : new ResizeObserver(handleResize);
 
     resizeObserver?.observe(chartContainer);
 
@@ -346,7 +382,7 @@ export function useEChartOption(
     );
 
     // Listen for browser resize events to update the legend layout.
-    window.addEventListener('resize', legendLayout.handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       // Clean up the ResizeObserver, font loading event listener, and window resize event listener.
@@ -355,11 +391,26 @@ export function useEChartOption(
         'loadingdone',
         legendLayout.handleFontLoading,
       );
-      window.removeEventListener('resize', legendLayout.handleResize);
+      window.removeEventListener('resize', handleResize);
+      if (resizeFrame !== null) {
+        cancelAnimationFrame(resizeFrame);
+      }
       chartRef.current = null;
       chart.dispose();
     };
-  }, [option, renderer]);
+  }, [option, renderer, enabled, onWidthChange]);
+
+  useEffect(() => {
+    gridHeightRef.current = gridHeight;
+    const chart = chartRef.current;
+    if (!enabled || !chart || gridHeight === undefined) {
+      return;
+    }
+
+    chart.resize();
+    chart.setOption({ grid: { height: gridHeight } });
+    applyYAxisBreakMark(chart, option);
+  }, [gridHeight, option, renderer, enabled]);
 
   return {
     divRef,

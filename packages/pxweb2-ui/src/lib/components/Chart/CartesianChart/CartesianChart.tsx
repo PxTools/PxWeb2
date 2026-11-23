@@ -47,6 +47,7 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xsmall: 300,
 };
 const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 72;
+const CHART_ASPECT_HEIGHT_PER_WIDTH = 9 / 16;
 
 export type ChartInstance = echarts.EChartsType;
 
@@ -90,6 +91,7 @@ export function CartesianChart({
   getTooltipSymbolSvg,
 }: CartesianChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+  const [chartWidth, setChartWidth] = useState<number | null>(null);
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing
@@ -212,30 +214,53 @@ export function CartesianChart({
       createCategoryYAxisLabelConfig(screenSize, axisFontSize, axisLineHeight),
     [axisFontSize, screenSize, axisLineHeight],
   );
-  const categoryLabels = dataset.source.map((row) => row.name);
-  const categoryLabelWidth =
-    categoryYAxisLabelConfig.estimateWidth(categoryLabels);
-
-  const categoryLabelHeight = isHorizontal
-    ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
-    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
-  const xAxisLabelsHeight = isHorizontal
-    ? 0
-    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  const categoryLabels = useMemo(
+    () => dataset.source.map((row) => row.name),
+    [dataset.source],
+  );
+  const categoryLabelWidth = useMemo(
+    () => categoryYAxisLabelConfig.estimateWidth(categoryLabels),
+    [categoryYAxisLabelConfig, categoryLabels],
+  );
+  const categoryLabelHeight = useMemo(
+    () =>
+      isHorizontal
+        ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
+        : rotatedAxisLabelConfig.estimateHeight(categoryLabels),
+    [
+      isHorizontal,
+      categoryYAxisLabelConfig,
+      rotatedAxisLabelConfig,
+      categoryLabels,
+    ],
+  );
+  const xAxisLabelsHeight = isHorizontal ? 0 : categoryLabelHeight;
   const horizontalRowHeight = Math.max(
     MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
     categoryLabelHeight + 8,
   );
-  const horizontalChartPlotHeightPx = Math.max(
-    CHART_PLOT_HEIGHT_PX[screenSize],
+  const horizontalMinimumHeightPx =
     dataset.source.length * horizontalRowHeight +
-      TOP_CHART_PADDING +
-      X_AXIS_LABEL_TO_LEGEND_GAP,
+    TOP_CHART_PADDING +
+    X_AXIS_LABEL_TO_LEGEND_GAP;
+  const fallbackPlotHeightPx = isHorizontal
+    ? Math.max(CHART_PLOT_HEIGHT_PX[screenSize], horizontalMinimumHeightPx)
+    : CHART_PLOT_HEIGHT_PX[screenSize];
+  const basePlotHeightPx =
+    chartWidth === null
+      ? CHART_PLOT_HEIGHT_PX[screenSize]
+      : chartWidth * CHART_ASPECT_HEIGHT_PER_WIDTH;
+  const chartPlotHeightPx = isHorizontal
+    ? Math.max(basePlotHeightPx, horizontalMinimumHeightPx)
+    : basePlotHeightPx;
+  const chartPlotHeightRem = chartPlotHeightPx / pixelsPerRem;
+  const gridHeight = Math.max(
+    0,
+    chartPlotHeightPx -
+      TOP_CHART_PADDING -
+      X_AXIS_LABEL_TO_LEGEND_GAP +
+      xAxisLabelsHeight,
   );
-  const chartPlotHeightRem =
-    (isHorizontal
-      ? horizontalChartPlotHeightPx
-      : CHART_PLOT_HEIGHT_PX[screenSize]) / pixelsPerRem;
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
@@ -261,14 +286,13 @@ export function CartesianChart({
       }),
     ) as echarts.EChartsOption['series'];
 
-    const gridHeight = isHorizontal
-      ? horizontalChartPlotHeightPx -
-        TOP_CHART_PADDING -
-        X_AXIS_LABEL_TO_LEGEND_GAP
-      : CHART_PLOT_HEIGHT_PX[screenSize] -
+    const fallbackGridHeight = Math.max(
+      0,
+      fallbackPlotHeightPx -
         TOP_CHART_PADDING -
         X_AXIS_LABEL_TO_LEGEND_GAP +
-        xAxisLabelsHeight;
+        xAxisLabelsHeight,
+    );
 
     const valueAxisBreakOptions = valueAxisBreak
       ? {
@@ -281,7 +305,7 @@ export function CartesianChart({
       ...buildDatasetOption(dataset),
       grid: {
         top: TOP_CHART_PADDING,
-        height: gridHeight,
+        height: fallbackGridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: 0,
         right: 0,
@@ -449,7 +473,6 @@ export function CartesianChart({
     seriesType,
     isHorizontal,
     resolvedColors,
-    screenSize,
     xAxisLabelsHeight,
     isSmallScreen,
     chartTitle,
@@ -462,7 +485,7 @@ export function CartesianChart({
     rotatedAxisLabelConfig,
     categoryYAxisLabelConfig,
     categoryLabelWidth,
-    horizontalChartPlotHeightPx,
+    fallbackPlotHeightPx,
     resolvedNumberFormatter,
     valueAxisMin,
     valueAxisInterval,
@@ -475,6 +498,9 @@ export function CartesianChart({
   const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     'svg',
+    !hasMultipleUnits,
+    setChartWidth,
+    gridHeight,
   );
 
   const calculatedLegendHeight =
@@ -494,7 +520,7 @@ export function CartesianChart({
     return () => {
       onChartReady?.(null);
     };
-  }, [chartRef, option, onChartReady]);
+  }, [chartRef, option, onChartReady, hasMultipleUnits]);
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
@@ -578,7 +604,14 @@ export function CartesianChart({
       }
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen, isHorizontal]);
+  }, [
+    chartRef,
+    option,
+    dataset,
+    isMediumOrSmallerScreen,
+    isHorizontal,
+    hasMultipleUnits,
+  ]);
 
   return (
     <>

@@ -20,6 +20,8 @@ type HookHostProps = {
   renderer?: 'canvas' | 'svg';
   onChartRef?: (chartRef: { current: EChartsType | null }) => void;
   onEstimatedLegendHeight?: (height: number | null) => void;
+  onWidthChange?: (width: number | null) => void;
+  gridHeight?: number;
 };
 
 function HookHost({
@@ -27,10 +29,15 @@ function HookHost({
   renderer,
   onChartRef,
   onEstimatedLegendHeight,
+  onWidthChange,
+  gridHeight,
 }: Readonly<HookHostProps>) {
   const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     renderer,
+    true,
+    onWidthChange,
+    gridHeight,
   );
 
   React.useEffect(() => {
@@ -60,7 +67,9 @@ describe('useEChartOption', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('selects the requested legend column count at each breakpoint', () => {
@@ -362,6 +371,7 @@ describe('useEChartOption', () => {
   });
 
   it('resizes without rebuilding the chart option on window resize', () => {
+    vi.useFakeTimers();
     const chartMock = createChartMock(200);
     vi.mocked(echarts.init).mockReturnValue(chartMock);
 
@@ -375,10 +385,100 @@ describe('useEChartOption', () => {
 
     act(() => {
       globalThis.dispatchEvent(new Event('resize'));
+      vi.advanceTimersToNextFrame();
     });
 
     expect(chartMock.resize).toHaveBeenCalledWith();
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports container width changes without recreating the chart', () => {
+    vi.useFakeTimers();
+    let width = 0;
+    let notifyResize: () => void = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      'ResizeObserver',
+      class implements ResizeObserver {
+        constructor(callback: ResizeObserverCallback) {
+          notifyResize = () => callback([], this);
+        }
+        observe = vi.fn();
+        unobserve = vi.fn();
+        disconnect = disconnect;
+      },
+    );
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(
+      () => width,
+    );
+    const chartMock = createChartMock();
+    vi.mocked(chartMock.getWidth).mockImplementation(() => width);
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+    const onWidthChange = vi.fn();
+    const option: EChartsOption = { legend: { data: ['A'] } };
+    const { rerender, unmount } = render(
+      <HookHost
+        option={option}
+        onWidthChange={onWidthChange}
+        gridHeight={400}
+      />,
+    );
+
+    expect(onWidthChange).not.toHaveBeenCalled();
+    width = 800;
+    act(() => {
+      notifyResize();
+      vi.advanceTimersToNextFrame();
+    });
+    expect(onWidthChange).toHaveBeenLastCalledWith(800);
+    act(() => {
+      width = 700;
+      notifyResize();
+      width = 600;
+      notifyResize();
+      globalThis.dispatchEvent(new Event('resize'));
+      vi.advanceTimersToNextFrame();
+    });
+    expect(onWidthChange).toHaveBeenLastCalledWith(600);
+    expect(onWidthChange).toHaveBeenCalledTimes(2);
+    expect(chartMock.resize).toHaveBeenCalled();
+
+    width = 0;
+    act(() => {
+      notifyResize();
+      vi.advanceTimersToNextFrame();
+    });
+    expect(onWidthChange).toHaveBeenLastCalledWith(600);
+
+    rerender(
+      <HookHost
+        option={option}
+        onWidthChange={onWidthChange}
+        gridHeight={300}
+      />,
+    );
+    expect(echarts.init).toHaveBeenCalledTimes(1);
+    expect(chartMock.dispose).not.toHaveBeenCalled();
+    expect(chartMock.setOption).toHaveBeenLastCalledWith({
+      grid: { height: 300 },
+    });
+
+    width = 500;
+    act(() => {
+      notifyResize();
+      vi.advanceTimersToNextFrame();
+    });
+    expect(chartMock.setOption).toHaveBeenLastCalledWith(
+      expect.objectContaining({ grid: { height: 300 } }),
+      { replaceMerge: ['legend'] },
+    );
+
+    act(() => notifyResize());
+    unmount();
+    expect(disconnect).toHaveBeenCalled();
+    expect(chartMock.dispose).toHaveBeenCalledOnce();
+    act(() => vi.advanceTimersToNextFrame());
+    expect(onWidthChange).toHaveBeenCalledTimes(3);
   });
 
   it('does not read rendered legend internals or subscribe to render events', () => {

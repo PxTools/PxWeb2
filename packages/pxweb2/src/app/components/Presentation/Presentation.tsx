@@ -86,6 +86,10 @@ function PresentationView({
   const { setChart } = useTableData();
   const staticTitle = useVariables().pxTableMetadata?.label ?? '';
   const { screenSize } = useApp();
+  const numberFormatter = useCallback(
+    (value: number) => t('number.simple_number', { value: `${value}` }),
+    [t],
+  );
 
   const lineChartEmptyStateTitle = t(
     'presentation_page.main_content.chart.warnings.multiple_units.title',
@@ -126,9 +130,7 @@ function PresentationView({
                 staticTitle={staticTitle}
                 onChartReady={setChart}
                 screenSize={screenSize}
-                numberFormatter={(value) =>
-                  t('number.simple_number', { value: `${value}` })
-                }
+                numberFormatter={numberFormatter}
                 translations={{
                   showMore: showMoreText,
                   showLess: showLessText,
@@ -149,9 +151,7 @@ function PresentationView({
                 staticTitle={staticTitle}
                 onChartReady={setChart}
                 screenSize={screenSize}
-                numberFormatter={(value) =>
-                  t('number.simple_number', { value: `${value}` })
-                }
+                numberFormatter={numberFormatter}
                 translations={{
                   showMore: showMoreText,
                   showLess: showLessText,
@@ -175,9 +175,7 @@ function PresentationView({
                 onChartReady={setChart}
                 screenSize={screenSize}
                 orientation="horizontal"
-                numberFormatter={(value) =>
-                  t('number.simple_number', { value: `${value}` })
-                }
+                numberFormatter={numberFormatter}
                 translations={{
                   showMore: showMoreText,
                   showLess: showLessText,
@@ -273,6 +271,7 @@ export function Presentation({
     window.addEventListener('resize', checkScrollAndGradient);
 
     return () => {
+      window.removeEventListener('resize', checkScrollAndGradient);
       if (currentContainer) {
         currentContainer.removeEventListener('scroll', checkScrollAndGradient);
       }

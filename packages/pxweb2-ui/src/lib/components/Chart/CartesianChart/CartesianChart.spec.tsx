@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
@@ -315,6 +315,50 @@ describe('CartesianChart', () => {
     expect(Number.parseFloat(chartDiv?.style.height ?? '0')).toBeGreaterThan(
       (528 + 16 + 120) / 16,
     );
+  });
+
+  it('updates the plot and container heights when the chart width changes', () => {
+    const { container } = renderChart({ seriesType: 'line' });
+    const chartDiv = container.querySelector('div') as HTMLDivElement;
+    const reportWidth = vi.mocked(useEChartOption).mock.calls[0][3];
+    const labelHeight = getXAxisLabelHeight(['2024']);
+
+    expect(chartDiv.style.height).toBe(
+      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+    );
+
+    act(() => reportWidth?.(800));
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
+      450 - 36 - 16 + labelHeight,
+    );
+    expect(chartDiv.style.height).toBe(
+      `${(450 + labelHeight + 16 + 120) / 16}rem`,
+    );
+
+    act(() => reportWidth?.(600));
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
+      337.5 - 36 - 16 + labelHeight,
+    );
+    expect(chartDiv.style.height).toBe(
+      `${(337.5 + labelHeight + 16 + 120) / 16}rem`,
+    );
+  });
+
+  it('preserves horizontal category row height when the container narrows', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: Array.from({ length: 20 }, (_, index) => ({
+        name: `Category ${index}`,
+        men: index,
+        women: index + 1,
+      })),
+    });
+    renderChart({ orientation: 'horizontal' });
+    const reportWidth = vi.mocked(useEChartOption).mock.calls[0][3];
+
+    act(() => reportWidth?.(400));
+
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(20 * 72);
   });
 
   it('uses the adaptive value-axis minimum for horizontal bars with negative values', () => {
