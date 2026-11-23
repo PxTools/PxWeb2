@@ -38,7 +38,4 @@ globalThis.PxWeb2Config = {
     sv: '', // Set to your Swedish homepage URL
     en: '', // Set to your English homepage URL
   },
-  features: {
-    chartEnabled: true,
-  },
 };
