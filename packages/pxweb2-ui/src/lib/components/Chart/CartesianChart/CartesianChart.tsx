@@ -8,6 +8,8 @@ import {
   buildDatasetOption,
   buildSeriesOption,
 } from '../Utils/chartOptionBuilder';
+import { createActiveLineMarker } from '../Utils/chartActiveLineMarker';
+import { getBarLegendSymbol } from '../Utils/chartSymbols';
 import { getFallbackLegendHeight } from '../Utils/chartLegendHelper';
 import { useEChartOption } from '../Utils/useEChartOption';
 import {
@@ -27,7 +29,11 @@ import {
   checkMultipleUnits,
   getValueAxisBreak,
 } from '../Utils/chartHelper';
-import { formatChartTooltip } from '../Utils/chartTooltipHelper';
+import {
+  findClosestIsolatedLineSeries,
+  formatChartTooltip,
+  type PointerPosition,
+} from '../Utils/chartTooltipHelper';
 import EmptyState from '../../EmptyState/EmptyState';
 import type { EmptyStateProps } from '../../EmptyState/EmptyState';
 import type { PxTable } from '../../../shared-types/pxTable';
@@ -95,6 +101,12 @@ export function CartesianChart({
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
+  // The tooltip formatter updates or clears this marker, which is created only
+  // after ECharts is ready. A ref lets the formatter access the current marker
+  // without triggering a React render.
+  const activeLineMarkerRef = useRef<
+    ReturnType<typeof createActiveLineMarker> | undefined
+  >(undefined);
   const hasMultipleUnits = checkMultipleUnits(pxtable);
   const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
@@ -252,12 +264,15 @@ export function CartesianChart({
     const series = buildSeriesOption(dataset, seriesType, resolvedColors).map(
       (seriesOption, index) => ({
         ...seriesOption,
+        emphasis: {
+          ...seriesOption.emphasis,
+          ...(isMediumOrSmallerScreen
+            ? { disabled: true }
+            : { focus: 'series' as const }),
+        },
         encode: isHorizontal
           ? { x: dataset.series[index].key, y: 'name' }
           : { x: 'name', y: dataset.series[index].key },
-        emphasis: isMediumOrSmallerScreen
-          ? { disabled: true }
-          : { focus: 'series' as const },
       }),
     ) as echarts.EChartsOption['series'];
 
@@ -414,6 +429,7 @@ export function CartesianChart({
           },
       legend: {
         data: visibleLegendData,
+        ...(seriesType === 'bar' ? { icon: getBarLegendSymbol() } : {}),
         orient: 'horizontal',
         textStyle: {
           overflow: 'break',
@@ -440,6 +456,7 @@ export function CartesianChart({
               tooltipTitle: styles.tooltipTitle,
             },
             getTooltipSymbolSvg,
+            (point) => activeLineMarkerRef.current?.update(point), // Update the active line marker with the currently hovered tooltip point
           ),
       },
     };
@@ -504,17 +521,41 @@ export function CartesianChart({
       return;
     }
 
+    const zrender = chart.getZr?.();
+    const activeLineMarker =
+      seriesType === 'line'
+        ? createActiveLineMarker(chart, dataset)
+        : undefined;
+    activeLineMarkerRef.current = activeLineMarker;
+    if (activeLineMarker) {
+      chart.on('hideTip', activeLineMarker.clear);
+      chart.on('finished', activeLineMarker.reposition);
+      chart.on('legendselectchanged', activeLineMarker.clear);
+    }
+
     // Remember the series the user is interacting with so the tooltip can
     // show only that series on smaller screens.
     const handleSeriesInteraction = (params: {
       componentType?: string;
       seriesIndex?: number;
+      event?: PointerPosition;
     }) => {
       if (
         params.componentType === 'series' &&
         typeof params.seriesIndex === 'number'
       ) {
+        const seriesChanged =
+          hoveredSeriesIndexRef.current !== params.seriesIndex;
         hoveredSeriesIndexRef.current = params.seriesIndex;
+        if (seriesType === 'line' && seriesChanged && params.event) {
+          // ECharts can cache the axis tooltip before the hovered line changes.
+          chart.dispatchAction({ type: 'hideTip' });
+          chart.dispatchAction({
+            type: 'showTip',
+            x: params.event.offsetX,
+            y: params.event.offsetY,
+          });
+        }
       }
     };
 
@@ -522,12 +563,54 @@ export function CartesianChart({
     // a series again.
     const handleGlobalOut = () => {
       hoveredSeriesIndexRef.current = null;
+      activeLineMarker?.clear();
+    };
+
+    // Isolated values have neither a visible marker nor a line to hit.
+    const handleIsolatedLinePoint = (event: PointerPosition) => {
+      const axisCoordinate = chart.convertFromPixel(
+        { xAxisIndex: 0 },
+        event.offsetX,
+      );
+      if (
+        typeof axisCoordinate !== 'number' ||
+        !Number.isFinite(axisCoordinate)
+      ) {
+        return;
+      }
+
+      const dataIndex = Math.round(axisCoordinate);
+      const row = dataset.source[dataIndex];
+      if (!row) {
+        return;
+      }
+
+      const closestSeriesIndex = findClosestIsolatedLineSeries(
+        chart,
+        dataset,
+        dataIndex,
+        row,
+        event,
+      );
+      if (closestSeriesIndex === undefined) {
+        return;
+      }
+
+      if (hoveredSeriesIndexRef.current !== closestSeriesIndex) {
+        hoveredSeriesIndexRef.current = closestSeriesIndex;
+        chart.dispatchAction({ type: 'hideTip' });
+      }
+      chart.dispatchAction({
+        type: 'showTip',
+        seriesIndex: closestSeriesIndex,
+        dataIndex,
+      });
     };
 
     // On smaller screens, a click on the chart should show the tooltip for
     // the closest data row. Convert the pointer coordinate along the category
     // axis to a valid row index.
-    const handleChartClick = (event: { offsetX: number; offsetY: number }) => {
+    const handleChartClick = (event: PointerPosition) => {
       if (!isMediumOrSmallerScreen || dataset.source.length === 0) {
         return;
       }
@@ -562,23 +645,50 @@ export function CartesianChart({
     };
 
     // Register the handlers with ECharts and its lower-level rendering layer.
+    if (seriesType === 'line') {
+      chart.on('mousemove', handleSeriesInteraction);
+    }
     chart.on('mouseover', handleSeriesInteraction);
     chart.on('click', handleSeriesInteraction);
     chart.on('globalout', handleGlobalOut);
-    const zrender = chart.getZr?.();
+    if (seriesType === 'line') {
+      zrender?.on('mousemove', handleIsolatedLinePoint);
+      zrender?.on('click', handleIsolatedLinePoint);
+    }
     zrender?.on('click', handleChartClick);
 
     return () => {
       // Remove the handlers when the effect is rerun or the component is
       // unmounted, preventing duplicate events and stale chart references.
+      activeLineMarkerRef.current = undefined;
       if (!chart.isDisposed()) {
+        if (activeLineMarker) {
+          chart.off('hideTip', activeLineMarker.clear);
+          chart.off('finished', activeLineMarker.reposition);
+          chart.off('legendselectchanged', activeLineMarker.clear);
+        }
+        if (seriesType === 'line') {
+          chart.off('mousemove', handleSeriesInteraction);
+        }
         chart.off('mouseover', handleSeriesInteraction);
         chart.off('click', handleSeriesInteraction);
         chart.off('globalout', handleGlobalOut);
       }
+      activeLineMarker?.dispose();
+      if (seriesType === 'line') {
+        zrender?.off('mousemove', handleIsolatedLinePoint);
+        zrender?.off('click', handleIsolatedLinePoint);
+      }
       zrender?.off('click', handleChartClick);
     };
-  }, [chartRef, option, dataset, isMediumOrSmallerScreen, isHorizontal]);
+  }, [
+    chartRef,
+    option,
+    dataset,
+    isMediumOrSmallerScreen,
+    seriesType,
+    isHorizontal,
+  ]);
 
   return (
     <>
