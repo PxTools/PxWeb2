@@ -1,7 +1,7 @@
 ## Build
 
 Go to the root of the entire project and run
-`npm run build-style-dictionary`
+`pnpm run build-style-dictionary`
 
 ## Custom theme
 

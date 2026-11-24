@@ -5,7 +5,17 @@ This guide is intended for maintainers - those who are maintaining PxWeb by prov
 ## Getting Started
 
 1. Familiarize yourself with the project structure and our [CONTRIBUTING.md](./CONTRIBUTING.md) guide as well as this guide.
-2. Setup the project locally and make sure that you can run PxWeb.
+2. Install [pnpm](https://pnpm.io/installation), which is the package manager for this repository. Do not use npm or Corepack.
+
+   ```sh
+   curl -fsSL https://get.pnpm.io/install.sh | sh -   # macOS/Linux
+   npm install -g pnpm@latest                         # or, if you prefer npm (recommended on Windows)
+   ```
+
+   The exact version is pinned in `packageManager` in the root `package.json`, and pnpm switches to it automatically. Update pnpm itself with `pnpm self-update`.
+
+   You do not need to install Node.js separately. The Node.js version is pinned in `devEngines.runtime` in the root `package.json`, and `pnpm install` downloads and uses it for you.
+3. Setup the project locally and make sure that you can run PxWeb.
 
 ## Development Tools we use
 
@@ -25,33 +35,33 @@ An overview of the current technical debt in the project:
 
 ### Dependency Install Cooldown
 
-This repository enforces an npm dependency release cooldown of 9 days.
+This repository enforces a dependency release cooldown of 9 days.
 
-- Configuration is set in the root `.npmrc`.
-- In this npm workspaces setup, npm commands started from workspace folders still resolve to the monorepo root project config.
-- The cooldown applies to both `npm install` and `npm ci`.
+- Configuration is set in the root `pnpm-workspace.yaml` as `minimumReleaseAge` (pnpm counts minutes, so 9 days is `12960`).
+- In this pnpm workspace, pnpm commands started from workspace folders still resolve to the monorepo root project config.
+- The cooldown applies to `pnpm install` whether or not the lockfile is frozen.
 - This helps reduce the risk of pulling in very recently published packages.
 
-If an urgent one-off override is needed, run the install command with `--min-release-age=0` for that specific command.
+If an urgent one-off override is needed, run the install command with `--config.minimumReleaseAge=0` for that specific command.
 
-This policy relies on npm v11 support for `min-release-age`.
+This policy relies on pnpm support for `minimumReleaseAge`, which is why `engines.pnpm` pins a minimum pnpm version.
 
 ### Long running tasks
 
 1. Updating the packages used in the project. This includes both Dependabot PRs and other outdated packages.
    - Before you begin: 
      - Make sure you have an updated version of main
-     - Run npm install in the root directory
+     - Run pnpm install in the root directory
    - For security reasons, we want to wait at least 9 days before updating packages.
    - First update Storybook to the latest version that is outside the cooldown of 9 days:
      - Go to Storybook and find the correct version to update to
        OR look at which Storybook version is wanted in the command output of:
-       npm outdated
+       pnpm outdated -r
      - Run the Storybook CLI update command:
-       npx storybook@10.2.7 upgrade (change to correct version)
-   - Update the other non-major versions: `npm update --save`
+       pnpm dlx storybook@10.2.7 upgrade (change to correct version)
+   - Update the other non-major versions: `pnpm update -r`
 2. Fix [SonarQube issues/codesmells](https://sonarcloud.io/project/overview?id=PxTools_PxWeb2)
-3. Fix warnings when running `npm run lint`
+3. Fix warnings when running `pnpm run lint`
 
 ### Onetime tasks
 

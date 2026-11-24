@@ -4,7 +4,10 @@
   "main": "./src/index.ts",
   "private": "true",
   "type": "module",
-  "devDependencies": {},
+  "devDependencies": {
+    "tslib": "^2.9.1",
+    "vitest": "^5.0.1"
+  },
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit -p tsconfig.lib.json",
