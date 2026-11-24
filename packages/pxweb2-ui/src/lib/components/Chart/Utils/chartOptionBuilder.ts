@@ -1,18 +1,7 @@
 import type * as echarts from 'echarts';
 
+import { getLineSeriesSymbol } from './chartSymbols';
 import type { EChartsDataset } from './chartTypes';
-
-type LineSeriesSymbol =
-  'circle' | 'rect' | 'triangle' | 'diamond' | 'pin' | 'arrow';
-
-export const LINE_SERIES_SYMBOLS: LineSeriesSymbol[] = [
-  'circle',
-  'rect',
-  'triangle',
-  'diamond',
-  'pin',
-  'arrow',
-];
 
 export function buildDatasetOption(
   dataset: EChartsDataset,
@@ -59,22 +48,41 @@ export function buildSeriesOption(
   colors?: string[],
 ): echarts.SeriesOption[] {
   return dataset.series.map((series, index) => {
-    const baseSeries: echarts.SeriesOption = {
+    const baseSeries = {
       name: series.name,
-      type,
       color: colors ? colors[index % colors.length] : undefined,
     };
 
     if (type === 'line') {
+      let lastDataIndex = dataset.source.length - 1;
+      // Show one symbol per line, on its latest valid data point. Search backward so trailing
+      // missing or non-numeric values don't prevent that symbol from being shown.
+      while (lastDataIndex >= 0) {
+        const value = dataset.source[lastDataIndex][series.key];
+        if (typeof value === 'number' && Number.isFinite(value)) {
+          break;
+        }
+        lastDataIndex -= 1;
+      }
+
       return {
         ...baseSeries,
-        symbol: LINE_SERIES_SYMBOLS[index % LINE_SERIES_SYMBOLS.length],
-        symbolSize: 8,
+        type: 'line',
+        symbol: getLineSeriesSymbol(index),
+        symbolKeepAspect: true,
+        // Use size 8 for the latest valid point's marker and size 0 to hide markers on the rest.
+        symbolSize: (_value, params) =>
+          params.dataIndex === lastDataIndex ? 8 : 0,
+        showAllSymbol: true,
+        // Enable events on the line path so the tooltip can track the hovered series.
+        triggerEvent: 'line',
+        emphasis: { scale: 1.5 },
       };
     }
 
     return {
       ...baseSeries,
+      type: 'bar',
       barMaxWidth: 100,
     };
   });
