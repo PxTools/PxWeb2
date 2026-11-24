@@ -38,14 +38,6 @@ describe('chartDownload', () => {
       getOption: vi.fn(() => ({
         legend: [{ bottom: 0 }, { bottom: 20 }],
         grid: [{ height: 476, bottom: 136 }],
-        graphic: [
-          {
-            elements: [
-              { id: 'existing', type: 'line' },
-              { id: 'pxweb-active-line-marker', type: 'image' },
-            ],
-          },
-        ],
       })),
     } as unknown as echarts.EChartsType;
     const anchorClick = vi
@@ -63,7 +55,6 @@ describe('chartDownload', () => {
         animation: false,
         legend: [{ bottom: 80 }, { bottom: 100 }],
         grid: [{ height: 380, bottom: 232 }],
-        graphic: [{ elements: [{ id: 'existing', type: 'line' }] }],
       }),
       true,
     );
