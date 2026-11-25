@@ -503,7 +503,8 @@ describe('CartesianChart', () => {
 
     act(() => reportWidth?.(400));
 
-    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(20 * 72);
+    // Each single-line label needs 20px plus 8px of row spacing.
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(20 * 28);
   });
 
   it('uses the adaptive value-axis minimum for horizontal bars with negative values', () => {
