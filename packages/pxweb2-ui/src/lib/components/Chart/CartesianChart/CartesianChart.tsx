@@ -249,23 +249,35 @@ export function CartesianChart({
     MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
     categoryLabelHeight + 8,
   );
+  // Minimum height for horizontal charts based on the number of rows and row height.
   const horizontalMinimumHeightPx =
     dataset.source.length * horizontalRowHeight + X_AXIS_LABEL_TO_LEGEND_GAP;
+
+  // Fallback plot height for the chart, considering horizontal minimum height if applicable.
   const fallbackPlotHeightPx = isHorizontal
     ? Math.max(CHART_PLOT_HEIGHT_PX[screenSize], horizontalMinimumHeightPx)
     : CHART_PLOT_HEIGHT_PX[screenSize];
+
+  // Base plot height for the chart, calculated from chart width and aspect ratio.
   const basePlotHeightPx =
     chartWidth === null
       ? CHART_PLOT_HEIGHT_PX[screenSize]
       : chartWidth * CHART_ASPECT_HEIGHT_PER_WIDTH;
+
+  // Final chart plot height, considering horizontal minimum height if applicable.
   const chartPlotHeightPx = isHorizontal
     ? Math.max(basePlotHeightPx, horizontalMinimumHeightPx)
     : basePlotHeightPx;
+
+  // Convert chart plot height from pixels to rem units.
   const chartPlotHeightRem = chartPlotHeightPx / pixelsPerRem;
+
+  // Grid height for the chart, ensuring it is non-negative and accounts for X-axis labels.
   const gridHeight = Math.max(
     0,
     chartPlotHeightPx - X_AXIS_LABEL_TO_LEGEND_GAP + xAxisLabelsHeight,
   );
+
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.

@@ -309,15 +309,16 @@ export function useEChartOption(
     setEstimatedLegendHeight(null);
 
     const applyOption = () => {
-      // Apply the new selection or legend state first. The legend can only be
-      // measured after ECharts has rendered the updated option.
       const currentGridHeight = gridHeightRef.current;
       const grid = option.grid;
+      // Determine the current grid height, either from the ref or the option itself.
       const sizedOption =
         currentGridHeight === undefined
           ? option
           : {
               ...option,
+              // Override the grid height with the current grid height from the ref.
+              // Handle both array and single object grid configurations.
               grid: Array.isArray(grid)
                 ? grid.map((item, index) =>
                     index === 0 ? { ...item, height: currentGridHeight } : item,
@@ -351,6 +352,8 @@ export function useEChartOption(
     const updateWidth = () => {
       const width = chartContainer.clientWidth;
       if (width > 0) {
+        // Notify that chart width is updated so that its accorrding height (16:9 aspect ratio)
+        // remains correctly applied.
         onWidthChange?.(width);
       }
     };
@@ -381,7 +384,7 @@ export function useEChartOption(
       legendLayout.handleFontLoading,
     );
 
-    // Listen for browser resize events to update the legend layout.
+    // Listen for browser resize events to update chart proportions (16:9 aspect ratio) and the legend layout.
     window.addEventListener('resize', handleResize);
 
     return () => {
