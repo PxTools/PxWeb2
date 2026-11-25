@@ -392,6 +392,29 @@ describe('useEChartOption', () => {
     expect(chartMock.setOption).toHaveBeenCalledTimes(1);
   });
 
+  it('reports the width on a height-only window resize without recreating the chart', () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('innerHeight', 800);
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(600);
+    const chartMock = createChartMock(600);
+    vi.mocked(echarts.init).mockReturnValue(chartMock);
+    const onWidthChange = vi.fn(() => window.innerHeight);
+
+    render(<HookHost option={{}} onWidthChange={onWidthChange} />);
+    expect(onWidthChange).toHaveLastReturnedWith(800);
+
+    vi.stubGlobal('innerHeight', 600);
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+      vi.advanceTimersToNextFrame();
+    });
+
+    expect(onWidthChange).toHaveBeenLastCalledWith(600);
+    expect(onWidthChange).toHaveLastReturnedWith(600);
+    expect(echarts.init).toHaveBeenCalledTimes(1);
+    expect(chartMock.dispose).not.toHaveBeenCalled();
+  });
+
   it('reports container width changes without recreating the chart', () => {
     vi.useFakeTimers();
     let width = 0;

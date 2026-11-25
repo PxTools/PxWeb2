@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import cl from 'clsx';
 
@@ -50,8 +50,14 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   small: 400,
   xsmall: 300,
 };
-const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 72;
+// Minimum height of a horizontal category row in pixels.
+const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 24;
+// Aspect ratio of the chart's height relative to its width (ideal ratio).
 const CHART_ASPECT_HEIGHT_PER_WIDTH = 9 / 16;
+// Minimum plot height in pixels.
+const MIN_PLOT_HEIGHT_PX = 280;
+// Offset to subtract from the viewport height to determine the maximum plot height.
+const VIEWPORT_HEIGHT_OFFSET_PX = 400;
 
 export type ChartInstance = echarts.EChartsType;
 
@@ -95,18 +101,48 @@ export function CartesianChart({
   getTooltipSymbolSvg,
 }: CartesianChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
-  const [chartWidth, setChartWidth] = useState<number | null>(null);
+
+  // Chart dimensions state, including the chart width and the viewport height.
+  // Used to calculate the chart's layout and aspect ratio based on the available width and viewport height.
+  const [dimensions, setDimensions] = useState<{
+    chartWidth: number | null;
+    viewportHeight: number | null;
+  }>({ chartWidth: null, viewportHeight: null });
+
+  const { chartWidth, viewportHeight } = dimensions;
+  
+    // Handle changes in the chart width and update the dimensions state accordingly.
+  const handleWidthChange = useCallback((chartWidth: number | null) => {
+    const newDimensions = {
+      chartWidth,
+      viewportHeight: typeof window === 'undefined' ? null : window.innerHeight,
+    };
+
+    setDimensions((previous) => {
+      if (
+        previous.chartWidth === newDimensions.chartWidth &&
+        previous.viewportHeight === newDimensions.viewportHeight
+      ) {
+        return previous;
+      }
+
+      return newDimensions;
+    });
+  }, []);
+
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
+  
   // The tooltip formatter updates or clears this marker, which is created only
   // after ECharts is ready. A ref lets the formatter access the current marker
   // without triggering a React render.
   const activeLineMarkerRef = useRef<
     ReturnType<typeof createActiveLineMarker> | undefined
   >(undefined);
+  
   const hasMultipleUnits = checkMultipleUnits(pxtable);
   const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
@@ -264,10 +300,22 @@ export function CartesianChart({
       ? CHART_PLOT_HEIGHT_PX[screenSize]
       : chartWidth * CHART_ASPECT_HEIGHT_PER_WIDTH;
 
-  // Final chart plot height, considering horizontal minimum height if applicable.
+  // Chart plot height for horizontal and vertical orientations.
+  const chartPlotHeightHorizontalPx = Math.max(basePlotHeightPx, horizontalMinimumHeightPx);
+  const chartPlotHeightVerticalPx = Math.max(
+        MIN_PLOT_HEIGHT_PX,
+        viewportHeight === null
+          ? basePlotHeightPx
+          : Math.min(
+              basePlotHeightPx,
+              viewportHeight - VIEWPORT_HEIGHT_OFFSET_PX,
+            ),
+      );
+
+  // Select the appropriate chart plot height based on orientation.
   const chartPlotHeightPx = isHorizontal
-    ? Math.max(basePlotHeightPx, horizontalMinimumHeightPx)
-    : basePlotHeightPx;
+    ? chartPlotHeightHorizontalPx
+    : chartPlotHeightVerticalPx;
 
   // Convert chart plot height from pixels to rem units.
   const chartPlotHeightRem = chartPlotHeightPx / pixelsPerRem;
@@ -518,7 +566,7 @@ export function CartesianChart({
     option,
     'svg',
     !hasMultipleUnits,
-    setChartWidth,
+    handleWidthChange,
     gridHeight,
   );
 
