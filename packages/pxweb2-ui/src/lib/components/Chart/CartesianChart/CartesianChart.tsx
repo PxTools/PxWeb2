@@ -110,8 +110,8 @@ export function CartesianChart({
   }>({ chartWidth: null, viewportHeight: null });
 
   const { chartWidth, viewportHeight } = dimensions;
-  
-    // Handle changes in the chart width and update the dimensions state accordingly.
+
+  // Handle changes in the chart width and update the dimensions state accordingly.
   const handleWidthChange = useCallback((chartWidth: number | null) => {
     const newDimensions = {
       chartWidth,
@@ -135,14 +135,14 @@ export function CartesianChart({
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
-  
+
   // The tooltip formatter updates or clears this marker, which is created only
   // after ECharts is ready. A ref lets the formatter access the current marker
   // without triggering a React render.
   const activeLineMarkerRef = useRef<
     ReturnType<typeof createActiveLineMarker> | undefined
   >(undefined);
-  
+
   const hasMultipleUnits = checkMultipleUnits(pxtable);
   const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
@@ -301,16 +301,16 @@ export function CartesianChart({
       : chartWidth * CHART_ASPECT_HEIGHT_PER_WIDTH;
 
   // Chart plot height for horizontal and vertical orientations.
-  const chartPlotHeightHorizontalPx = Math.max(basePlotHeightPx, horizontalMinimumHeightPx);
+  const chartPlotHeightHorizontalPx = Math.max(
+    basePlotHeightPx,
+    horizontalMinimumHeightPx,
+  );
   const chartPlotHeightVerticalPx = Math.max(
-        MIN_PLOT_HEIGHT_PX,
-        viewportHeight === null
-          ? basePlotHeightPx
-          : Math.min(
-              basePlotHeightPx,
-              viewportHeight - VIEWPORT_HEIGHT_OFFSET_PX,
-            ),
-      );
+    MIN_PLOT_HEIGHT_PX,
+    viewportHeight === null
+      ? basePlotHeightPx
+      : Math.min(basePlotHeightPx, viewportHeight - VIEWPORT_HEIGHT_OFFSET_PX),
+  );
 
   // Select the appropriate chart plot height based on orientation.
   const chartPlotHeightPx = isHorizontal
