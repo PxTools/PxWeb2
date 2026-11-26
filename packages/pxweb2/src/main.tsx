@@ -8,6 +8,7 @@ import { validateConfig } from './app/util/validate';
 import { AppProvider } from './app/context/AppProvider';
 import { routerConfig } from './app/routes';
 import { getConfig } from './app/util/config/getConfig';
+import { configureApiClient } from './app/util/config/configureApiClient';
 import { OpenAPI } from '@pxweb2/pxweb2-api-client';
 
 const root = ReactDOM.createRoot(
@@ -15,6 +16,7 @@ const root = ReactDOM.createRoot(
 );
 
 validateConfig();
+configureApiClient(getConfig());
 
 const config = getConfig();
 OpenAPI.BASE = config.apiUrl;

@@ -52,6 +52,11 @@
       "type": "string",
       "description": "The base url for the pxweb api"
     },
+    "apiWithCredentials": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include credentials in cross-origin API requests. Enable only for a trusted API requiring authentication."
+    },
     "homePage": {
       "type": "object",
       "description": "Homepage URLs for the logo link, mapped by language code. Keys should be language codes (e.g., 'en', 'sv', 'no').",
