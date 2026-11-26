@@ -8,6 +8,7 @@ export type Config = {
   };
   baseApplicationPath: string;
   apiUrl: string;
+  apiWithCredentials?: boolean;  
   maxDataCells: number;
   useDynamicContentInTitle: boolean;
   showBreadCrumbOnStartPage: boolean;
