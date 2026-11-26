@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.15.0](https://github.com/PxTools/PxWeb2/compare/v2.14.0...v2.15.0) (2026-11-26)
+
+
+### :sparkles: Features
+
+* Active data point symbol in LineChart ([#1632](https://github.com/PxTools/PxWeb2/issues/1632)) ([631a143](https://github.com/PxTools/PxWeb2/commit/631a143263a9cc219091f5c2440ef5c2d34818ac))
+* Add number formatting support to CartesianChart ([#1588](https://github.com/PxTools/PxWeb2/issues/1588)) ([4b3cee4](https://github.com/PxTools/PxWeb2/commit/4b3cee4e154d4160c9cb9e296619794966bd359e))
+* Horizontal barchart ([#1620](https://github.com/PxTools/PxWeb2/issues/1620)) ([28c6e2f](https://github.com/PxTools/PxWeb2/commit/28c6e2f2dbe4037279bd4b664ba71634999a6525))
+* Show saved query as graph if it was created as one  ([#1576](https://github.com/PxTools/PxWeb2/issues/1576)) ([99ef256](https://github.com/PxTools/PxWeb2/commit/99ef256aae254c6cacc319dce48609afe8afae4b))
+
+
+### :bug: Bug Fixes
+
+* capitalize label for manual pivot ([#1570](https://github.com/PxTools/PxWeb2/issues/1570)) ([007fe44](https://github.com/PxTools/PxWeb2/commit/007fe44f509988b96bee3dd475f4b1eb2e6ecc0a))
+* manual pivot increase drop area ([#1613](https://github.com/PxTools/PxWeb2/issues/1613)) ([a1fdf51](https://github.com/PxTools/PxWeb2/commit/a1fdf5174c4db394793913d57d981989699c108e))
+* remove unused features configuration from PxWeb2 settings ([#1643](https://github.com/PxTools/PxWeb2/issues/1643)) ([899917d](https://github.com/PxTools/PxWeb2/commit/899917d1c6baf3fd2c2591d131d6e102719d3fad))
+* sort subjecttree on sortcode for all levels.  ([#1590](https://github.com/PxTools/PxWeb2/issues/1590)) ([45adf33](https://github.com/PxTools/PxWeb2/commit/45adf33eaae048a441d40fb4ccdc0cd79a58d781))
+
+
+### :building_construction: Build System and dependencies
+
+* **deps-dev:** bump @rolldown/plugin-babel from 0.2.4 to 0.3.1 ([#1649](https://github.com/PxTools/PxWeb2/issues/1649)) ([1ad5f47](https://github.com/PxTools/PxWeb2/commit/1ad5f47fe3f078d0e9951acc023140ac6b3a0837))
+* **deps-dev:** bump eslint from 10.13.0 to 10.14.0 ([#1629](https://github.com/PxTools/PxWeb2/issues/1629)) ([eede6c6](https://github.com/PxTools/PxWeb2/commit/eede6c62a425b27e204c29d50c3c46618c054b84))
+* **deps-dev:** bump eslint from 10.14.0 to 10.15.0 ([#1650](https://github.com/PxTools/PxWeb2/issues/1650)) ([80af933](https://github.com/PxTools/PxWeb2/commit/80af933be4a03c0a229277e4c976f257d32fe4fc))
+* **deps-dev:** bump jsdom from 30.1.3 to 31.0.1 ([#1651](https://github.com/PxTools/PxWeb2/issues/1651)) ([0c637ef](https://github.com/PxTools/PxWeb2/commit/0c637ef50bd0ce8b132c0a7ecf78c9a8b81b3b74))
+* **deps:** bump chromaui/action from 18.13.3 to 18.14.4 ([#1646](https://github.com/PxTools/PxWeb2/issues/1646)) ([3d42c73](https://github.com/PxTools/PxWeb2/commit/3d42c7327290305838c4c8159afa21d0f8a8e7b5))
+* **deps:** bump docker/login-action from 4.7.0 to 4.8.0 ([#1633](https://github.com/PxTools/PxWeb2/issues/1633)) ([0e8153b](https://github.com/PxTools/PxWeb2/commit/0e8153b9225d3513dab05d5a78cc31c6fcfa5171))
+* **deps:** bump github/codeql-action/upload-sarif ([#1637](https://github.com/PxTools/PxWeb2/issues/1637)) ([6615d49](https://github.com/PxTools/PxWeb2/commit/6615d4999b6a241de469230e8d17c590d6dc149f))
+* **deps:** bump motion from 14.12.0 to 14.14.0 ([#1653](https://github.com/PxTools/PxWeb2/issues/1653)) ([e390bcb](https://github.com/PxTools/PxWeb2/commit/e390bcbe5e58fc6aea618a1cba7ab91955242127))
+* **deps:** bump motion from 14.6.0 to 14.7.1 ([#1618](https://github.com/PxTools/PxWeb2/issues/1618)) ([2f459e1](https://github.com/PxTools/PxWeb2/commit/2f459e1bb43fe03bd9af0fb8af73fa68bf9dbf92))
+* **deps:** bump SonarSource/sonarqube-scan-action from 8.3.0 to 8.5.0 ([#1647](https://github.com/PxTools/PxWeb2/issues/1647)) ([9719ff8](https://github.com/PxTools/PxWeb2/commit/9719ff825d50926a1e15fdee153a4b32612a8708))
+
+
+### :broom: Chores
+
+* Update all non-major project dependencies ([#1655](https://github.com/PxTools/PxWeb2/issues/1655)) ([0e9773e](https://github.com/PxTools/PxWeb2/commit/0e9773e951b5f3d65b6f227d184d77a8eec8d42c))
+* update dependencies 20261119 ([#1642](https://github.com/PxTools/PxWeb2/issues/1642)) ([7cfa08c](https://github.com/PxTools/PxWeb2/commit/7cfa08ceb36f194db001a72d3dad755cbea535eb))
+* update dependencies across packages ([#1630](https://github.com/PxTools/PxWeb2/issues/1630)) ([7e24713](https://github.com/PxTools/PxWeb2/commit/7e247139e43db5d68b28581c5d8b2f0c947181f5))
+
 ## [2.14.0](https://github.com/PxTools/PxWeb2/compare/v2.13.0...v2.14.0) (2026-11-05)
 
 
