@@ -607,8 +607,12 @@ describe('CartesianChart', () => {
 
     expect(chartDiv).toBeTruthy();
     const labelHeight = getXAxisLabelHeight(['2024']);
-    expect(chartDiv?.style.height).toBe(
-      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+
+    // jsdom rounds CSS lengths to 4 decimals, so compare numerically
+    expect(chartDiv?.style.height).toMatch(/rem$/);
+    expect(parseFloat(chartDiv?.style.height ?? '')).toBeCloseTo(
+      (528 + labelHeight + 16 + 120) / 16,
+      3,
     );
   });
 
