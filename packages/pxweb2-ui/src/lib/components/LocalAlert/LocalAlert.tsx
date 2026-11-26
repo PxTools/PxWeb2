@@ -51,6 +51,14 @@ export function LocalAlert({
   const cssClasses = className.length > 0 ? ' ' + className : '';
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
+
+  // const renderChildren = (content: string | React.ReactNode) => {
+  //   if (typeof content === 'string') {
+  //     return <MarkdownRenderer mdText={content} />;
+  //   }
+  //   return content;
+  // };
+
   const handleClose = () => {
     setIsVisible(false);
     onDismissed?.();
