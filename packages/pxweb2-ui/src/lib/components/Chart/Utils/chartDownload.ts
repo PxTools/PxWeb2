@@ -5,6 +5,7 @@ import { applyYAxisBreakMark } from '../Utils/useEChartOption';
 type ChartImageType = 'png' | 'svg';
 const LEGEND_BOTTOM_GAP_PX = 80;
 const EXPORT_EXTRA_X_AXIS_LEGEND_GAP_PX = 16;
+const EXPORT_TOP_CHART_PADDING_PX = 36;
 
 export async function downloadChartImage(
   chart: echarts.EChartsType | null,
@@ -95,8 +96,14 @@ async function createExportChart(
         LEGEND_BOTTOM_GAP_PX + EXPORT_EXTRA_X_AXIS_LEGEND_GAP_PX;
       option.grid = grids.map((grid) => ({
         ...grid,
+        top: EXPORT_TOP_CHART_PADDING_PX,
         ...(typeof grid.height === 'number'
-          ? { height: Math.max(0, grid.height - gridShift) }
+          ? {
+              height: Math.max(
+                0,
+                grid.height - gridShift - EXPORT_TOP_CHART_PADDING_PX,
+              ),
+            }
           : {}),
         ...(typeof grid.bottom === 'number'
           ? { bottom: grid.bottom + gridShift }

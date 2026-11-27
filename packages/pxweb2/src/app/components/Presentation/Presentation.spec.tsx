@@ -207,6 +207,38 @@ describe('Presentation', () => {
     expect(gradientContainer).toBeInTheDocument();
   });
 
+  it('removes its resize listener on rerender and unmount', () => {
+    const addListener = vi.spyOn(window, 'addEventListener');
+    const removeListener = vi.spyOn(window, 'removeEventListener');
+    const { rerender, unmount } = renderPresentation();
+
+    for (let index = 0; index < 3; index += 1) {
+      rerender(
+        <MemoryRouter>
+          <Presentation
+            selectedTabId="1"
+            isExpanded={false}
+            setIsExpanded={vi.fn()}
+          />
+        </MemoryRouter>,
+      );
+    }
+    unmount();
+
+    const listeners = addListener.mock.calls
+      .filter(
+        ([type, listener]) =>
+          type === 'resize' &&
+          typeof listener === 'function' &&
+          listener.name === 'checkScrollAndGradient',
+      )
+      .map(([, listener]) => listener);
+    expect(listeners.length).toBeGreaterThan(1);
+    for (const listener of listeners) {
+      expect(removeListener).toHaveBeenCalledWith('resize', listener);
+    }
+  });
+
   it.each([
     { view: 'linechart', chart: mockLineChart },
     { view: 'barchart', chart: mockBarChart },
@@ -224,6 +256,26 @@ describe('Presentation', () => {
     expect(mockT).toHaveBeenCalledWith('number.simple_number', {
       value: '1234.5',
     });
+  });
+
+  it('keeps the chart number formatter stable across presentation rerenders', () => {
+    const { rerender } = renderPresentation(undefined, '/?view=linechart');
+    const numberFormatter = mockLineChart.mock.lastCall?.[0].numberFormatter;
+    expect(numberFormatter).toBeDefined();
+
+    rerender(
+      <MemoryRouter initialEntries={['/?view=linechart']}>
+        <Presentation
+          selectedTabId="1"
+          isExpanded={false}
+          setIsExpanded={vi.fn()}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(mockLineChart.mock.lastCall?.[0].numberFormatter).toBe(
+      numberFormatter,
+    );
   });
 
   it('renders the horizontal bar chart with translated number formatting', () => {

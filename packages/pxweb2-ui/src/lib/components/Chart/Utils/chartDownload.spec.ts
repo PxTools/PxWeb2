@@ -37,7 +37,7 @@ describe('chartDownload', () => {
       getHeight: vi.fn(() => 300),
       getOption: vi.fn(() => ({
         legend: [{ bottom: 0 }, { bottom: 20 }],
-        grid: [{ height: 476, bottom: 136 }],
+        grid: [{ top: 0, height: 512, bottom: 136 }],
       })),
     } as unknown as echarts.EChartsType;
     const anchorClick = vi
@@ -54,14 +54,14 @@ describe('chartDownload', () => {
       expect.objectContaining({
         animation: false,
         legend: [{ bottom: 80 }, { bottom: 100 }],
-        grid: [{ height: 380, bottom: 232 }],
+        grid: [{ top: 36, height: 380, bottom: 232 }],
       }),
       true,
     );
     expect(applyYAxisBreakMark).toHaveBeenCalledWith(
       exportChart,
       expect.objectContaining({
-        grid: [{ height: 380, bottom: 232 }],
+        grid: [{ top: 36, height: 380, bottom: 232 }],
       }),
     );
     expect(
@@ -97,7 +97,7 @@ describe('chartDownload', () => {
       getOption: vi.fn(() => ({
         title: [{ text: 'Population by year' }],
         legend: [{ bottom: 0 }, { bottom: 20 }],
-        grid: [{ height: 476, bottom: 136 }],
+        grid: [{ top: 0, height: 512, bottom: 136 }],
       })),
     } as unknown as echarts.EChartsType;
     const anchorClick = vi
@@ -114,14 +114,14 @@ describe('chartDownload', () => {
     expect(exportChart.setOption).toHaveBeenCalledWith(
       expect.objectContaining({
         legend: [{ bottom: 80 }, { bottom: 100 }],
-        grid: [{ height: 380, bottom: 232 }],
+        grid: [{ top: 36, height: 380, bottom: 232 }],
       }),
       true,
     );
     expect(applyYAxisBreakMark).toHaveBeenCalledWith(
       exportChart,
       expect.objectContaining({
-        grid: [{ height: 380, bottom: 232 }],
+        grid: [{ top: 36, height: 380, bottom: 232 }],
       }),
     );
     expect(exportChart.getDataURL).toHaveBeenCalledWith({
@@ -129,6 +129,42 @@ describe('chartDownload', () => {
       backgroundColor: '#fff',
     });
 
+    anchorClick.mockRestore();
+  });
+
+  it('does not make the export grid height negative for a short chart', async () => {
+    let finishedHandler: (() => void) | undefined;
+    const exportChart = {
+      on: vi.fn((_event: string, handler: () => void) => {
+        finishedHandler = handler;
+      }),
+      off: vi.fn(),
+      setOption: vi.fn(() => finishedHandler?.()),
+      getDataURL: vi.fn(() => 'data:image/png;base64,chart'),
+      dispose: vi.fn(),
+    };
+    vi.mocked(echarts.init).mockReturnValue(
+      exportChart as unknown as echarts.EChartsType,
+    );
+    const sourceChart = {
+      getWidth: vi.fn(() => 200),
+      getHeight: vi.fn(() => 100),
+      getOption: vi.fn(() => ({
+        grid: [{ top: 0, height: 100, bottom: 0 }],
+      })),
+    } as unknown as echarts.EChartsType;
+    const anchorClick = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {});
+
+    await exportPngFromSvgChart(sourceChart, 'chart');
+
+    expect(exportChart.setOption).toHaveBeenCalledWith(
+      expect.objectContaining({
+        grid: [{ top: 36, height: 0, bottom: 96 }],
+      }),
+      true,
+    );
     anchorClick.mockRestore();
   });
 });

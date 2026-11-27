@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import cl from 'clsx';
 
@@ -41,8 +41,6 @@ import type { ScreenSize } from '../../../types/screenSize';
 
 // Pixel gap between the x-axis labels and the chart legend.
 const X_AXIS_LABEL_TO_LEGEND_GAP = 16;
-// Pixel padding above the plot area.
-const TOP_CHART_PADDING = 36;
 // Height of plot area in pixels for different screen sizes.
 const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   xxlarge: 680,
@@ -52,7 +50,14 @@ const CHART_PLOT_HEIGHT_PX: Record<ScreenSize, number> = {
   small: 400,
   xsmall: 300,
 };
-const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 72;
+// Minimum height of a horizontal category row in pixels.
+const MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX = 24;
+// Aspect ratio of the chart's height relative to its width (ideal ratio).
+const CHART_ASPECT_HEIGHT_PER_WIDTH = 9 / 16;
+// Minimum plot height in pixels.
+const MIN_PLOT_HEIGHT_PX = 280;
+// Offset to subtract from the viewport height to determine the maximum plot height.
+const VIEWPORT_HEIGHT_OFFSET_PX = 400;
 
 export type ChartInstance = echarts.EChartsType;
 
@@ -96,17 +101,48 @@ export function CartesianChart({
   getTooltipSymbolSvg,
 }: CartesianChartProps) {
   const [isLegendExpanded, setIsLegendExpanded] = useState(false);
+
+  // Chart dimensions state, including the chart width and the viewport height.
+  // Used to calculate the chart's layout and aspect ratio based on the available width and viewport height.
+  const [dimensions, setDimensions] = useState<{
+    chartWidth: number | null;
+    viewportHeight: number | null;
+  }>({ chartWidth: null, viewportHeight: null });
+
+  const { chartWidth, viewportHeight } = dimensions;
+
+  // Handle changes in the chart width and update the dimensions state accordingly.
+  const handleWidthChange = useCallback((chartWidth: number | null) => {
+    const newDimensions = {
+      chartWidth,
+      viewportHeight: typeof window === 'undefined' ? null : window.innerHeight,
+    };
+
+    setDimensions((previous) => {
+      if (
+        previous.chartWidth === newDimensions.chartWidth &&
+        previous.viewportHeight === newDimensions.viewportHeight
+      ) {
+        return previous;
+      }
+
+      return newDimensions;
+    });
+  }, []);
+
   // Stores the position of the chart series the user is currently hovering.
   // null means that no series has been selected yet. A ref is used because
   // this value is only needed by chart event handlers and the tooltip; changing
   // it should not cause the whole chart component to render again.
   const hoveredSeriesIndexRef = useRef<number | null>(null);
+
   // The tooltip formatter updates or clears this marker, which is created only
   // after ECharts is ready. A ref lets the formatter access the current marker
   // without triggering a React render.
   const activeLineMarkerRef = useRef<
     ReturnType<typeof createActiveLineMarker> | undefined
   >(undefined);
+
   const hasMultipleUnits = checkMultipleUnits(pxtable);
   const isHorizontal = seriesType === 'bar' && orientation === 'horizontal';
   const isMediumOrSmallerScreen =
@@ -224,30 +260,72 @@ export function CartesianChart({
       createCategoryYAxisLabelConfig(screenSize, axisFontSize, axisLineHeight),
     [axisFontSize, screenSize, axisLineHeight],
   );
-  const categoryLabels = dataset.source.map((row) => row.name);
-  const categoryLabelWidth =
-    categoryYAxisLabelConfig.estimateWidth(categoryLabels);
-
-  const categoryLabelHeight = isHorizontal
-    ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
-    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
-  const xAxisLabelsHeight = isHorizontal
-    ? 0
-    : rotatedAxisLabelConfig.estimateHeight(categoryLabels);
+  const categoryLabels = useMemo(
+    () => dataset.source.map((row) => row.name),
+    [dataset.source],
+  );
+  const categoryLabelWidth = useMemo(
+    () => categoryYAxisLabelConfig.estimateWidth(categoryLabels),
+    [categoryYAxisLabelConfig, categoryLabels],
+  );
+  const categoryLabelHeight = useMemo(
+    () =>
+      isHorizontal
+        ? categoryYAxisLabelConfig.estimateHeight(categoryLabels)
+        : rotatedAxisLabelConfig.estimateHeight(categoryLabels),
+    [
+      isHorizontal,
+      categoryYAxisLabelConfig,
+      rotatedAxisLabelConfig,
+      categoryLabels,
+    ],
+  );
+  const xAxisLabelsHeight = isHorizontal ? 0 : categoryLabelHeight;
   const horizontalRowHeight = Math.max(
     MIN_HORIZONTAL_CATEGORY_ROW_HEIGHT_PX,
     categoryLabelHeight + 8,
   );
-  const horizontalChartPlotHeightPx = Math.max(
-    CHART_PLOT_HEIGHT_PX[screenSize],
-    dataset.source.length * horizontalRowHeight +
-      TOP_CHART_PADDING +
-      X_AXIS_LABEL_TO_LEGEND_GAP,
+  // Minimum height for horizontal charts based on the number of rows and row height.
+  const horizontalMinimumHeightPx =
+    dataset.source.length * horizontalRowHeight + X_AXIS_LABEL_TO_LEGEND_GAP;
+
+  // Fallback plot height for the chart, considering horizontal minimum height if applicable.
+  const fallbackPlotHeightPx = isHorizontal
+    ? Math.max(CHART_PLOT_HEIGHT_PX[screenSize], horizontalMinimumHeightPx)
+    : CHART_PLOT_HEIGHT_PX[screenSize];
+
+  // Base plot height for the chart, calculated from chart width and aspect ratio.
+  const basePlotHeightPx =
+    chartWidth === null
+      ? CHART_PLOT_HEIGHT_PX[screenSize]
+      : chartWidth * CHART_ASPECT_HEIGHT_PER_WIDTH;
+
+  // Chart plot height for horizontal and vertical orientations.
+  const chartPlotHeightHorizontalPx = Math.max(
+    basePlotHeightPx,
+    horizontalMinimumHeightPx,
   );
-  const chartPlotHeightRem =
-    (isHorizontal
-      ? horizontalChartPlotHeightPx
-      : CHART_PLOT_HEIGHT_PX[screenSize]) / pixelsPerRem;
+  const chartPlotHeightVerticalPx = Math.max(
+    MIN_PLOT_HEIGHT_PX,
+    viewportHeight === null
+      ? basePlotHeightPx
+      : Math.min(basePlotHeightPx, viewportHeight - VIEWPORT_HEIGHT_OFFSET_PX),
+  );
+
+  // Select the appropriate chart plot height based on orientation.
+  const chartPlotHeightPx = isHorizontal
+    ? chartPlotHeightHorizontalPx
+    : chartPlotHeightVerticalPx;
+
+  // Convert chart plot height from pixels to rem units.
+  const chartPlotHeightRem = chartPlotHeightPx / pixelsPerRem;
+
+  // Grid height for the chart, ensuring it is non-negative and accounts for X-axis labels.
+  const gridHeight = Math.max(
+    0,
+    chartPlotHeightPx - X_AXIS_LABEL_TO_LEGEND_GAP + xAxisLabelsHeight,
+  );
+
   // Bar charts with no negative values start at zero; a line-chart axis break
   // also requires a zero minimum. Otherwise, use the adaptive minimum so
   // negative values remain visible.
@@ -276,14 +354,10 @@ export function CartesianChart({
       }),
     ) as echarts.EChartsOption['series'];
 
-    const gridHeight = isHorizontal
-      ? horizontalChartPlotHeightPx -
-        TOP_CHART_PADDING -
-        X_AXIS_LABEL_TO_LEGEND_GAP
-      : CHART_PLOT_HEIGHT_PX[screenSize] -
-        TOP_CHART_PADDING -
-        X_AXIS_LABEL_TO_LEGEND_GAP +
-        xAxisLabelsHeight;
+    const fallbackGridHeight = Math.max(
+      0,
+      fallbackPlotHeightPx - X_AXIS_LABEL_TO_LEGEND_GAP + xAxisLabelsHeight,
+    );
 
     const valueAxisBreakOptions = valueAxisBreak
       ? {
@@ -295,8 +369,8 @@ export function CartesianChart({
     return {
       ...buildDatasetOption(dataset),
       grid: {
-        top: TOP_CHART_PADDING,
-        height: gridHeight,
+        top: 0,
+        height: fallbackGridHeight,
         bottom: fallbackLegendHeight + X_AXIS_LABEL_TO_LEGEND_GAP,
         left: 0,
         right: 0,
@@ -466,7 +540,6 @@ export function CartesianChart({
     seriesType,
     isHorizontal,
     resolvedColors,
-    screenSize,
     xAxisLabelsHeight,
     isSmallScreen,
     chartTitle,
@@ -479,7 +552,7 @@ export function CartesianChart({
     rotatedAxisLabelConfig,
     categoryYAxisLabelConfig,
     categoryLabelWidth,
-    horizontalChartPlotHeightPx,
+    fallbackPlotHeightPx,
     resolvedNumberFormatter,
     valueAxisMin,
     valueAxisInterval,
@@ -492,6 +565,9 @@ export function CartesianChart({
   const { divRef, chartRef, estimatedLegendHeight } = useEChartOption(
     option,
     'svg',
+    !hasMultipleUnits,
+    handleWidthChange,
+    gridHeight,
   );
 
   const calculatedLegendHeight =
@@ -511,7 +587,7 @@ export function CartesianChart({
     return () => {
       onChartReady?.(null);
     };
-  }, [chartRef, option, onChartReady]);
+  }, [chartRef, option, onChartReady, hasMultipleUnits]);
 
   useEffect(() => {
     // ECharts creates the chart after the component renders. There is nothing
@@ -686,8 +762,9 @@ export function CartesianChart({
     option,
     dataset,
     isMediumOrSmallerScreen,
-    seriesType,
     isHorizontal,
+    hasMultipleUnits,
+    seriesType,
   ]);
 
   return (

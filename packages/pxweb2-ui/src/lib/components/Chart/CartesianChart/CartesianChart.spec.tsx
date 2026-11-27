@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import * as echarts from 'echarts';
@@ -35,9 +35,16 @@ vi.mock('../Utils/useEChartOption', () => ({
   useEChartOption: vi.fn(),
 }));
 
-vi.mock('../Utils/chartLegendHelper', () => ({
-  getFallbackLegendHeight: vi.fn(() => 120),
-}));
+vi.mock('../Utils/chartLegendHelper', async () => {
+  const actual = await vi.importActual<
+    typeof import('../Utils/chartLegendHelper')
+  >('../Utils/chartLegendHelper');
+
+  return {
+    ...actual,
+    getFallbackLegendHeight: vi.fn(() => 120),
+  };
+});
 
 vi.mock('../Utils/chartOptionBuilder', async () => {
   const actual = await vi.importActual<
@@ -125,6 +132,7 @@ function getTooltipFormatter(option: { tooltip?: unknown }) {
 describe('CartesianChart', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
   });
 
   beforeEach(() => {
@@ -193,8 +201,8 @@ describe('CartesianChart', () => {
     expect(option.xAxis).toMatchObject({ axisLine: { onZero: false } });
     const labelHeight = getXAxisLabelHeight(['2024']);
     expect(option.grid).toEqual({
-      top: 36,
-      height: 476 + labelHeight,
+      top: 0,
+      height: 512 + labelHeight,
       bottom: 136,
       left: 0,
       right: 0,
@@ -320,6 +328,183 @@ describe('CartesianChart', () => {
     expect(Number.parseFloat(chartDiv?.style.height ?? '0')).toBeGreaterThan(
       (528 + 16 + 120) / 16,
     );
+  });
+
+  it('updates the plot and container heights when the chart width changes', () => {
+    vi.stubGlobal('innerHeight', 1000);
+    const { container } = renderChart({ seriesType: 'line' });
+    const chartDiv = container.querySelector('div') as HTMLDivElement;
+    const reportWidth = vi.mocked(useEChartOption).mock.calls[0][3];
+    const labelHeight = getXAxisLabelHeight(['2024']);
+
+    expect(chartDiv.style.height).toBe(
+      `${(528 + labelHeight + 16 + 120) / 16}rem`,
+    );
+
+    act(() => reportWidth?.(800));
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
+      450 - 16 + labelHeight,
+    );
+    expect(chartDiv.style.height).toBe(
+      `${(450 + labelHeight + 16 + 120) / 16}rem`,
+    );
+
+    act(() => reportWidth?.(600));
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
+      337.5 - 16 + labelHeight,
+    );
+    expect(chartDiv.style.height).toBe(
+      `${(337.5 + labelHeight + 16 + 120) / 16}rem`,
+    );
+  });
+
+  it.each(['line', 'bar'] as const)(
+    'clamps the %s plot height to the viewport and minimum',
+    (seriesType) => {
+      vi.stubGlobal('innerHeight', 1000);
+      const { container } = renderChart({ seriesType });
+      const chartDiv = container.querySelector('div') as HTMLDivElement;
+      const reportWidth = vi.mocked(useEChartOption).mock.lastCall?.[3];
+      const labelHeight = getXAxisLabelHeight(['2024']);
+      const expectPlotHeight = (height: number) => {
+        expect(chartDiv.style.height).toBe(
+          `${(height + labelHeight + 16 + 120) / 16}rem`,
+        );
+        expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(
+          height - 16 + labelHeight,
+        );
+      };
+
+      act(() => reportWidth?.(800));
+      expectPlotHeight(450);
+
+      vi.stubGlobal('innerHeight', 700);
+      act(() => reportWidth?.(800));
+      expectPlotHeight(300);
+
+      vi.stubGlobal('innerHeight', 1000);
+      act(() => reportWidth?.(400));
+      expectPlotHeight(280);
+
+      vi.stubGlobal('innerHeight', 500);
+      act(() => reportWidth?.(800));
+      expectPlotHeight(280);
+
+      vi.stubGlobal('innerHeight', 680);
+      act(() => reportWidth?.(800));
+      expectPlotHeight(280);
+
+      vi.stubGlobal('innerHeight', 681);
+      act(() => reportWidth?.(800));
+      expectPlotHeight(281);
+
+      vi.stubGlobal('innerHeight', 1440);
+      act(() => reportWidth?.(2560));
+      expectPlotHeight(1040);
+    },
+  );
+
+  it('does not apply viewport height limits to horizontal bars', () => {
+    vi.stubGlobal('innerHeight', 500);
+    const { container } = renderChart({ orientation: 'horizontal' });
+    const chartDiv = container.querySelector('div') as HTMLDivElement;
+    const reportWidth = vi.mocked(useEChartOption).mock.lastCall?.[3];
+
+    act(() => reportWidth?.(800));
+
+    expect(chartDiv.style.height).toBe(`${(450 + 16 + 120) / 16}rem`);
+    vi.stubGlobal('innerHeight', 1000);
+    act(() => reportWidth?.(800));
+    expect(chartDiv.style.height).toBe(`${(450 + 16 + 120) / 16}rem`);
+  });
+
+  it('tracks viewport height changes with a stable width callback', () => {
+    vi.stubGlobal('innerHeight', 800);
+    try {
+      renderChart({ seriesType: 'line' });
+      const reportWidth = vi.mocked(useEChartOption).mock.lastCall?.[3];
+
+      act(() => reportWidth?.(800));
+      const callsAfterWidthChange =
+        vi.mocked(useEChartOption).mock.calls.length;
+
+      vi.stubGlobal('innerHeight', 600);
+      act(() => reportWidth?.(800));
+
+      expect(vi.mocked(useEChartOption).mock.calls.length).toBeGreaterThan(
+        callsAfterWidthChange,
+      );
+      expect(vi.mocked(useEChartOption).mock.lastCall?.[3]).toBe(reportWidth);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it.each(['line', 'bar'] as const)(
+    'updates the %s chart on a height-only window resize without recreating it',
+    async (seriesType) => {
+      vi.useFakeTimers();
+      vi.stubGlobal('innerHeight', 1000);
+      vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(
+        800,
+      );
+      vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
+        function (this: HTMLElement) {
+          return Number.parseFloat(this.style.height) * 16 || 0;
+        },
+      );
+      vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+      const actual = await vi.importActual<
+        typeof import('../Utils/useEChartOption')
+      >('../Utils/useEChartOption');
+      vi.mocked(useEChartOption).mockImplementation(actual.useEChartOption);
+
+      try {
+        const { container, unmount } = renderChart({ seriesType });
+        const chartDiv = container.querySelector('div') as HTMLDivElement;
+        const initialHeight = Number.parseFloat(chartDiv.style.height) * 16;
+        const chart = echarts.getInstanceByDom(chartDiv);
+        expect(chart).toBeDefined();
+
+        vi.stubGlobal('innerHeight', 700);
+        act(() => {
+          window.dispatchEvent(new Event('resize'));
+          vi.advanceTimersToNextFrame();
+        });
+
+        expect(Number.parseFloat(chartDiv.style.height) * 16).toBeCloseTo(
+          initialHeight - 150,
+        );
+        expect(echarts.getInstanceByDom(chartDiv)).toBe(chart);
+        expect(chart?.isDisposed()).toBeFalsy();
+        const grid = chart?.getOption().grid;
+        expect(Array.isArray(grid) && grid[0]).toMatchObject({
+          height: 300 - 16 + getXAxisLabelHeight(['2024']),
+        });
+        unmount();
+      } finally {
+        vi.mocked(useEChartOption).mockReset();
+        vi.restoreAllMocks();
+      }
+    },
+  );
+
+  it('preserves horizontal category row height when the container narrows', () => {
+    vi.mocked(mapPxTableToChartDataset).mockReturnValueOnce({
+      ...mockDataset,
+      source: Array.from({ length: 20 }, (_, index) => ({
+        name: `Category ${index}`,
+        men: index,
+        women: index + 1,
+      })),
+    });
+    renderChart({ orientation: 'horizontal' });
+    const reportWidth = vi.mocked(useEChartOption).mock.calls[0][3];
+
+    act(() => reportWidth?.(400));
+
+    // Each single-line label needs 20px plus 8px of row spacing.
+    expect(vi.mocked(useEChartOption).mock.lastCall?.[4]).toBe(20 * 28);
   });
 
   it('uses the adaptive value-axis minimum for horizontal bars with negative values', () => {
